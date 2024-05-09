@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 13:36:46 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/05/02 15:50:29 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/05/09 21:42:41 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int	execute_and_cleanup(t_env **env, t_main_loop *loop)
 	else if (g_signal_caught)
 	{
 		g_signal_caught = 0;
-		printf("signal caught\n");
 		exit_status = 130;
 	}
 	else if (!result)

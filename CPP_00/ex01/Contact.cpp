@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Contact.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:36:27 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/19 15:50:32 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/19 15:58:47 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,18 @@ const std::string &Contact::getDarkestSecret() const {
 }
 
 bool Contact::is_valid_phone_number(const std::string &phone_number) const {
-    if (phone_number.empty() || phone_number.length() < 4) {
+    if (phone_number.empty()) {
         return false;
     }
 
     size_t start = 0;
     if (phone_number[0] == '+') {
         start = 1;
+    }
+
+    // Ensure the phone number has at least 4 digits excluding the '+'
+    if (phone_number.length() - start < 4) {
+        return false;
     }
 
     for (size_t i = start; i < phone_number.length(); ++i) {

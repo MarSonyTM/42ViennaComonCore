@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 12:51:32 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/18 17:08:44 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/19 12:38:21 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int main(int ac, char **av)
         {
             std::cout << (char)std::toupper(av[i][j]);
         }
+        std::cout << " "; 
     }
     std::cout << std::endl;
     return (0);

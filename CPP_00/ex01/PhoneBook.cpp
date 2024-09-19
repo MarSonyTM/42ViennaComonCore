@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:00:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/19 14:40:38 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/19 15:45:52 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void PhoneBook::add_contact() {
     }
 }
 
-void PhoneBook::search_contact() const {
+void PhoneBook::search_contact(bool &exit_flag) const {
     if (total_contacts == 0) {
         std::cout << "No contacts in the PhoneBook" << std::endl;
         return;
@@ -38,7 +38,7 @@ void PhoneBook::search_contact() const {
               << std::setw(10) << "First Name" << "|"
               << std::setw(10) << "Last Name" << "|"
               << std::setw(10) << "Nickname" << std::endl;
-    std::cout << "                                      " << std::endl;
+    std::cout << "---------------------------------------------" << std::endl;
 
     for (int i = 0; i < total_contacts; ++i) {
         contacts[i].display_summary(i + 1);
@@ -49,15 +49,23 @@ void PhoneBook::search_contact() const {
         std::cout << "Enter the index of the contact you want to display or type 'EXIT' to return: ";
         std::getline(std::cin, input);
 
+        if (std::cin.eof()) {
+            std::cout << "\nExiting search..." << std::endl;
+            std::cin.clear(); // Clear the EOF flag
+            exit_flag = true;
+            return;
+        }
+
         if (input == "EXIT") {
-            break;
+            return;
         }
 
         std::stringstream ss(input);
         int index;
         ss >> index;
 
-        if (ss.fail() || index <= 0 || index > total_contacts) {
+        // Check for invalid characters after the index
+        if (ss.fail() || index <= 0 || index > total_contacts || !ss.eof()) {
             std::cout << "Invalid index. Please try again." << std::endl;
         } else {
             contacts[index - 1].display_full_info();

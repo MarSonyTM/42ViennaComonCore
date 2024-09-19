@@ -5,15 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/19 14:45:11 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/19 14:52:20 by mafurnic         ###   ########.fr       */
+/*   Created: 2024/09/19 15:36:27 by mafurnic          #+#    #+#             */
+/*   Updated: 2024/09/19 15:50:32 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Contact.hpp"
+ #include "Contact.hpp"
 #include <iostream>
 #include <iomanip>
 #include <cctype>
+#include <cstdlib>
 
 void Contact::setFirstName(const std::string &first_name) {
     this->first_name = first_name;
@@ -56,7 +57,7 @@ const std::string &Contact::getDarkestSecret() const {
 }
 
 bool Contact::is_valid_phone_number(const std::string &phone_number) const {
-    if (phone_number.empty() || phone_number.length() < 5) {
+    if (phone_number.empty() || phone_number.length() < 4) {
         return false;
     }
 
@@ -74,46 +75,84 @@ bool Contact::is_valid_phone_number(const std::string &phone_number) const {
     return true;
 }
 
+bool Contact::is_valid_input(const std::string &input) const {
+    for (size_t i = 0; i < input.length(); ++i) {
+        if (static_cast<unsigned char>(input[i]) > 127) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::string Contact::trim(const std::string &str) const {
+    size_t first = str.find_first_not_of(' ');
+    if (first == std::string::npos) {
+        return "";
+    }
+    size_t last = str.find_last_not_of(' ');
+    return str.substr(first, last - first + 1);
+}
+
 void Contact::set_contact_info() {
     std::string input;
 
     std::cout << "Enter first name: ";
     std::getline(std::cin, input);
-    while (input.empty()) {
-        std::cout << "First name cannot be empty. Enter first name: ";
+    if (std::cin.eof()) exit(0);
+    input = trim(input);
+    while (input.empty() || !is_valid_input(input)) {
+        std::cout << "First name cannot be empty and must contain only ASCII characters. Enter first name: ";
         std::getline(std::cin, input);
+        if (std::cin.eof()) exit(0);
+        input = trim(input);
     }
     setFirstName(input);
 
     std::cout << "Enter last name: ";
     std::getline(std::cin, input);
-    while (input.empty()) {
-        std::cout << "Last name cannot be empty. Enter last name: ";
+    if (std::cin.eof()) exit(0);
+    input = trim(input);
+    while (input.empty() || !is_valid_input(input)) {
+        std::cout << "Last name cannot be empty and must contain only ASCII characters. Enter last name: ";
         std::getline(std::cin, input);
+        if (std::cin.eof()) exit(0);
+        input = trim(input);
     }
     setLastName(input);
 
     std::cout << "Enter nickname: ";
     std::getline(std::cin, input);
-    while (input.empty()) {
-        std::cout << "Nickname cannot be empty. Enter nickname: ";
+    if (std::cin.eof()) exit(0);
+    input = trim(input);
+    while (input.empty() || !is_valid_input(input)) {
+        std::cout << "Nickname cannot be empty and must contain only ASCII characters. Enter nickname: ";
         std::getline(std::cin, input);
+        if (std::cin.eof()) exit(0);
+        input = trim(input);
     }
     setNickname(input);
 
     std::cout << "Enter phone number: ";
     std::getline(std::cin, input);
+    if (std::cin.eof()) exit(0);
+    input = trim(input);
     while (input.empty() || !is_valid_phone_number(input)) {
-        std::cout << "Phone number  must contain only digits (at least 4) and may start with a plus sign. Enter phone number: ";
+        std::cout << "Phone number must be at least 4 digits long, contain only digits, and may start with a plus sign. Enter phone number: ";
         std::getline(std::cin, input);
+        if (std::cin.eof()) exit(0);
+        input = trim(input);
     }
     setPhoneNumber(input);
 
     std::cout << "Enter darkest secret: ";
     std::getline(std::cin, input);
-    while (input.empty()) {
-        std::cout << "Darkest secret cannot be empty. Enter darkest secret: ";
+    if (std::cin.eof()) exit(0);
+    input = trim(input);
+    while (input.empty() || !is_valid_input(input)) {
+        std::cout << "Darkest secret cannot be empty and must contain only ASCII characters. Enter darkest secret: ";
         std::getline(std::cin, input);
+        if (std::cin.eof()) exit(0);
+        input = trim(input);
     }
     setDarkestSecret(input);
 }

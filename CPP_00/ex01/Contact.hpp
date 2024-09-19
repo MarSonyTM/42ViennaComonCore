@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:47:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/19 14:44:23 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/19 15:31:40 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ private:
     std::string darkest_secret;
 
     bool is_valid_phone_number(const std::string &phone_number) const;
+    bool is_valid_input(const std::string &input) const;
+    std::string trim(const std::string &str) const;
 
 public:
     void setFirstName(const std::string &first_name);

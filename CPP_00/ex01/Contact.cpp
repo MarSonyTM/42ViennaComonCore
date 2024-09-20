@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Contact.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:36:27 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/19 15:58:47 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/09/20 14:46:40 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

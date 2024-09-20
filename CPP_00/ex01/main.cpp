@@ -6,14 +6,16 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:17:57 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/19 15:46:53 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/20 14:04:44 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PhoneBook.hpp"
 #include <iostream>
 
-int main(int ac, char **av)
+// main function provides the command line interface for interacting with the phone book application
+
+int main(int ac, char **av)        
 {
     if (ac > 1)
     {
@@ -48,6 +50,5 @@ int main(int ac, char **av)
             std::cout << "Unknown command. Please try again." << std::endl;
         }
     }
-
     return 0;
 }

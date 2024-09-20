@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:36:27 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/20 15:21:01 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/20 17:01:04 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 #include <cctype>
 #include <cstdlib>
 
-void Contact::setFirstName(const std::string &first_name)
+void Contact::setFirstName(const std::string &first_name)  
 {
-    this->first_name = first_name;
+    this->first_name = first_name; 
 }
 
 void Contact::setLastName(const std::string &last_name)
@@ -186,9 +186,9 @@ void Contact::display_summary(int index) const
 
 void Contact::display_full_info() const 
 {
-    std::cout << "First Name: " << first_name << std::endl;
-    std::cout << "Last Name: " << last_name << std::endl;
-    std::cout << "Nickname: " << nickname << std::endl;
-    std::cout << "Phone Number: " << phone_number << std::endl;
-    std::cout << "Darkest Secret: " << darkest_secret << std::endl;
+    std::cout << "First Name: " << getFirstName() << std::endl;
+    std::cout << "Last Name: " << getLastName() << std::endl;
+    std::cout << "Nickname: " <<  getNickname() << std::endl;
+    std::cout << "Phone Number: " << getPhoneNumber() << std::endl;
+    std::cout << "Darkest Secret: " << getDarkestSecret() << std::endl;
 }

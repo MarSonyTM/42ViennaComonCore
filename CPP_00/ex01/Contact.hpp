@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:47:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/20 16:00:09 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:58:48 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,14 @@ private:                      // private members storing the data of the contact
     bool is_valid_input(const std::string &input) const;  // private member functions to validate the input
     std::string trim(const std::string &str) const;   // private member functions to trim the string
 
-public:     // Setters (mutators) and Getters (accessors) for the private members
+public:     // Setters (mutators)
     void setFirstName(const std::string &first_name);
     void setLastName(const std::string &last_name);
     void setNickname(const std::string &nickname);
     void setPhoneNumber(const std::string &phone_number);
     void setDarkestSecret(const std::string &darkest_secret);
 
+          // Getters (accessors)
     const std::string &getFirstName() const;   // by declaring a function const
     const std::string &getLastName() const;    //  we are telling the compiler that this function will not modify the object
     const std::string &getNickname() const;
@@ -47,3 +48,5 @@ public:     // Setters (mutators) and Getters (accessors) for the private member
 };
 
 #endif // CONTACT_HPP
+
+

@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   megaphone.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 12:51:32 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/23 14:57:43 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 22:20:14 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <cctype>
+#include <iostream> // std::cout, std::endl
+#include <cctype> // std::toupper
 
 int main(int ac, char **av)
 {
@@ -24,7 +24,7 @@ int main(int ac, char **av)
     {
         for(int j = 0; av[i][j]; j++)
         {
-            std::cout << (char)std::toupper(av[i][j]);
+            std::cout << std::toupper(av[i][j]);
         }
         std::cout << " "; 
     }

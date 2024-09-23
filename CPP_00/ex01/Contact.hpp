@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Contact.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:47:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/23 13:20:00 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 18:30:13 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <string>
 
+// since the Contact class does not require any special initialization, the default constructor porvided by the compiler will initialize all std::string members to empty strings, therefore no need to define a constructor.
 class Contact {
 private:                      // private members storing the data of the contact
     std::string first_name;

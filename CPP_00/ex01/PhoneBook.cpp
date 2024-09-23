@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:00:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/23 13:07:53 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 13:26:10 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void PhoneBook::search_contact(bool &exit_flag) const
         std::cout << "Enter the index of the contact you want to display or type 'EXIT' to return: ";
         std::getline(std::cin, input);
 
-        if (std::cin.eof())
+        if (std::cin.eof()) // Check for EOF (Ctrl + D)
         {
             std::cout << "\nExiting search..." << std::endl;
             std::cin.clear(); // Clear the EOF flag
@@ -71,7 +71,7 @@ void PhoneBook::search_contact(bool &exit_flag) const
 
         std::stringstream ss(input);    // Convert the input to an integer
         int index;
-        ss >> index;
+        ss >> index; // Extract the integer from the stringstream
 
         // Check if the conversion was successful and the index is within the range, and there are no extra characters
         if (ss.fail() || index <= 0 || index > total_contacts || !ss.eof())

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:36:27 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/23 12:58:49 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 13:14:22 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,14 @@ bool Contact::is_valid_phone_number(const std::string &phone_number) const
         return false;
 
     size_t start = 0;
-    if (phone_number[0] == '+')
-        start = 1;
+    if (phone_number[0] == '+') // Check for the '+' sign at the beginning of the phone number
+        start = 1; // Skip the '+' sign
 
     // Ensure the phone number has at least 4 digits excluding the '+'
     if (phone_number.length() - start < 4 || phone_number.length() - start > 15)
         return false;
 
-    for (size_t i = start; i < phone_number.length(); ++i)
+    for (size_t i = start; i < phone_number.length(); ++i) // Check if all characters are digits
     {
         if (!std::isdigit(phone_number[i]))
             return false;
@@ -87,7 +87,7 @@ bool Contact::is_valid_phone_number(const std::string &phone_number) const
     return (true);
 }
 
-bool Contact::is_valid_input(const std::string &input) const 
+bool Contact::is_valid_input(const std::string &input) const   // Check if the input contains only ASCII characters
 {
     for (size_t i = 0; i < input.length(); ++i)
     {

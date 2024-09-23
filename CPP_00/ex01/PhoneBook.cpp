@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PhoneBook.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:00:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/23 13:26:10 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 22:48:07 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

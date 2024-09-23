@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:17:57 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/23 12:25:35 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 22:55:58 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int main(int ac, char **av)
     std::string command; // variable to store the command entered by the user
     bool exit_flag = false; // Flag to catch cntrl + D and exit the program
 
-    while (true)
+    while (true) // Infinite loop to keep the program running
     {
         if (exit_flag)
         {

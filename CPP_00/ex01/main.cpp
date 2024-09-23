@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:17:57 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/20 15:03:54 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:25:35 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int ac, char **av)
     if (ac > 1)
     {
         std::cout << "Usage: " << av[0] << std::endl;
-        return 1;
+        return (1);
     }
     
     PhoneBook phoneBook; // Creating an instance of the PhoneBook class

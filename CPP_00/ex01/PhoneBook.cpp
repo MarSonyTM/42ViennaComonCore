@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:00:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/20 15:22:36 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 13:07:53 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iomanip>
 #include <sstream>
 
+ // Constructor to initialize the PhoneBook class, it initializes the PhoneBook object, total_contacts and current_index
 PhoneBook::PhoneBook() : total_contacts(0), current_index(0) {}
 
 void PhoneBook::add_contact()
@@ -28,7 +29,7 @@ void PhoneBook::add_contact()
     {
         std::cout << "PhoneBook is full. Replacing the oldest contact." << std::endl;
         contacts[current_index].set_contact_info();
-        current_index = (current_index + 1) % 8;
+        current_index = (current_index + 1) % 8; // Circular buffer to replace the oldest contact
     }
 }
 
@@ -68,18 +69,18 @@ void PhoneBook::search_contact(bool &exit_flag) const
         if (input == "EXIT")
             return;
 
-        std::stringstream ss(input);
+        std::stringstream ss(input);    // Convert the input to an integer
         int index;
         ss >> index;
 
-        // Check for invalid characters after the index
+        // Check if the conversion was successful and the index is within the range, and there are no extra characters
         if (ss.fail() || index <= 0 || index > total_contacts || !ss.eof())
         {
             std::cout << "Invalid index. Please try again." << std::endl;
         }
         else
         {
-            contacts[index - 1].display_full_info();
+            contacts[index - 1].display_full_info(); 
             break;
         }
     }

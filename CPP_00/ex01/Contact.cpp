@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:36:27 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/20 17:01:04 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:58:49 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,13 @@ bool Contact::is_valid_input(const std::string &input) const
     return (true);
 }
 
-std::string Contact::trim(const std::string &str) const
+std::string Contact::trim(const std::string &str) const // Remove leading and trailing spaces
 {
-    size_t first = str.find_first_not_of(' ');
+    size_t first = str.find_first_not_of(' '); // Find the first non-space character
     if (first == std::string::npos)
         return "";
-    size_t last = str.find_last_not_of(' ');
-    return (str.substr(first, last - first + 1));
+    size_t last = str.find_last_not_of(' '); // Find the last non-space character
+    return (str.substr(first, last - first + 1)); // Extract the substring without leading and trailing spaces
 }
 
 void Contact::set_contact_info()
@@ -114,7 +114,7 @@ void Contact::set_contact_info()
     std::getline(std::cin, input);
     if (std::cin.eof()) exit(0); // Check for cntrl + D
     input = trim(input);
-    while (input.empty() || !is_valid_input(input))
+    while (input.empty() || !is_valid_input(input)) // Check for empty input and invalid characters
     {
         std::cout << "First name cannot be empty and must contain only ASCII characters. Enter first name: ";
         std::getline(std::cin, input);
@@ -177,8 +177,8 @@ void Contact::set_contact_info()
 }
 
 void Contact::display_summary(int index) const 
-{
-    std::cout << std::setw(10) << index << "|"
+{    // output stream manipulator setw() to set the width of the output
+    std::cout << std::setw(10) << index << "|"                 // substr() function to display only the first 9 characters of the string plus a dot
               << std::setw(10) << (first_name.length() > 9 ? first_name.substr(0, 9) + "." : first_name) << "|"
               << std::setw(10) << (last_name.length() > 9 ? last_name.substr(0, 9) + "." : last_name) << "|"
               << std::setw(10) << (nickname.length() > 9 ? nickname.substr(0, 9) + "." : nickname) << std::endl;

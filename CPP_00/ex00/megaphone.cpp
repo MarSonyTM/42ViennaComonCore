@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 12:51:32 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/19 12:41:09 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 14:57:43 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int main(int ac, char **av)
     if (ac < 2)
     {
         std::cout << "* LOUD AND UNBEARABLE FEEDBACK NOISE *" << std::endl;
+        return (0);
     }
     for(int i = 1; i < ac; i++)
     {

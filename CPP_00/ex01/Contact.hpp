@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:47:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/20 16:58:48 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/23 13:20:00 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ private:                      // private members storing the data of the contact
 
 public:     // Setters (mutators)
     void setFirstName(const std::string &first_name);
-    void setLastName(const std::string &last_name);
+    void setLastName(const std::string &last_name);            // public member functions to set the contact information
     void setNickname(const std::string &nickname);
     void setPhoneNumber(const std::string &phone_number);
     void setDarkestSecret(const std::string &darkest_secret);
@@ -39,7 +39,7 @@ public:     // Setters (mutators)
     const std::string &getFirstName() const;   // by declaring a function const
     const std::string &getLastName() const;    //  we are telling the compiler that this function will not modify the object
     const std::string &getNickname() const;
-    const std::string &getPhoneNumber() const;
+    const std::string &getPhoneNumber() const;                  // public member functions to get the contact information
     const std::string &getDarkestSecret() const;
 
     void set_contact_info(); // function to set the contact information

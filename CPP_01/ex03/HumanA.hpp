@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:32:50 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/26 15:45:47 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/26 15:55:43 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class HumanA
 {
     private:
         std::string name; // The name of the human
-        Weapon &weapon; // The weapon of the human
+        Weapon &weapon; // Reference to the weapon of the human
 
     public:
         HumanA(const std::string &name, Weapon &weapon); // Constructor to initialize the name and weapon attributes

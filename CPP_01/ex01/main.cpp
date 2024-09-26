@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Zombie.cpp                                         :+:      :+:    :+:   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/26 13:26:52 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/26 14:26:19 by mafurnic         ###   ########.fr       */
+/*   Created: 2024/09/26 13:36:36 by mafurnic          #+#    #+#             */
+/*   Updated: 2024/09/26 15:10:48 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Zombie.hpp"
 #include <iostream>
 
-// default constructor
-Zombie::Zombie() : name("") {}
-
-// parameterized constructor
-Zombie::Zombie(std::string name) : name(name){
-    std::cout << "Zombie " << this->name << " is created." << std::endl;
-}
-
-// destructor
-Zombie::~Zombie()
+int main()
 {
-    std::cout << "Zombie " << this->name << " is destroyed." << std::endl;
-}
+    int N = 5;
+    Zombie* horde = zombieHorde(N, "HordeZombie");
 
-// announce method
-void Zombie::announce() 
-{
-    std::cout << this->name << "> BraiiiiiiinnnzzzZ..." << std::endl;
+    if(horde)
+    {
+        for(int i = 0; i < N; ++i)
+        {
+            horde[i].announce();
+        }
+        delete[] horde;
+    }
+    else
+    {
+        std::cout << "Failed to create zombie horde." << std::endl;
+    }
+    return (0);
 }

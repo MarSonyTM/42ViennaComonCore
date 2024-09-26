@@ -5,29 +5,33 @@
 #                                                     +:+ +:+         +:+      #
 #    By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/09/18 12:54:59 by mafurnic          #+#    #+#              #
-#    Updated: 2024/09/26 13:46:47 by mafurnic         ###   ########.fr        #
+#    Created: 2024/09/26 12:37:27 by mafurnic          #+#    #+#              #
+#    Updated: 2024/09/26 12:37:35 by mafurnic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# Makefile for the Megaphone program
-
-NAME = megaphone
+# Variables
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+SRC = main.cpp Zombie.cpp newZombie.cpp randomChump.cpp
+OBJ = $(SRC:.cpp=.o)
+NAME = zombie_program
 
-SRCS = megaphone.cpp
-OBJS = $(SRCS:.cpp=.o)
-
+# Rules
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
+$(NAME): $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re

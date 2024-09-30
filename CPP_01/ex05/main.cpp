@@ -5,30 +5,30 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/26 13:36:36 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 10:57:49 by mafurnic         ###   ########.fr       */
+/*   Created: 2024/09/30 12:08:34 by mafurnic          #+#    #+#             */
+/*   Updated: 2024/09/30 12:23:48 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Zombie.hpp"
-#include <iostream>
+#include "Harl.hpp"
 
 int main()
 {
-    int N = 5;
-    Zombie* horde = zombieHorde(N, "HordeZombie"); // 1. Allocation of N zombies on the heap with a set name
+    Harl harl;
 
-    if(horde) // Check if the horde was created successfully
-    {
-        for(int i = 0; i < N; ++i)
-        {
-            horde[i].announce(); // 4. Call the announce method for each zombie in the horde
-        } 
-        delete[] horde; // 5. Deallocate the memory for the horde
-    }
-    else
-    {
-        std::cout << "Failed to create zombie horde." << std::endl;
-    }
+    harl.complain("DEBUG");
+    harl.complain("INFO");
+    harl.complain("WARNING");
+    harl.complain("ERROR");
+    harl.complain("UNKNOWN");
+
     return (0);
 }
+
+/*
+    The Goal of this exercise is to create a Harl Class that can output different messages
+    based on a given log level. The log levels are DEBUG, INFO, WARNING and ERROR.
+    The Harl class should use pointers to member functions to call the apporproate function based on the log level.
+    avoiding the use of series of if/else statements.
+
+*/

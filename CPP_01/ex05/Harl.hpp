@@ -1,21 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HumanA.cpp                                         :+:      :+:    :+:   */
+/*   Harl.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/26 15:34:02 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 11:03:40 by mafurnic         ###   ########.fr       */
+/*   Created: 2024/09/30 12:01:58 by mafurnic          #+#    #+#             */
+/*   Updated: 2024/09/30 12:16:15 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "HumanA.hpp"
-#include <iostream>
+#ifndef HARL_HPP
+# define HARL_HPP
 
-HumanA::HumanA(const std::string &name, Weapon &weapon) : name(name), weapon(weapon) {} // Constructor to initialize the name and weapon attributes
+#include <string>
 
-void HumanA::attack() const
+class Harl
 {
-    std::cout << name << " attacks with their " << weapon.getType() << std::endl;
-}
+private:
+    void debug(void);
+    void info(void);
+    void warning(void);
+    void error(void);
+
+public:
+    void complain(std::string level);
+};
+
+#endif

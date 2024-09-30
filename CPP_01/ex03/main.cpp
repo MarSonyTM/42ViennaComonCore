@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:39:18 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 11:03:11 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:39:01 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,21 @@
 int main()
 {
     {
-    Weapon club = Weapon("crude spiked club");   // Create a weapon
-    HumanA bob("Bob", club);   // Create a human with the weapon
+    Weapon club = Weapon("crude spiked club");   // Create a weapon object with the type "crude spiked club"
+    HumanA bob("Bob", club);   // Create a human object with the name "Bob" and the weapon "club"
     
-    bob.attack();
-    club.setType("some other type of club");
-    bob.attack();
-    }
+    bob.attack();  // Display the attack of the human "Bob" with the weapon "club"
+    club.setType("some other type of club"); // Change the type of the weapon "club" to "some other type of club"
+    bob.attack(); // Display the attack of the human "Bob" with the weapon "club"
+    } 
     {
-    Weapon club = Weapon("crude spiked club");
-    HumanB jim("Jim");
+    Weapon club = Weapon("crude spiked club");  // Create a weapon object with the type "crude spiked club"
+    HumanB jim("Jim"); // Create a human object with the name "Jim"
     
-    jim.setWeapon(club);
-    jim.attack();
-    club.setType("some other type of club");
-    jim.attack();
+    jim.setWeapon(club); // Set the weapon of the human "Jim" to "club"
+    jim.attack(); // Display the attack of the human "Jim" with the weapon "club"
+    club.setType("some other type of club");    // Change the type of the weapon "club" to "some other type of club"
+    jim.attack(); // Display the attack of the human "Jim" with the weapon "club"
     }
     
     return (0);

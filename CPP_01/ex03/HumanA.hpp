@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HumanA.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:32:50 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/26 15:55:43 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:29:53 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

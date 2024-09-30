@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HumanB.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:35:43 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/26 15:56:33 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:25:39 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class HumanB
 {
     private:
         std::string name; // The name of the human
-        Weapon *weapon; // Pointer to the weapon of the human
+        Weapon *weapon; // Pointer to the weapon of the human 
 
     public:
         HumanB(const std::string &name); // Constructor to initialize the name attribute

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:08:34 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 12:23:48 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:54:55 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int main()
 {
-    Harl harl;
+    Harl harl; // Creata a instance of the Harl class
 
     harl.complain("DEBUG");
     harl.complain("INFO");

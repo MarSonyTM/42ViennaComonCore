@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:58 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 14:34:21 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:47:21 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 
     std::string filename = argv[1];
     std::string s1 = argv[2];
-    std::string s2 = argv[3];
+    std::string s2 = argv[3]; 
 
     std::ifstream inputFile(filename.c_str()); // open the file  in read mode
     

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Harl.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:03:56 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 14:34:39 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:53:25 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ void Harl::error(void)
 }
 
 void Harl::complain(std::string level)
-{
+{                                               // Array of pointers to member functions
     void (Harl::*complaints[])(void) = {&Harl::debug, &Harl::info, &Harl::warning, &Harl::error};
 
-    std::string levels[] = {"DEBUG", "INFO", "WARNING", "ERROR"};
+    std::string levels[] = {"DEBUG", "INFO", "WARNING", "ERROR"}; // Array of strings to compare with the level
 
     for (int i = 0; i < 4; i++)
     {

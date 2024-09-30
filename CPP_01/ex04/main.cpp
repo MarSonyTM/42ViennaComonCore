@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:58 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 11:54:34 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:29:22 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,12 @@
 
 int main(int argc, char **argv)
 {
-    if (argc != 4)
+    if (argc != 4 || !argv[1][0] || !argv[2][0]) // check if the number of arguments is correct
     {
-        std::cout << "Usage: " << argv[0] << " <filename> <s1> <s2>" << std::endl;
+        if (argc != 4)
+            std::cerr << "Usage: " << argv[0] << " <filename> <s1> <s2>" << std::endl;
+        else
+            std::cerr << "Error: filename and strings cannot be empty" << std::endl;
         return (1);
     }
 

@@ -3,20 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:30:02 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 10:25:47 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 20:45:51 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Zombie.hpp"
+#include <iostream>
 
-int main()
+int main(int argc, char **argv)
 {
-    Zombie* zombie = newZombie("HeapZombie"); // creating a new zombie on the heap
-    zombie->announce(); // zombie announces itself
-    delete zombie; // Destructor is called here to free the memory allocated on the heap
+    Zombie *zombie; // Declaring a pointer to a Zombie object
+    
+    if (argc != 1 && argv)
+    {
+        std::cerr << "Usage: "<< argv[0] << std::endl;
+        return (1);
+    }
+    zombie = newZombie("HeapZombie"); // creating a new zombie on the heap
+    delete zombie; // Destructor is called here to announce the destruction of the zombie
 
     randomChump("StackZombie"); // creating a new zombie on the stack and announcing it
     return(0);

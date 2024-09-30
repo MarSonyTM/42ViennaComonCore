@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Zombie.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 13:26:52 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/26 15:09:27 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:15:49 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Zombie.hpp"
 #include <iostream>
 
-// default constructor
+// default constructor with name set to empty string to initialize the zombie with an empty name to avoid undefined behavior
 Zombie::Zombie() : name("") {}
 
-// parameterized constructor
+// parameterized constructor 
 Zombie::Zombie(std::string name) : name(name)
 {
     std::cout << "Zombie " << this->name << " is created." << std::endl;

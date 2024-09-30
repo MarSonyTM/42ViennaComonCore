@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   zombieHorde.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 13:34:24 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 10:56:10 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:14:11 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Zombie.hpp"
-
+                      // function will return a pointer to the first zombie in the horde array
 Zombie* zombieHorde(int N, std::string name)     // Function to create a horde of zombies
 {
     if (N <= 0)

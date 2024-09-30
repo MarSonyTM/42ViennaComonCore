@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Zombie.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 13:21:40 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/26 14:59:55 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:15:06 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   randomChump.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:27:35 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 10:16:08 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 20:29:10 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void randomChump(std::string name)
 {
-    Zombie zombie(name); // create a zombie with the given name
+    Zombie zombie(name); // create a zombie on the stack with the given name
     zombie.announce(); // zombie announces itself
-} // Destructor is called automatically  here when the function ends
+} // Destructor is called automatically  here once the function goes out of scope and the zombie is destroyed
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Zombie.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:15:38 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 09:54:18 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 20:28:07 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ private:
 
 public:
     Zombie(std::string name); // constructor to initialize the zombie with a name 
-    ~Zombie(); // Destructor to handle clean up
+    ~Zombie(); // Destructor 
     void announce() const; // method to announce the zombie
 };
 

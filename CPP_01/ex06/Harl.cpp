@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:31:17 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 12:38:52 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 12:52:19 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,19 +69,15 @@ void Harl::filter(std::string level)
     {
         case 0:
             (this->*complaints[0])();
-            break;
         case 1:
             (this->*complaints[1])();
-            break;
         case 2:
             (this->*complaints[2])();
-            break;
         case 3:
             (this->*complaints[3])();
             break;
         default:
             std::cout << "[ Probably complaining about insignificant problems ]" << std::endl;
-            break;
     }
 }
 

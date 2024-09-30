@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Harl.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:29:42 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 13:10:30 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 22:36:12 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class Harl
 private:
     void debug(void);
     void info(void);
-    void warning(void);
+    void warning(void);      // Methods to display messages based on the log level
     void error(void);
 
 public:

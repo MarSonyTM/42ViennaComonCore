@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:31:17 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 22:16:48 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/09/30 22:19:32 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void Harl::filter(std::string level)
     void (Harl::*complaints[4])(void) = {&Harl::debug, &Harl::info, &Harl::warning, &Harl::error};
     std::string levels[4] = {"DEBUG", "INFO", "WARNING", "ERROR"};
 
-    int levelIndex = -1;
+    int levelIndex = -1; // Default value to indicate that the level is not found
 
     for (int i = 0; i < 4; i++)
     {

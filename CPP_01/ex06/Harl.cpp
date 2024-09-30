@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:31:17 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 22:19:32 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/09/30 22:36:46 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void Harl::filter(std::string level)
 
     for (int i = 0; i < 4; i++)
     {
-        if (levels[i] == level)
+        if (levels[i] == level) // Check if the log level entered by the user is valid
         {
             levelIndex = i;
             break;

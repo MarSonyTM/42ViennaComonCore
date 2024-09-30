@@ -6,14 +6,14 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:29:42 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 12:31:08 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:10:30 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HARL_HPP
 # define HARL_HPP
 
-#include <string>
+#include <string>                // Header file defining Harl Class with its methods
 
 class Harl
 {
@@ -24,8 +24,7 @@ private:
     void error(void);
 
 public:
-    void complain(std::string level);
-    void filter(std::string level);
+    void filter(std::string level);  // Method to filter and display messages based on the log level
 };
 
 #endif

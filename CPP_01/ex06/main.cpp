@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:39:01 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 12:45:27 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:07:37 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,3 +26,9 @@ int main(int argc, char **argv)
 
     return (0);
 }
+
+/*
+        The Goal of this excercise if to create a programm that filters
+        and displays messages from a character named Harl based on a specific log level.
+        The prgramm should display mesagges staring from the specified log level up to the highest level (ERROR).
+*/

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:31:17 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 12:52:19 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:10:25 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,6 @@ void Harl::warning(void)
 void Harl::error(void)
 {
     std::cout << "[ ERROR ]\nThis is unacceptable. I want to speak to the manager now." << std::endl;
-}
-
-void Harl::complain(std::string level)
-{
-    void (Harl::*complaints[4])(void) = {&Harl::debug, &Harl::info, &Harl::warning, &Harl::error};
-    std::string levels[4] = {"DEBUG", "INFO", "WARNING", "ERROR"};
-
-    for (int i = 0; i < 4; i++)
-    {
-        if (levels[i] == level)
-        {
-            (this->*complaints[i])();
-            return;
-        }
-    }
-    std::cout << "[ Probably complaining about insignificant problems ]" << std::endl;
 }
 
 void Harl::filter(std::string level)

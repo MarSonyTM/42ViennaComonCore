@@ -6,22 +6,34 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:08:34 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 21:54:55 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/09/30 22:06:02 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Harl.hpp"
+#include <iostream>
 
-int main()
+int main(int argc, char **argv)
 {
+    if (argc != 1)
+    {
+        std::cerr << "Usage: " << argv[0] << std::endl;
+        return (1);
+    }
     Harl harl; // Creata a instance of the Harl class
 
-    harl.complain("DEBUG");
-    harl.complain("INFO");
-    harl.complain("WARNING");
-    harl.complain("ERROR");
-    harl.complain("UNKNOWN");
-
+    std::string levels;
+    while(1)
+    {
+        std::cout << "Enter the log level:<DEBUG, INFO, WARNING, ERROR>: ";
+        std::cin >> levels;
+        if (levels == "EXIT" || std::cin.eof())
+        {
+            std::cerr << "Exiting..." << std::endl;
+            break;
+        }
+        harl.complain(levels); // Call the complain function to output the message based on the log level
+    }
     return (0);
 }
 

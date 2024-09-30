@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:14:07 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/26 15:41:08 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:23:38 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 int main()
 {
     std::string string = "HI THIS IS BRAIN";  // string
-    std::string *stringPTR = &string;  // pointer to the string
-    std::string &stringREF = string;  // reference to the string
+    std::string *stringPTR = &string;  // pointer to the string that holds the address of the string
+    std::string &stringREF = string;  // reference to the string taht also refers to the string
 
     std::cout << "Address in memory of the string: " << &string << std::endl;   // address of the string
     std::cout << "Address in memory of the stringPTR: " << stringPTR << std::endl; // address of the pointer
@@ -29,3 +29,11 @@ int main()
 
     return (0);
 }
+
+/*
+    This exercise helps understand understand that references are just another way
+    to manipulate adresses , similar to pointers. The difference is that references
+    are not variables, they are just aliases for variables. They are not objects
+    and they cannot be NULL. They are safer than pointers because they cannot be
+    reassigned to another object after initialization.
+*/

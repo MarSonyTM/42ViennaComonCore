@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:03:56 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 12:22:49 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:34:39 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void Harl::warning(void)
 
 void Harl::error(void)
 {
-    std::cout << "This is unacceptable, I want to speak to the manager now." << std::endl;
+    std::cerr << "This is unacceptable, I want to speak to the manager now." << std::endl;
 }
 
 void Harl::complain(std::string level)
@@ -47,5 +47,5 @@ void Harl::complain(std::string level)
             return;
         }
     }
-    std::cout << "Invalid level - " << level << std::endl;
+    std::cerr << "Invalid level - " << level << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:39:01 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 14:29:14 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:31:15 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 {
     if (argc != 2)
     {
-        std::cout << "Usage: " << argv[0] << " <DEBUG> , <INFO>, <WARNING>, <ERROR>" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " <DEBUG> , <INFO>, <WARNING>, <ERROR>" << std::endl;
         return (1);
     }
 

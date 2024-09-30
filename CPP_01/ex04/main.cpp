@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:58 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 14:29:22 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:34:21 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     
     if (!inputFile.is_open()) // check if the file is open
     {
-        std::cout << "Error: could not open file" << std::endl;
+        std::cerr << "Error: could not open file" << std::endl;
         return (1);
     }
     std::stringstream buffer; // create a stringstream object to read the file content
@@ -44,19 +44,19 @@ int main(int argc, char **argv)
 
     if(content.empty()) // check if the file is empty
     {
-        std::cout << "Error: file is empty" << std::endl;
+        std::cerr << "Error: file is empty" << std::endl;
         return (1);
     }
     if (content.find(s1) == std::string::npos) // check if the string s1 is in the file
     {
-        std::cout << "Error: string " << s1 << " not found in file" << std::endl;
+        std::cerr << "Error: string " << s1 << " not found in file" << std::endl;
         return (1);
     }
     replace(content, s1, s2);
     std::ofstream outputFile((filename + ".replace").c_str()); // create a new file in write mode ending with .replace
     if (!outputFile.is_open()) // check if the file can be open
     {
-        std::cout << "Error: Could not create output file" << filename + ".replace" << std::endl;
+        std::cerr << "Error: Could not create output file" << filename + ".replace" << std::endl;
         return (1);
     }
     outputFile << content; // write the content of the file into the output file

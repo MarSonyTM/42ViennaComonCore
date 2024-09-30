@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 13:36:36 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 10:57:49 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:33:47 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int main()
     }
     else
     {
-        std::cout << "Failed to create zombie horde." << std::endl;
+        std::cerr << "Failed to create zombie horde." << std::endl;
     }
     return (0);
 }

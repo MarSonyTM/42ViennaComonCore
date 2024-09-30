@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:39:01 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 14:31:15 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 22:12:26 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,25 @@
 
 int main(int argc, char **argv)
 {
-    if (argc != 2)
+    if (argc != 1)
     {
-        std::cerr << "Usage: " << argv[0] << " <DEBUG> , <INFO>, <WARNING>, <ERROR>" << std::endl;
+        std::cerr << "Usage: " << argv[0] << std::endl;
         return (1);
     }
-
     Harl harl;
-    harl.filter(argv[1]);
+    std::string levels;
+    while(1)
+    {
+        std::cout << "Enter the log level:<DEBUG, INFO, WARNING, ERROR>: ";
+        std::cin >> levels;
+        if (levels == "EXIT" || std::cin.eof())
+        {
+            std::cerr << "Exiting..." << std::endl;
+            break;
+        }
+        harl.filter(levels); // Call the complain function to output the message based on the log level
+    }
+    
 
     return (0);
 }

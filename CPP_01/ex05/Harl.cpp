@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:03:56 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 21:53:25 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/09/30 22:08:21 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void Harl::complain(std::string level)
     {
         if (levels[i] == level)
         {
-            (this->*complaints[i])();
+            (this->*complaints[i])(); 
             return;
         }
     }

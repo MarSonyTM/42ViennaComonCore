@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Harl.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:31:17 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 13:10:25 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/09/30 22:16:48 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,17 @@ void Harl::filter(std::string level)
         }
     }
 
-    switch (levelIndex)
+     switch (levelIndex)
     {
         case 0:
             (this->*complaints[0])();
+           // Intentional fall-through
         case 1:
             (this->*complaints[1])();
+            // Intentional fall-through
         case 2:
             (this->*complaints[2])();
+             // Intentional fall-through
         case 3:
             (this->*complaints[3])();
             break;

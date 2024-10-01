@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:39:01 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 22:41:19 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/01 08:08:53 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,8 @@ int main(int argc, char **argv)
         std::cerr << "Usage: " << argv[0] << " <DEBUG> , <INFO>, <WARNING>, <ERROR>" << std::endl;
         return (1);
     }
-
     Harl harl;
     harl.filter(argv[1]);
-
     return (0);
 }
 

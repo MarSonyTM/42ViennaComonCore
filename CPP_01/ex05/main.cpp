@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:08:34 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/09/30 22:44:02 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/01 08:07:32 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     std::string levels;
     while(1)
     {
-        std::cout << "Enter the log level:<DEBUG, INFO, WARNING, ERROR>: ";
+        std::cout << "Enter the log level:<DEBUG, INFO, WARNING, ERROR or EXIT> : ";
         std::cin >> levels;
         if (levels == "EXIT" || std::cin.eof())
         {

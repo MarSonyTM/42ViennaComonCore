@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 13:49:14 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/04 13:53:02 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:23:27 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ public:
     Fixed(const int intValue); // Constructor to convert int to fixed point
     Fixed(const float floatValue); // Constructor to convert float to fixed point
     Fixed(const Fixed &copy); // Copy constructor
-    Fixed &operator=(const Fixed &copy); // Copy assignment operator
+    Fixed &operator = (const Fixed &copy); // Copy assignment operator
     ~Fixed(); // Destructor
 
     int getRawBits(void) const; // Returns the raw value of the fixed point value (Getter)

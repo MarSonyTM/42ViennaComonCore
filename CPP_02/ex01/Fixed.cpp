@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 13:53:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/04 14:02:43 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:01:24 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,19 @@ Fixed::Fixed(const int intValue)
 // Constructor to convert a float to a fixed point value
 Fixed::Fixed(const float floatValue)
 {
-    std::cout << "Float constructor called" << std::endl;
+    std::cout << "Float constructor called" << std::endl;       // bitshift the float value to the left by the number of fractional bits
     fixedPointValue = roundf(floatValue * (1 << fractionalBits)); // Multiply the float by 2^fractionalBits and round the result
 }
 
-// Copy constructor
+// Copy constructor , initializes a new Fixed object from an existing one
 Fixed::Fixed(const Fixed &copy)
 {
     std::cout << "Copy constructor called" << std::endl;
-    this->fixedPointValue = copy.getRawBits();
+    this->fixedPointValue = copy.getRawBits();   
 }
 
-// Copy assignment operator
-Fixed &Fixed::operator=(const Fixed &copy)
+// Copy assignment operator   , assigns the values from one Fixed object to existing Fixed object.
+Fixed &Fixed::operator = (const Fixed &copy)
 {
     std::cout << "Copy assignment operator called" << std::endl;
     if (this != &copy)
@@ -71,17 +71,18 @@ void Fixed::setRawBits(int const raw)
 // Convert the fixed point value to a float
 float Fixed::toFloat(void) const
 {
-    return static_cast<float>(this->fixedPointValue) / (1 << fractionalBits); // Divide the fixed point value by 2^fractionalBits
+    return (static_cast<float>(this->fixedPointValue) / (1 << fractionalBits)); // Divide the fixed point value by 2^fractionalBits
 }
 
 // Convert the fixed point value to an integer
 int Fixed::toInt(void) const
 {
-    return this->fixedPointValue >> fractionalBits; // Shift the fixed point value to the right by the number of fractional bits
+    return (this->fixedPointValue >> fractionalBits); // Shift the fixed point value to the right by the number of fractional bits
 }
 
+// Overload of << operator to display the fixed point value
 std::ostream &operator<<(std::ostream &out, const Fixed &fixed)
 {
     out << fixed.toFloat();
-    return out;
+    return (out); // Return the ostream object
 }

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:20:42 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/04 15:26:03 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:55:03 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,27 @@ Point::Point(float xCoord, float yCoord) : x(xCoord), y(yCoord) {}
 Point::Point(const Point &copy) : x(copy.getX()), y(copy.getY()) {}
 
 // Copy assignment operator
-Point &Point::operator=(const Point &copy) {
-    if (this != &copy) {
+Point &Point::operator = (const Point &copy) 
+{
+    if (this != &copy) // Check to avoid  self-assignment
+    {
         this->x = copy.getX();
         this->y = copy.getY();
     }
-    return *this;
+    return *this; // Return the object
 }
 
 // Destructor
 Point::~Point() {}
 
 // Getter for x
-Fixed Point::getX() const {
-    return x;
+Fixed Point::getX() const 
+{
+    return (x);
 }
 
 // Getter for y
-Fixed Point::getY() const {
-    return y;
+Fixed Point::getY() const 
+{
+    return (y);
 }

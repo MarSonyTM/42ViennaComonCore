@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:19:29 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/04 15:22:29 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:12:56 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ public:
     Point();  // Default constructor
     Point(float x, float y);  // Constructor with coordinates
     Point(const Point &copy);  // Copy constructor
-    Point &operator=(const Point &copy);  // Copy assignment operator
+    Point &operator = (const Point &copy);  // Copy assignment operator overload
     ~Point();  // Destructor
 
     Fixed getX() const;  // Getter for x

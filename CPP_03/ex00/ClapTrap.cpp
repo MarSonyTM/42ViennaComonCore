@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClapTrap.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:19:44 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/09 16:35:08 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/09 22:39:08 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void ClapTrap::attack(const std::string& target)
     }
     if (_hitpoints <= 0)
     {
-        std::cout << "ClapTrap" << _name << " is trying to hit  but has no hit points, can't be hit!" << std::endl;
+        std::cout << "ClapTrap" << _name << " is trying to hit . Has no hit points, can't be hit!" << std::endl;
         return;
     }
     _energyPoints--; // decreasing point of energy
@@ -71,7 +71,7 @@ void ClapTrap::takeDamage(unsigned int amount)
 {
     _hitpoints -= amount; // decreasing point of hitpoints by amount
     if (_hitpoints < 0)
-         std::cout << "ClapTrap " << _name << " is getting hit with  " << amount << " Hit Points, but cannot take any more damage ! No more Hit points left" << std::endl;
+         std::cout << "ClapTrap " << _name << " is getting hit with  " << amount << " Hit Points. Cannot take any more damage ! No more Hit points left" << std::endl;
     else
         std::cout << "ClapTrap " << _name << " takes Damage -" << amount << " to Hit Points" << std::endl;
     printState();

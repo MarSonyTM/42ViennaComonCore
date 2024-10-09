@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClapTrap.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:16:01 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/09 14:33:48 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/09 22:54:19 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

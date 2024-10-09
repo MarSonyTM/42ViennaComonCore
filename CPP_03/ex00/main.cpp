@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:36:17 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/09 16:00:22 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/09 23:02:33 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int main()
     claptrap0.beRepaired(3);   // this will increase hit points and decrease energy points
     claptrap0.attack("target1");  
     claptrap0.takeDamage(10);
+    claptrap0.attack("target1"); 
+    
     std::cout << std::endl;
 
     // claptrap1.printState();

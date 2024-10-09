@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:34:48 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/08 13:53:56 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:23:25 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 #include "ClapTrap.hpp"
 
 class ScavTrap : public ClapTrap {
+private:
+        bool _guardMode;
+    
 public:
     ScavTrap();
     ScavTrap(const std::string& name);
@@ -23,7 +26,6 @@ public:
     ScavTrap& operator=(const ScavTrap& other);
     ~ScavTrap();
 
-    void attack(const std::string& target);
     void guardGate();
 };
 

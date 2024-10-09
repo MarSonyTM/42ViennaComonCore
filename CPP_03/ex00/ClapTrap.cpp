@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:19:44 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/08 13:04:09 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:00:58 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ ClapTrap::ClapTrap(const ClapTrap& other) : _name(other._name), _hitpoints(other
 
 ClapTrap& ClapTrap::operator=(const ClapTrap& other)
 {
-    if (this != &other)
+    if (this != &other)  // Avoid copying the object into itself
     {
         _name = other._name;
         _hitpoints = other._hitpoints;
@@ -50,33 +50,55 @@ ClapTrap::~ClapTrap()
 // Function simulates an attack on target by decreasing energy points and printing a message
 void ClapTrap::attack(const std::string& target)        
 {
-    if (_hitpoints <= 0 || _energyPoints <= 0)
+    
+    if (_energyPoints <= 0)
     {
-        std::cout << "ClapTrap " << _name << " has no hit points or energy points left!" << std::endl;
+        std::cout << "ClapTrap" << _name << " is trying to hit but has no energy points left , can't attack !" << std::endl;
+        return;
+    }
+    if (_hitpoints <= 0)
+    {
+        std::cout << "ClapTrap" << _name << " is trying to hit  but has no hit points, can't be hit!" << std::endl;
         return;
     }
     _energyPoints--; // decreasing point of energy
-    std::cout << "ClapTrap " << _name << " attacks " << target << ", causing " << _attackDamage << " points of damage!" << std::endl;
+    std::cout << "ClapTrap " << _name << " attacks " << target << ", causing " << _attackDamage << " Attack Damage !" << "  Energy Points--" << std::endl;
+    printState();
 }
-
 
 // Function simulates taking damage by decreasing hit points and printing a message
 void ClapTrap::takeDamage(unsigned int amount)
 {
     _hitpoints -= amount; // decreasing point of hitpoints by amount
-    if (_hitpoints < 0) _hitpoints = 0; // hitpoints cannot be negative
-    std::cout << "ClapTrap " << _name << " takes " << amount << " points of damage! Hit points left: " << _hitpoints << std::endl;
+    if (_hitpoints < 0)
+         std::cout << "ClapTrap " << _name << " is getting hit with  " << amount << " Hit Points, but cannot take any more damage ! No more Hit points left" << std::endl;
+    else
+        std::cout << "ClapTrap " << _name << " takes Damage -" << amount << " to Hit Points" << std::endl;
+    printState();
 }
 
 // Function simulates being repaired by increasing hit points and printing a message
 void ClapTrap::beRepaired(unsigned int amount)
 {
-    if (_hitpoints <= 0 || _energyPoints <= 0)
+    if (_hitpoints <= 0)
     {
-        std::cout << "ClapTrap " << _name << " has no hit points or energy points left!" << std::endl;
+        std::cout << "ClapTrap " << _name << " trying to be repaired but has no Hit Points!" << std::endl;
+        return;
+    }
+    if (_energyPoints <= 0)
+    {
+        std::cout << "ClapTrap " << _name << "trying to be repaired but has no Energy Points left!" << std::endl;
         return;
     }
     _energyPoints--;
     _hitpoints += amount; // increasing point of hitpoints by amount
-    std::cout << "ClapTrap " << _name << " is repaired by " << amount << " points! Hit points now: " << _hitpoints << std::endl;
+    std::cout << "ClapTrap " << _name << " is repaired by Hit Points + "<< amount << "  Energy Points--" <<std::endl;
+    printState();
+}
+
+// Function prints the state of the ClapTrap
+void ClapTrap::printState() const {
+    std::cout << "ClapTrap " << _name << "    Hit Points: " << _hitpoints
+              << "    Energy Points: " << _energyPoints
+              << "    Attack Damage: " << _attackDamage << std::endl;
 }

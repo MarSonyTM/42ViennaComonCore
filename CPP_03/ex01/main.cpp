@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:18:30 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/09 16:33:33 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:40:10 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,23 @@
  
 int main()
 {
-    // // Creating ClapTrap objects
-    // ClapTrap claptrap0;                        // Default constructor
-    // ClapTrap claptrap1("Wally");     // Parameterized constructor
-    // ClapTrap claptrap2(claptrap1);            // Copy constructor            
-    // claptrap0 = claptrap2;                    // Copy assignment operator                
+    // Creating ClapTrap objects
+    ClapTrap claptrap0;                        // Default constructor
+    ClapTrap claptrap1("Wally");     // Parameterized constructor
+    ClapTrap claptrap2(claptrap1);            // Copy constructor            
+    claptrap0 = claptrap2;                    // Copy assignment operator                
 
-    // std::cout << std::endl;
+    std::cout << std::endl;
     
-    // // Demonstrating attack, takeDamage, and beRepaired functions
+    // Demonstrating attack, takeDamage, and beRepaired functions
     
-    // claptrap0.printState();
-    // claptrap0.attack("target0");  // this will decrease energy points
-    // claptrap0.takeDamage(5);     // this will decrease hit points
-    // claptrap0.beRepaired(3);   // this will increase hit points and decrease energy points
-    // claptrap0.attack("target1");  
-    // claptrap0.takeDamage(10);
-    // std::cout << std::endl;
+    claptrap0.printState();
+    claptrap0.attack("target0");  // this will decrease energy points
+    claptrap0.takeDamage(5);     // this will decrease hit points
+    claptrap0.beRepaired(3);   // this will increase hit points and decrease energy points
+    claptrap0.attack("target1");  
+    claptrap0.takeDamage(10);
+    std::cout << std::endl;
 
     // Creating ScavTrap objects
     

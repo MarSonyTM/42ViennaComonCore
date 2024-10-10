@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ScavTrap.hpp                                       :+:      :+:    :+:   */
+/*   FlagTrap.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 13:34:48 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/10 12:17:59 by mafurnic         ###   ########.fr       */
+/*   Created: 2024/10/10 11:30:17 by mafurnic          #+#    #+#             */
+/*   Updated: 2024/10/10 12:03:31 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SCAVTRAP_HPP
-# define SCAVTRAP_HPP
+#ifndef FLAGTRAP_HPP
+# define FLAGTRAP_HPP
 
 #include "ClapTrap.hpp"
+#include <string>
 
-class ScavTrap : public ClapTrap {
+class FlagTrap : public ClapTrap { 
 public:
-    ScavTrap();
-    ScavTrap(const std::string& name);
-    ScavTrap(const ScavTrap& other);
-    ScavTrap& operator=(const ScavTrap& other);
-    ~ScavTrap();
+    FlagTrap(); 
+    FlagTrap(const std::string& name);
+    FlagTrap(const FlagTrap& copy);
+    FlagTrap& operator = (const FlagTrap& copy);
+    ~FlagTrap();
 
-    void attack(const std::string& target);
-    void guardGate();
+    void highFivesGuys(void);
 };
 
-#endif // SCAVTRAP_HPP
+#endif // FLAGTRAP_HPP

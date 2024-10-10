@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:16:01 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/10 11:37:58 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:37:43 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 class ClapTrap {
 
-private:
+protected:
     std::string _name;    // Name of the ClapTrap
     int _hitPoints;      // Health points of the ClapTrap
     int _energyPoints;   // Energy points of the ClapTrap
@@ -33,7 +33,7 @@ public:
     void attack(const std::string& target); // this function will simulate an attack on the target by decreasing energy points
     void takeDamage(unsigned int amount); // this function will simulate taking damage by decreasing hit points amount
     void beRepaired(unsigned int amount); // this function will simulate repairing the ClapTrap by increasing hit points amount
-    void printState() const; 
+    void printState() const;
 };
 
 #endif

@@ -6,15 +6,15 @@
 #    By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 12:35:59 by mafurnic          #+#    #+#              #
-#    Updated: 2024/10/10 12:26:12 by mafurnic         ###   ########.fr        #
+#    Updated: 2024/10/10 12:26:18 by mafurnic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME =  ScavTrap
+NAME =  FlagTrap
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRCS = main.cpp ClapTrap.cpp ScavTrap.cpp
+SRCS = main.cpp ClapTrap.cpp ScavTrap.cpp FlagTrap.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:16:01 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/09 16:09:34 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:39:27 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ class ClapTrap {
 
 protected:
     std::string _name;    // Name of the ClapTrap
-    int _hitpoints;      // Health points of the ClapTrap
+    int _hitPoints;      // Health points of the ClapTrap
     int _energyPoints;   // Energy points of the ClapTrap
     int _attackDamage;   // Damage points of the ClapTrap
 

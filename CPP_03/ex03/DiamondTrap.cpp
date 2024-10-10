@@ -13,8 +13,9 @@
 #include "DiamondTrap.hpp"
 #include <iostream>
 
-DiamondTrap::DiamondTrap() : ClapTrap(), ScavTrap(), FragTrap(), _name("Default")
+DiamondTrap::DiamondTrap() : ClapTrap(), ScavTrap(), FragTrap() 
 {
+    _name = "Default";
     _hitPoints = FragTrap::_hitPoints;
     _energyPoints = ScavTrap::_energyPoints;
     _attackDamage = FragTrap::_attackDamage;

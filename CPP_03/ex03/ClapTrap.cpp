@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:19:44 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/10 13:02:19 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:53:19 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ ClapTrap::ClapTrap(const ClapTrap& other) : _name(other._name), _hitPoints(other
 // Copy assignment operator
 ClapTrap& ClapTrap::operator=(const ClapTrap& other)
 {
-    std::cout << "ClapTrap " << _name << " has been assigned (copy assignment operator)." << std::endl;
     if (this != &other)  // Avoid copying the object into itself
     {
         _name = other._name;
@@ -42,6 +41,7 @@ ClapTrap& ClapTrap::operator=(const ClapTrap& other)
         _energyPoints = other._energyPoints;
         _attackDamage = other._attackDamage;
     }
+    std::cout << "ClapTrap " << _name << " has been assigned (copy assignment operator)." << std::endl;
     return (*this);
 }
 

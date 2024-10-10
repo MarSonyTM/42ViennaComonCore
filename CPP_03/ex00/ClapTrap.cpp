@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:19:44 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/10 11:38:52 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/10 13:01:49 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ ClapTrap::ClapTrap(const ClapTrap& other) : _name(other._name), _hitPoints(other
 
 ClapTrap& ClapTrap::operator=(const ClapTrap& other)
 {
+    std::cout << "ClapTrap " << _name << " has been assigned (copy assignment operator)." << std::endl;
     if (this != &other)  // Avoid copying the object into itself
     {
         _name = other._name;
@@ -37,7 +38,6 @@ ClapTrap& ClapTrap::operator=(const ClapTrap& other)
         _energyPoints = other._energyPoints;
         _attackDamage = other._attackDamage;
     }
-    std::cout << "ClapTrap " << _name << " has been assigned (copy assignment operator)." << std::endl;
     return (*this);
 }
 
@@ -96,7 +96,8 @@ void ClapTrap::beRepaired(unsigned int amount)
 }
 
 // Function prints the state of the ClapTrap
-void ClapTrap::printState() const {
+void ClapTrap::printState() const
+{
     std::cout << "ClapTrap " << _name << "    Hit Points: " << _hitPoints
               << "    Energy Points: " << _energyPoints
               << "    Attack Damage: " << _attackDamage << std::endl;

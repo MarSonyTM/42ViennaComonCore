@@ -6,36 +6,27 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:18:30 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/10 12:43:54 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/10 13:34:34 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "FragTrap.hpp"
+#include "DiamondTrap.hpp"
 #include <iostream>
  
 int main()
 {
-    FragTrap fragtrap0;
-    FragTrap fragtrap1("FragTrap");
-    FragTrap fragtrap2(fragtrap1);
-    fragtrap0 = fragtrap2;    
-    
+    DiamondTrap diamondtrap0; // Calls the default constructor
+    DiamondTrap diamondtrap1("DiamondTrap"); // Calls the parameterized constructor
+    DiamondTrap diamondtrap2(diamondtrap1); // Calls the copy constructor
+    diamondtrap0 = diamondtrap2; // Calls the copy assignment operator
+
     // Demonstrate working class with inherited methods
     std::cout << std::endl;
-    fragtrap0.printState();
-    fragtrap0.attack("Target");
-    fragtrap0.takeDamage(10);
-    fragtrap0.beRepaired(5);
-    fragtrap0.printState();
+    diamondtrap1.printState();
+    diamondtrap1.attack("target");
+    diamondtrap1.whoAmI();
     std::cout << std::endl;
-
-    // Demonstrate new method
-    fragtrap0.highFivesGuys();
-    std::cout << std::endl;
-
-    // Demonstrate error handling
-    
-                
+     
     return (0);
 }
 

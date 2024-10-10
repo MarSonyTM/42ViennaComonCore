@@ -6,25 +6,25 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 11:30:17 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/10 12:03:31 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:41:46 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FLAGTRAP_HPP
-# define FLAGTRAP_HPP
+#ifndef FRAGTRAP_HPP
+# define FRAGTRAP_HPP
 
 #include "ClapTrap.hpp"
 #include <string>
 
-class FlagTrap : public ClapTrap { 
+class FragTrap : public ClapTrap { 
 public:
-    FlagTrap(); 
-    FlagTrap(const std::string& name);
-    FlagTrap(const FlagTrap& copy);
-    FlagTrap& operator = (const FlagTrap& copy);
-    ~FlagTrap();
+    FragTrap(); 
+    FragTrap(const std::string& name);
+    FragTrap(const FragTrap& copy);
+    FragTrap& operator = (const FragTrap& copy);
+    ~FragTrap();
 
     void highFivesGuys(void);
 };
 
-#endif // FLAGTRAP_HPP
+#endif // FRAGTRAP_HPP

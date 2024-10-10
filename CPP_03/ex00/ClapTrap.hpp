@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClapTrap.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:16:01 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/09 22:54:19 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/10 10:35:21 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ public:
     void attack(const std::string& target); // this function will simulate an attack on the target by decreasing energy points
     void takeDamage(unsigned int amount); // this function will simulate taking damage by decreasing hit points amount
     void beRepaired(unsigned int amount); // this function will simulate repairing the ClapTrap by increasing hit points amount
-    void printState() const;
+    void printState() const; 
 };
 
 #endif

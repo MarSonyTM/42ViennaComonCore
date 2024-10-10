@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:18:30 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/09 16:40:10 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:20:48 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int main()
 
     std::cout << std::endl;
     
-    // Demonstrating attack, takeDamage, and beRepaired functions
+    // // Demonstrating attack, takeDamage, and beRepaired functions
     
     claptrap0.printState();
     claptrap0.attack("target0");  // this will decrease energy points
@@ -53,5 +53,27 @@ int main()
     scavtrap0.takeDamage(10);
     std::cout << std::endl;
 
+    // Demonstrating guardGate function
+    scavtrap0.guardGate();
+    std::cout << std::endl;
+
+    // Demostrating no action when hit points are 0
+    ScavTrap scavtrap3("Scavtrap3");
+    scavtrap3.printState();
+    scavtrap3.takeDamage(101); // this will decrease hit points to 0
+    scavtrap3.attack("target2"); // this will print a message that the object has no hit points
+
+    // Demostarting no action when energy points are 0
+    ScavTrap scavtrap4("Scavtrap4");
+    scavtrap4.printState();
+    for(int i = 0; i < 50; i++)
+        scavtrap4.attack("target3"); // this will decrease energy points to 0
+    scavtrap4.attack("target4"); // this will print a message that the object has no energy points
+
     return (0);
 }
+
+/*
+            In C++, the base class constructor is called before the derived class constructor.
+            In C++, the base class destructor is called after the derived class destructor.
+*/

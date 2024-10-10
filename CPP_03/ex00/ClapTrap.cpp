@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ClapTrap.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:19:44 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/09 22:39:08 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/10 10:35:38 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClapTrap.hpp"
 #include <iostream>
-
 
 ClapTrap::ClapTrap() : _name("Default"), _hitpoints(10), _energyPoints(10), _attackDamage(0)
 {

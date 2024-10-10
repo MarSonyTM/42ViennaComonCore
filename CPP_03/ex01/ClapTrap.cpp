@@ -6,29 +6,32 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:19:44 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/09 16:00:58 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:02:32 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClapTrap.hpp"
 #include <iostream>
 
-
+// Default constructor
 ClapTrap::ClapTrap() : _name("Default"), _hitpoints(10), _energyPoints(10), _attackDamage(0)
 {
     std::cout << "ClapTrap " << _name << " has been created (default constructor)." << std::endl;
 }
 
+// Parameterized constructor
 ClapTrap::ClapTrap(const std::string& name) : _name(name), _hitpoints(10), _energyPoints(10), _attackDamage(0)
 {
     std::cout << "ClapTrap " << _name << " has been created (parameterized constructor)." << std::endl;
 }
 
+// Copy constructor
 ClapTrap::ClapTrap(const ClapTrap& other) : _name(other._name), _hitpoints(other._hitpoints), _energyPoints(other._energyPoints), _attackDamage(other._attackDamage)
 {
     std::cout << "ClapTrap " << _name << " has been copied (copy constructor)." << std::endl;
 }
 
+// Copy assignment operator
 ClapTrap& ClapTrap::operator=(const ClapTrap& other)
 {
     if (this != &other)  // Avoid copying the object into itself
@@ -42,6 +45,7 @@ ClapTrap& ClapTrap::operator=(const ClapTrap& other)
     return (*this);
 }
 
+// Destructor
 ClapTrap::~ClapTrap()
 {
     std::cout << "ClapTrap " << _name << " has been destroyed." << std::endl;
@@ -97,7 +101,8 @@ void ClapTrap::beRepaired(unsigned int amount)
 }
 
 // Function prints the state of the ClapTrap
-void ClapTrap::printState() const {
+void ClapTrap::printState() const
+{
     std::cout << "ClapTrap " << _name << "    Hit Points: " << _hitpoints
               << "    Energy Points: " << _energyPoints
               << "    Attack Damage: " << _attackDamage << std::endl;

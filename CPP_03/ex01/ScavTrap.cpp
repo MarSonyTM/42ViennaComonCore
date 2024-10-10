@@ -6,14 +6,14 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:54:20 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/09 16:36:53 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:17:16 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
  #include "ScavTrap.hpp"
  #include <iostream>
 
-ScavTrap::ScavTrap() : ClapTrap()
+ScavTrap::ScavTrap() : ClapTrap() // Calls the base constructor 
 {
     _hitpoints = 100;
     _energyPoints = 50;
@@ -49,12 +49,12 @@ void ScavTrap::attack(const std::string& target)
 {
     if (_hitpoints <= 0)
     {
-        std::cout << "ScavTrap " << _name << " has no hit points!" << std::endl;
+        std::cout << "ScavTrap " << _name << "is trying to atack , has no hit points!" << std::endl;
         return;
     }
     if (_energyPoints <= 0)
     {
-        std::cout << "ScavTrap " << _name << " has no energy points left!" << std::endl;
+        std::cout << "ScavTrap " << _name << "is trying to atack , has no energy points left!" << std::endl;
         return;
     }
     _energyPoints--;

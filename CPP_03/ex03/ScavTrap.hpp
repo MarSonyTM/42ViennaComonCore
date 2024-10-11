@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:34:48 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/10 13:13:04 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/11 10:33:46 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "ClapTrap.hpp"
 
 class ScavTrap : virtual public ClapTrap {
+protected:
+    int _energyPoints;
 public:
     ScavTrap();
     ScavTrap(const std::string& name);

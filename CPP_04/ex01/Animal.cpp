@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:35:17 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 13:10:16 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/15 12:21:50 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ Animal::~Animal()
     std::cout << "Animal destructor called" << std::endl;
 }
 
-void Animal::makeSound() const 
+void Animal::makeSound() const
 {
     std::cout << getType() << " : makes a sound" << std::endl;
 }

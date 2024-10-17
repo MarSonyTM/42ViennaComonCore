@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 16:18:30 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/11 09:56:57 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 14:36:50 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int main()
     // // Demonstrate working class with inherited methods
     std::cout << std::endl;
     diamondtrap1.printState();
-    diamondtrap1.attack("target");
+    diamondtrap0.attack("target");
     diamondtrap1.whoAmI();
     std::cout << std::endl;
      

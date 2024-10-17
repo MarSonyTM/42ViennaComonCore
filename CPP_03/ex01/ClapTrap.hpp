@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:16:01 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/10 11:39:27 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 10:05:31 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include <string>
 
-class ClapTrap {
+class ClapTrap{
 
 protected:
     std::string _name;    // Name of the ClapTrap

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:54:50 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 13:10:44 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 11:47:50 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ Cat &Cat::operator = (const Cat &copy)
 {
     if (this != &copy)
     {
-        Animal::operator=(copy);
-        delete brain;
-        brain = new Brain(*copy.brain);
+        Animal::operator = (copy); // call the parent class assignment operator
+        delete brain; // delete the old brain
+        brain = new Brain(*copy.brain); // create a new brain and copy the content deep copy
     }
     std::cout << "Cat assignment operator called" << std::endl;
-    return (*this);
+    return (*this); // return the current object by reference to allow chain assignment
 }
 
 Cat::~Cat()

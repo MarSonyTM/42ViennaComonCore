@@ -6,11 +6,12 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:20:19 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 14:14:38 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 12:01:31 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
+#include "Animal.hpp"
 #include "Cat.hpp"
 #include "Dog.hpp"
 
@@ -18,6 +19,7 @@
 int main()
 {
     const AAnimal* animals[10];
+    // AAnimal animal; // Error: AAnimal is abstract, cannot be instantiated directly.
 
     for (int i = 0; i < 5; ++i)
     {
@@ -32,7 +34,7 @@ int main()
     {
         delete animals[i];
     }
-     
+    
 
     return(0);
 }

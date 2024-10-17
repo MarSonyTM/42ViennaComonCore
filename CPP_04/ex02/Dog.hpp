@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:42:33 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 14:08:03 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 12:02:38 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ class Dog : public AAnimal
 #endif
 
 /*
-    Dog Class inherits from Animal class and sets the type to "Dog".
-    It ovverrides the makeSound() functions to print a dog-specific Sound.
+   Abstract Class: The AAnimal class is abstract and cannpt be instantiated directly.
+                   It has a pure virtual function makeSound. = 0;
 */

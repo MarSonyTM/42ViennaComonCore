@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:01:16 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 12:11:44 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 11:08:53 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class WrongAnimal
         WrongAnimal &operator=(const WrongAnimal &copy);
         virtual ~WrongAnimal();
 
-    virtual void makeSound() const;
+    void makeSound() const;
     std::string getType() const;
 };
 

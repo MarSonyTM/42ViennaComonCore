@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:20:19 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 13:07:15 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 11:45:52 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int main()
 
 
 /*
-        Deep Copy : Ensures that copies of objects are deep copies, preventing memory issues.
+        Deep Copy : Copies the object's immediate values and creates copies of the objects it points to.
+        Shallow Copy : Copies the object's immediate values but does not create copies of the objects it points to.
         Inheritance: Allows a class to inherit propertie and behaviors from another class.
         Polymorphism: Enables methods to do different things bases on the object they are acting upon,
                       even if they share the same name.

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:54:50 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 12:18:53 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 10:51:52 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Cat::Cat() : Animal()
 {
-    type = "Cat";
+    type = "Cat"; 
     std::cout << "Cat constructor called" << std::endl;
 }
 

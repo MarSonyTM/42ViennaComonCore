@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:20:19 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 12:11:18 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 11:38:31 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,34 +18,43 @@
 
 int main()
 {
-    const Animal* meta = new Animal();
-    const Animal* j = new Dog();
-    const Animal* i = new Cat();
+    const Animal* animal = new Animal(); // animal object created with a pointer to the base class
+    const Animal* Louis = new Dog(); // dog object created with a pointer to the base class
+    const Animal* Ash = new Cat(); // cat object created with a pointer to the base class
 
-    std::cout << j->getType() << " " << std::endl;
-    std::cout << i->getType() << " " << std::endl;
-    i->makeSound();
-    j->makeSound();
-    meta->makeSound();
+    std::cout << "Louis is a " << Louis->getType() << " " << std::endl;
+    std::cout << "Ash is a "<< Ash->getType() << " " << std::endl;
+    Louis->makeSound();
+    Ash->makeSound();
+    animal->makeSound();
 
-    delete meta;
-    delete j;
-    delete i;
+    delete animal;
+    delete Louis;
+    delete Ash;
 
     std::cout << "--------------------------" << std::endl;
 
-    const WrongAnimal* wrongMeta = new WrongAnimal();
-    const WrongAnimal* wrongCat = new WrongCat();
+    const WrongAnimal* wrongAnimal = new WrongAnimal(); // wrongAnimal object created with a pointer to the base class
+    const WrongAnimal* wrongCat = new WrongCat(); // wrongCat object created with a pointer to the base class
 
-    std::cout << wrongCat->getType() << " " << std::endl;
+    const WrongCat* wrongCat2 = new WrongCat(); // wrongCat object created with a pointer to the derived class
+
+    std::cout << "WrongCat is type  " << wrongCat->getType() << " " << std::endl;
     wrongCat->makeSound();
-    wrongMeta->makeSound();
+    wrongAnimal->makeSound();
+    wrongCat2->makeSound(); 
 
-    delete wrongMeta;
+    delete wrongAnimal;
     delete wrongCat;
 
     return(0);
 }
+
+/*
+    Base Class Pointer to Base Class Object : Calls the base class's version of the function.
+    Base Class Pointer to Derived Class Object : Calls the base class's version of the function if the function is not virtual.
+    Derived Class Pointer to Derived Class Object : Calls the derived class's version of the function.
+*/
 
 
 /*
@@ -54,6 +63,6 @@ int main()
                       even if they share the same name.
         Virtual functions : Functions in a base class that can be overridden in derived classes.
                             When Called through a base class pointer or reference, the derived class's
-                            versuib if tghe function is executed.
+                            version of the function is called.
         
 */

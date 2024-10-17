@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:49:22 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 12:02:52 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 10:56:05 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "Animal.hpp"
 
-class Cat : public Animal 
+class Cat : public Animal // Cat class inherits from Animal class
 {
     public:
        Cat();

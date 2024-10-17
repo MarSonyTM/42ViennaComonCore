@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:28:33 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 12:00:27 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 10:53:45 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@
 class Animal
 {
     protected:
-      std::string type;
+      std::string type; // for the type to be accessible by derived classes like Dog and Cat in our examples, needs to be protected.
 
-    public:
+    public:              // canonical form 
        Animal();
        Animal(Animal const &copy);
        Animal &operator = (Animal const &copy);
        virtual ~Animal();
 
-    virtual void makeSound() const;
-    std::string getType() const;
+    virtual void makeSound() const; // virtual function to be overridden by derived classes like Dog and Cat in our examples.
+    std::string getType() const;    // getter for the type attribute.
 };
 
 #endif

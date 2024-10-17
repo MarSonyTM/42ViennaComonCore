@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:28:33 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 14:05:46 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/17 11:54:37 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ class AAnimal
        AAnimal &operator = (AAnimal const &copy);
        virtual ~AAnimal();
 
-    virtual void makeSound() const = 0; // Pure virtual function
-    std::string getType() const;
+    virtual void makeSound() const = 0; // Pure virtual function that makes the class abstract
+    std::string getType() const;        // and cannot be instantiated directly.
 };
 
 #endif
@@ -36,6 +36,6 @@ class AAnimal
 
 /*
         This is the base class with a protected attribute type
-        and a virtual function makeSounds(). The makeSound() function
-        is meant to be overridden by derived classe like Dog and Cat in our examples.
+        and a virtual function makeSounds().
+        The class is abstract due to the pure virtual function makeSound.
 */

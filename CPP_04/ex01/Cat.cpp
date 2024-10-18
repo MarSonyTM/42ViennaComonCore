@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:54:50 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/17 11:47:50 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 09:53:21 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ Cat::Cat() : Animal(), brain(new Brain())
     std::cout << "Cat constructor called" << std::endl;
 }
 
-Cat::Cat(const Cat &copy) : Animal(copy), brain(new Brain(*copy.brain))
+Cat::Cat(const Cat &copy) : Animal(copy), brain(new Brain(*copy.brain)) // deep copy of the brain
 {
     std::cout << "Cat copy constructor called" << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:44:36 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 13:05:08 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 09:53:15 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ Dog::Dog() : Animal(), brain(new Brain())
     std::cout << "Dog constructor called" << std::endl;
 }
 
-Dog::Dog(const Dog &copy) : Animal(copy), brain(new Brain(*copy.brain))
+Dog::Dog(const Dog &copy) : Animal(copy), brain(new Brain(*copy.brain)) // deep copy of the brain
 {
     std::cout << "Dog copy constructor called" << std::endl;
 }

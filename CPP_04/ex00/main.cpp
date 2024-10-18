@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:20:19 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/17 11:38:31 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 09:47:40 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int main()
 
     delete wrongAnimal;
     delete wrongCat;
+    delete wrongCat2;
 
     return(0);
 }

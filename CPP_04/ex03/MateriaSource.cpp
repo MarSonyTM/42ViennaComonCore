@@ -6,11 +6,11 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:13:12 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 14:15:08 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:18:06 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
- #include "MateriaSource.hpp"
+#include "MateriaSource.hpp"
 #include "AMateria.hpp"
 
 MateriaSource::MateriaSource()
@@ -23,15 +23,15 @@ MateriaSource::MateriaSource()
 
 MateriaSource::MateriaSource(const MateriaSource &other)
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; ++i) 
     {
-        if (other.templates[i])
+        if (other.templates[i]) // if the slot is not empty
         {
-            templates[i] = other.templates[i]->clone();
+            templates[i] = other.templates[i]->clone(); // deep copy the materia
         }
         else
         {
-            templates[i] = NULL;
+            templates[i] = NULL; // if the slot is empty
         }
     }
 }

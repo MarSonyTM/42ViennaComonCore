@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:20:19 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 11:57:36 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 16:13:09 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Animal.hpp"
+#include "AAnimal.hpp"
 #include "Cat.hpp"
 #include "Dog.hpp"
 
@@ -35,6 +35,10 @@ int main()
     
     return(0);
 }
+
+/*
+        Array of Pointers can ve declared because it holds pointers to objects of derived classes that implement the pure virtual function makeSound.
+*/
 
 /*
         The AAnimal class is now abstract due to the pure virtual function makeSound.

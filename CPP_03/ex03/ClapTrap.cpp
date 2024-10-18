@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClapTrap.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 12:19:44 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/17 12:53:39 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:58:09 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ ClapTrap::~ClapTrap()
 // Function simulates an attack on target by decreasing energy points and printing a message
 void ClapTrap::attack(const std::string& target)        
 {
-    
     if (_energyPoints <= 0)
     {
         std::cout << "ClapTrap" << _name << " is trying to hit but has no energy points left , can't attack !" << std::endl;

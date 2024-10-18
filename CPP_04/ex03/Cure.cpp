@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:11:00 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 11:25:00 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:45:59 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ Cure::~Cure()
 
 AMateria* Cure::clone() const
 {
-    return (new Cure(*this));
+    return (new Cure(*this)); // deep copy of the object
 }
 
-void Cure::use(ICharacter &target)
+void Cure::use(ICharacter &target)   // Uses the materia on the target
 {
     std::cout << "* heals " << target.getName() << "'s wounds *" << std::endl;
 }

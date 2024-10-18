@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:36 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 11:25:34 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 12:25:23 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ Ice::~Ice()
 
 AMateria* Ice::clone() const
 {
-    return (new Ice(*this));
+    return (new Ice(*this));  // deep copy of the object
 }
 
 void Ice::use(ICharacter &target)

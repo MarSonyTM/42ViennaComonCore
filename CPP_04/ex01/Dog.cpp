@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:44:36 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 09:53:15 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 11:45:45 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "Animal.hpp"
 #include "Brain.hpp"
 
-Dog::Dog() : Animal(), brain(new Brain())
+Dog::Dog() : Animal(), brain(new Brain()) // create a new brain
 {
     type = "Dog";
     std::cout << "Dog constructor called" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:49:22 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 13:10:53 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 11:43:26 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 class Cat : public Animal 
 {
     private:
-        Brain* brain;
+        Brain* brain; // pointer to a brain object
 
     public:
        Cat();

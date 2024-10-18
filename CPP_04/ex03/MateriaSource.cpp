@@ -6,11 +6,12 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:13:12 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 11:27:14 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:53:24 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
  #include "MateriaSource.hpp"
+#include "AMateria.hpp"
 
 MateriaSource::MateriaSource()
 {
@@ -69,26 +70,26 @@ MateriaSource::~MateriaSource()
     }
 }
 
-void MateriaSource::learnMateria(AMateria* m)
-{
+void MateriaSource::learnMateria(AMateria* m)    // this is a function is used to add a new materia to the MateriaSource
+{                                               // by adding a new AMateria object to the templates array that can store up to 4 AMateria objects
     for (int i = 0; i < 4; ++i)
     {
-        if (!templates[i])
+        if (!templates[i]) // if the slot is empty
         {
-            templates[i] = m;
+            templates[i] = m; // add the materia
             break;
         }
     }
 }
 
-AMateria* MateriaSource::createMateria(std::string const & type)
+AMateria* MateriaSource::createMateria(std::string const & type)  // this function is used to create a new materia of the given type
 {
     for (int i = 0; i < 4; ++i)
-    {
-        if (templates[i] && templates[i]->getType() == type)
+    {  // loop through the templates array
+        if (templates[i] && templates[i]->getType() == type) // if the materia is found
         {
-            return templates[i]->clone();
+            return templates[i]->clone(); // return a deep copy of the materia
         }
     }
-    return (NULL);
+    return (NULL); // if the materia is not found return NULL
 }

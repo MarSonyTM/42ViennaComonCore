@@ -6,13 +6,13 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:35:17 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 09:40:31 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 11:32:52 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Animal.hpp"
 
-Animal::Animal() : type("Animal") 
+Animal::Animal() : type("Animal")
 {
     std::cout << "Animal default constructor called" << std::endl;
 }

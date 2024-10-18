@@ -6,13 +6,13 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:54:50 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 09:53:21 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 11:45:40 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cat.hpp"
 
-Cat::Cat() : Animal(), brain(new Brain())
+Cat::Cat() : Animal(), brain(new Brain()) // create a new brain
 {
     type = "Cat";
     std::cout << "Cat constructor called" << std::endl;

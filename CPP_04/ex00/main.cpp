@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:20:19 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 09:47:40 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 11:36:30 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int main()
 
 
 /*
-        Inheritance: Allows a class to inherit propertie and behaviors from another class.
+        Inheritance: Allows a class to inherit properties and behaviors from another class.
         Polymorphism: Enables methods to do different things bases on the object they are acting upon,
                       even if they share the same name.
         Virtual functions : Functions in a base class that can be overridden in derived classes.

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:13:12 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 13:53:24 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:15:08 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,11 @@ void MateriaSource::learnMateria(AMateria* m)    // this is a function is used t
         {
             templates[i] = m; // add the materia
             break;
-        }
+        }                                
     }
 }
 
-AMateria* MateriaSource::createMateria(std::string const & type)  // this function is used to create a new materia of the given type
+AMateria* MateriaSource::createMateria(std::string const & type)  // this function is used to create a new materia based of the type passed as an argument
 {
     for (int i = 0; i < 4; ++i)
     {  // loop through the templates array

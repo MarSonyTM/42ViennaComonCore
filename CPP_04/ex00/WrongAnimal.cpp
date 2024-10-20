@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   WrongAnimal.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:03:14 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/15 12:13:20 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/20 18:29:29 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ WrongAnimal &WrongAnimal::operator = (const WrongAnimal &copy)
 
 WrongAnimal::~WrongAnimal()
 {
-    std::cout << "WrongAnimal destructor called" << std::endl;
+    std::cout << getType() << "make sound" << std::endl;
 }
 std::string WrongAnimal::getType() const
 {

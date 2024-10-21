@@ -6,11 +6,12 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:11:00 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 13:45:59 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/21 10:10:59 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cure.hpp"
+#include "ICharacter.hpp"
 #include <iostream>
 
 Cure::Cure() : AMateria("cure")
@@ -25,9 +26,9 @@ Cure::Cure(const Cure &other) : AMateria(other)
 
 Cure& Cure::operator=(const Cure &other)
 {
-    if (this != &other) {
-        // Do not copy the type
-        // Copy other relevant state if any
+    if (this != &other) 
+    {
+      AMateria::operator = (other);
     }
     std::cout << "Cure copy assignment operator called" << std::endl;
     return *this;

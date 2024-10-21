@@ -6,11 +6,12 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:10:36 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/21 10:08:46 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/21 10:10:29 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Ice.hpp"
+#include "ICharacter.hpp"
 #include <iostream>
 
 Ice::Ice() : AMateria("ice")
@@ -27,8 +28,7 @@ Ice& Ice::operator=(const Ice &other)
 {
     if (this != &other)
     {
-        // Do not copy the type
-        // Copy other relevant state if any
+        AMateria::operator=(other);
     }
     std::cout << "Ice copy assignment operator called" << std::endl;
     return (*this);

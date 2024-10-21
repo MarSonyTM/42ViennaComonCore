@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:20:19 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 11:36:30 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/21 09:07:02 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int main()
     std::cout << "--------------------------" << std::endl;
 
     const WrongAnimal* wrongAnimal = new WrongAnimal(); // wrongAnimal object created with a pointer to the base class
-    const WrongAnimal* wrongCat = new WrongCat(); // wrongCat object created with a pointer to the base class
+    const WrongAnimal* wrongCat = new WrongCat(); // wrongCat object created with a pointer to the derived class
 
     const WrongCat* wrongCat2 = new WrongCat(); // wrongCat object created with a pointer to the derived class
 

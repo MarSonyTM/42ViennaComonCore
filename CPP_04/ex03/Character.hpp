@@ -6,12 +6,12 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:09:28 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 13:37:30 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/21 09:49:29 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHARACTER_HPP
-#define CHARACTER_HPP
+# define CHARACTER_HPP
 
 #include "ICharacter.hpp"                       
                                              // Character class implements ICharacter interface and repsresent a character in the game

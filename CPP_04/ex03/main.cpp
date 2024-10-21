@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:13:23 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 14:15:45 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/21 10:00:05 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int main()
     src->learnMateria(new Ice());               // Learn two types of Materia: Ice   adds Ice to the MateriaSource
     src->learnMateria(new Cure());              // and Cure                          adds Cure to the MateriaSource
 
-    ICharacter* me = new Character("me");      // Create a Character object me
+    ICharacter* me = new Character("Cloud");      // Create a Character object me
     AMateria* tmp;      // declare a pointer to AMateria                       
 
     tmp = src->createMateria("ice");          // Create and Equip the Character with the two types of Materia

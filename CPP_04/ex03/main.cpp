@@ -77,7 +77,6 @@
 #include "ICharacter.hpp"
 #include "IMateriaSource.hpp"
 #include "MateriaSource.hpp"
-#include <cstdlib> 
 
 
 void test_00()
@@ -153,15 +152,15 @@ void test_01()
 	std::cout << std::endl;
 
 	// // Deep copy vs its source character
-	// std::cout << "DEEP COPY VS SOURCE:" << std::endl;
-	// std::cout << "-----------------------" << std::endl;
-	// charles->unequip(0); // this shows that they have different materia pointers equipped
-	// // charles_copy->unequip(1); //this will produce a leak if we don't store the address somewhere else before
-	// tmp = src->createMateria("cure");
-	// charles_copy->equip(tmp);
-	// tmp = src->createMateria("ice");
-	// charles_copy->equip(tmp);
-	// std::cout << std::endl;
+	std::cout << "DEEP COPY VS SOURCE:" << std::endl;
+	std::cout << "-----------------------" << std::endl;
+	charles->unequip(0); // this shows that they have different materia pointers equipped
+	// charles_copy->unequip(1); //this will produce a leak if we don't store the address somewhere else before
+	tmp = src->createMateria("cure");
+	charles_copy->equip(tmp);
+	tmp = src->createMateria("ice");
+	charles_copy->equip(tmp);
+	std::cout << std::endl;
 
 	charles->use(0, *bob);
 	charles->use(1, *bob);
@@ -199,25 +198,25 @@ void test_01()
 
 void test_02()
 {
-	// {
-	// 	IMateriaSource* src = new MateriaSource();
-	// 	src->learnMateria(new Ice());
-	// 	src->learnMateria(new Cure());
-	// 	ICharacter* me = new Character("me");
-	// 	AMateria* tmp;
-	// 	tmp = src->createMateria("ice");
-	// 	me->equip(tmp);
-	// 	tmp = src->createMateria("cure");
-	// 	me->equip(tmp);
-	// 	ICharacter* bob = new Character("bob");
-	// 	me->use(0, *bob);
-	// 	me->use(1, *bob);
-	// 	std::cout << std::endl;
+	{
+		IMateriaSource* src = new MateriaSource();
+		src->learnMateria(new Ice());
+		src->learnMateria(new Cure());
+		ICharacter* me = new Character("me");
+		AMateria* tmp;
+		tmp = src->createMateria("ice");
+		me->equip(tmp);
+		tmp = src->createMateria("cure");
+		me->equip(tmp);
+		ICharacter* bob = new Character("bob");
+		me->use(0, *bob);
+		me->use(1, *bob);
+		std::cout << std::endl;
 
-	// 	delete bob;
-	// 	delete me;
-	// 	delete src;
-	// }
+		delete bob;
+		delete me;
+		delete src;
+	}
 	{
 		std::cout << "1. Create new MateriaSource and learn materias (check maximum too):" << std::endl;
 		IMateriaSource* src = new MateriaSource();
@@ -813,17 +812,18 @@ int main()
     std::cout << "-----------test_07_thomas----------" << std::endl;
 	test_07_thomas();
     std::cout << "-----------test_08_thomas----------" << std::endl;
-	test_08_thomas(); // segfault
+	test_08_thomas();
     std::cout<< "-----------test_09----------" << std::endl;
 	test_09();
     std::cout << "-----------test_10----------" << std::endl;
     test_10();
     std::cout << "-----------test_11----------" << std::endl;
-	test_11(); // segfault
+	test_11();
 	std::cout << "-----------test_12----------" << std::endl;
     test_12();
     std::cout << "-----------test_13----------" << std::endl;
-    test_13(); // segfault
+    test_13();
+	
 	for (int i = 0; i < 1000; ++i) 
 	{
 		delete Character::deleteMateria[i];

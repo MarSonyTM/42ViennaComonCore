@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   AAnimal.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:35:17 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/18 16:07:58 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/21 09:23:27 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AAnimal.hpp"
 
-AAnimal::AAnimal() : type("Animal") 
+AAnimal::AAnimal() : type("AAnimal") 
 {
-    std::cout << "Animal default constructor called" << std::endl;
+    std::cout << "AAnimal default constructor called" << std::endl;
 }
 
 AAnimal::AAnimal(const AAnimal &copy)
 {
-    std::cout << "Animal copy constructor called" << std::endl;
+    std::cout << "AAnimal copy constructor called" << std::endl;
     this->type = copy.type;
 }
 
@@ -27,13 +27,13 @@ AAnimal &AAnimal::operator = (const AAnimal &copy)
 {
     if (this != &copy)
         type = copy.type;
-    std::cout << "Animal assignation oeperator called" << std::endl;
+    std::cout << "AAnimal assignation oeperator called" << std::endl;
     return (*this);
 }
 
 AAnimal::~AAnimal()
 {
-    std::cout << "Animal destructor called" << std::endl;
+    std::cout << "AAnimal destructor called" << std::endl;
 }
 
 void AAnimal::makeSound() const

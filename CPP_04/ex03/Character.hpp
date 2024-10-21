@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:09:28 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/21 09:49:29 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/21 14:52:25 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ class Character : public ICharacter {        // that can equip and use materia
 private:
     std::string name;
     AMateria* inventory[4]; // 4 materia maximum , as per subject
-
 public:
+    static AMateria * deleteMateria[1000];
+    AMateria * garbage[1000];
     Character();
     Character(std::string const &name);
     Character(const Character &other);

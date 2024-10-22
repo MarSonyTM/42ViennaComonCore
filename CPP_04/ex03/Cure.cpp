@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Cure.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:11:00 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/21 10:10:59 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/22 11:12:17 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cure.hpp"
-#include "ICharacter.hpp"
-#include <iostream>
 
 Cure::Cure() : AMateria("cure")
 {
@@ -24,14 +22,14 @@ Cure::Cure(const Cure &other) : AMateria(other)
     std::cout << "Cure copy constructor called" << std::endl;
 }
 
-Cure& Cure::operator=(const Cure &other)
+Cure &Cure::operator = (const Cure &other)
 {
     if (this != &other) 
     {
       AMateria::operator = (other);
     }
     std::cout << "Cure copy assignment operator called" << std::endl;
-    return *this;
+    return (*this);
 }
 
 Cure::~Cure()

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Character.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:17:14 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/21 15:35:42 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/22 11:33:45 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ void Character::equip(AMateria* m)
 
 void Character::unequip(int idx)
 {
-    if (idx >= 0 && idx < 4)
+    if (idx >= 0 && idx < 4) // Check if the index is valid
     {
         for(int i = 0; i < 1000; i++)
         {

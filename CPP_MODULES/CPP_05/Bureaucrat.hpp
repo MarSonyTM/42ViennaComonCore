@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 11:45:18 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/22 12:25:25 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/22 12:44:55 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ class Bureaucrat {
     
     public:
         Bureaucrat(std::string const &name, int grade);
-        
+        Bureaucrat(Bureaucrat const &other);
+        Bureaucrat &operator = (Bureaucrat const &other);
+        ~Bureaucrat();
           
 };

@@ -6,12 +6,12 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 11:11:25 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/21 09:28:57 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:14:08 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef IMATERIASOURCE_HPP
-#define IMATERIASOURCE_HPP
+# define IMATERIASOURCE_HPP
 
 #include "AMateria.hpp"                      // Interface defines the operations for managing and creating materia
 

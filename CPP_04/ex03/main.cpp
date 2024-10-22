@@ -61,7 +61,7 @@
 //             8. Delete the MateriaSource object
 
 
-//     * Interface - A Class with pure virtual functions that define a contract fir the derived classes to implement
+//     * Interface - A Class with pure virtual functions that define a contract for the derived classes to implement
 //                     interface do not provide any implementation
 //     * Abstract class - A class that cannot be instantiated and is used to define the structure of derived classes
 //     * Concrete class - A class that can be instantiated and provides implementation for all the pure virtual functions of the base class
@@ -823,7 +823,7 @@ int main()
     test_12();
     std::cout << "-----------test_13----------" << std::endl;
     test_13();
-	
+
 	for (int i = 0; i < 1000; ++i) 
 	{
 		delete Character::deleteMateria[i];

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dance Studio Management System Architecture</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body>
+    <h1>Dance Studio Management System Architecture</h1>
+
+    <!-- Mermaid Diagram Container -->
+    <div class="mermaid">
+        graph TD
+            A[User Database] --> B[Authentication Service]
+            A --> C[User Management Service]
+            D[Timetable Database] --> E[Scheduling Service]
+            F[Notification Service]
+            G[API Gateway]
+            H[Web App]
+            I[Mobile App]
+            J[Push Notification Service]
+            K[Email Service]
+            L[SMS Service]
+
+            E -->|Timetable Changes| F
+            F --> J
+            F --> K
+            F --> L
+            G --> B
+            G --> C
+            G --> E
+            G --> F
+            H --> G
+            I --> G
+            B --> H
+    </div>
+</body>
+</html>

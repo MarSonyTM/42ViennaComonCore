@@ -5,27 +5,42 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 11:45:18 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/22 12:44:55 by mafurnic         ###   ########.fr       */
+/*   Created: 2024/10/29 09:04:21 by mafurnic          #+#    #+#             */
+/*   Updated: 2024/10/29 09:59:37 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#pragma once 
 
 #include <string>
 #include <iostream>
-#include <stdexcept>
+
 
 class Bureaucrat {
-    
     private:
-        std::string const _name;
-        int _grade;
+            std::string const _name;
+            int _grade;
     
     public:
         Bureaucrat(std::string const &name, int grade);
         Bureaucrat(Bureaucrat const &other);
-        Bureaucrat &operator = (Bureaucrat const &other);
+        Bureaucrat &operator=(Bureaucrat const &other);
         ~Bureaucrat();
-          
+
+        std::string const &getName() const;
+        int     getGrade() const;
+        void    incrementGrade();
+        void    decrementGrade();
+        
+        class GradeTooHighException : public std::exception {     
+            public:
+                    virtual const char* what() const throw();
+        };
+
+        class GradeTooLowException : public std::exception {                                                                   
+            public:
+                    virtual const char * what() const throw();
+        };  
 };
+    
+std::ostream &operator<<(std::ostream &out, Bureaucrat const &bureucrat);

@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 12:42:07 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/29 13:00:41 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/29 13:26:08 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,7 @@ int Form::getGradeToExecute() const
 {
     return (_gradeToExecute);
 }
+
+void Form::beSigned(Bureaucrat cosnt &burea)
 
  

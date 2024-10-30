@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bureaucrat.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 09:04:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/29 10:18:02 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/29 17:33:14 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #include <string>
 #include <iostream>
-
 
 class Bureaucrat {
     private:
@@ -42,5 +41,5 @@ class Bureaucrat {
                     virtual const char * what() const throw();
         };  
 };
-    
+
 std::ostream &operator<<(std::ostream &out, Bureaucrat const &bureucrat);

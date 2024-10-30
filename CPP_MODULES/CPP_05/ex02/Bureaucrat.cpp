@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Bureaucrat.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 09:13:45 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/29 17:32:16 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/29 14:20:37 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 Bureaucrat::Bureaucrat(std::string const &name, int grade) : _name(name), _grade(grade) {
     if (grade < 1)
@@ -60,4 +61,13 @@ const char* Bureaucrat::GradeTooLowException::what() const throw() {
 std::ostream &operator<<(std::ostream &out, Bureaucrat const &bureaucrat) {
     out << bureaucrat.getName() << ", the bureaucrat with the grade " << bureaucrat.getGrade();
     return (out);
+}
+
+void Bureaucrat::signForm(Form &form) {
+    try {
+        form.beSigned(*this);
+        std::cout << _name << " signed " << form.getName() << std::endl;
+    } catch (std::exception &e) {
+        std::cout << _name << " couln't sign " << form.getName() << " because " << e.what() << std::endl;
+    }
 }

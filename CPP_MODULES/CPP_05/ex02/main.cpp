@@ -5,33 +5,38 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 09:26:32 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/30 14:40:51 by mafurnic         ###   ########.fr       */
+/*   Created: 2024/10/30 15:48:15 by mafurnic          #+#    #+#             */
+/*   Updated: 2024/10/30 17:05:08 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
-#include "Form.hpp"
+#include "AForm.hpp"
+#include "ShrubberyCreationForm.hpp"
+#include "RobotomyRequestForm.hpp"
+#include "PresidentialPardonForm.hpp"
 
 int main() {
     try {
         Bureaucrat bob("Bob", 2);
-        Form formA("Form A", 1, 1);
-        Form formB("Form B", 3, 3);
+        ShrubberyCreationForm shrubbery("home");
+        RobotomyRequestForm robotomy("Alice");
+        PresidentialPardonForm pardon("Marvin");
 
         std::cout << bob << std::endl;
-        std::cout << formA << std::endl;
-        std::cout << formB << std::endl;
+        std::cout << shrubbery << std::endl;
+        std::cout << robotomy << std::endl;
+        std::cout << pardon << std::endl;
 
-        std::cout << "Bob is attempting to sign forms A and B" << std::endl;
-        bob.signForm(formA);
-        bob.signForm(formB);
+        bob.signForm(shrubbery);
+        bob.signForm(robotomy);
+        bob.signForm(pardon);
 
-        std::cout << formA << std::endl;
-        std::cout << formB << std::endl;   
+        bob.executeForm(shrubbery);
+        bob.executeForm(robotomy);
+        bob.executeForm(pardon);
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
     return (0);
 }
-    

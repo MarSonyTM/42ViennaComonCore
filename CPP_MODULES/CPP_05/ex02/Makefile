@@ -18,7 +18,6 @@ CLEANUP := rm -rf
 
 # Directory Paths
 OBJECTS_PATH := obj/
-INCLUDES := -I inc
 
 # Source and Object Files
 SOURCE_FILES := main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp RobotomyRequestForm.cpp PresidentialPardonForm.cpp 

@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:39:55 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/30 21:02:00 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/30 21:46:18 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ RobotomyRequestForm::RobotomyRequestForm(std::string const &target)
 RobotomyRequestForm::RobotomyRequestForm(RobotomyRequestForm const &other)
     : AForm(other), _target(other._target) {}
 
-RobotomyRequestForm &RobotomyRequestForm::operator=(RobotomyRequestForm const &other) {
+RobotomyRequestForm &RobotomyRequestForm::operator=(RobotomyRequestForm const &other)
+{
     if (this != &other) {
         AForm::operator=(other);
         _target = other._target;
@@ -28,14 +29,8 @@ RobotomyRequestForm &RobotomyRequestForm::operator=(RobotomyRequestForm const &o
 
 RobotomyRequestForm::~RobotomyRequestForm() {}
 
-void RobotomyRequestForm::execute(Bureaucrat const &executor) const {
-    if (!isSigned()) {
-        throw AForm::FormNotSignedException();
-    }
-    if (executor.getGrade() > getGradeToExecute()) {
-        throw AForm::GradeTooLowException();
-    }
-
+void RobotomyRequestForm::performAction() const
+{
     std::cout << "Make some drilling noises..." << std::endl;
     if (std::rand() % 2) {
         std::cout << _target << " has been robotomized successfully!" << std::endl;

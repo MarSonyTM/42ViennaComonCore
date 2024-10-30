@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 12:34:47 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/30 21:21:01 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/30 21:52:25 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 class Bureaucrat;
 
 class AForm {
+    protected:
+            virtual void performAction() const = 0;
     private:
             std::string const _name;
             bool _signed;
@@ -37,7 +39,7 @@ class AForm {
             int  getGradeToExecute() const;
 
             void beSigned(Bureaucrat const &bureaucrat);
-            virtual void execute(Bureaucrat const &executor) const = 0; // pure virtual function to tbe implemented in derived classes
+            void execute(Bureaucrat const &executor) const;                   
 
             class GradeTooHighException : public std::exception {
                 public:

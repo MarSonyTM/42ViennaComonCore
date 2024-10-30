@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:25:06 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/30 20:34:13 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/30 21:44:41 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include "AForm.hpp"
 
 class ShrubberyCreationForm : public AForm {
+    protected:
+        void performAction() const;
     private:
         std::string _target;
     public:

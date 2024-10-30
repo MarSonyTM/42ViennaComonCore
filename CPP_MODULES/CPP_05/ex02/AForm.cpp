@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 12:42:07 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/30 21:08:49 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/30 21:44:19 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,15 @@ std::ostream &operator<<(std::ostream &out, AForm const &form)
     << ", grade to execute: " << form.getGradeToExecute();
 
     return (out);
+}
+
+void AForm::execute(Bureaucrat const &executor) const
+{
+    if (!isSigned())
+        throw FormNotSignedException();
+    if (executor.getGrade() > getGradeToExecute())
+        throw GradeTooLowException();
+    performAction();
 }
 
 

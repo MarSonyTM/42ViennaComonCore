@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 # Project Name and Compiler Settings
-NAME := Bureaucrat2.0
+NAME := Presidential
 COMPILER := c++
 CXXFLAGS := -Wall -Wextra -Werror -std=c++98
 CLEANUP := rm -rf
@@ -21,7 +21,7 @@ OBJECTS_PATH := obj/
 INCLUDES := -I inc
 
 # Source and Object Files
-SOURCE_FILES := main.cpp Bureaucrat.cpp Form.cpp
+SOURCE_FILES := main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp RobotomyRequestForm.cpp PresidentialPardonForm.cpp 
 
 OBJECTS := $(SOURCE_FILES:%.cpp=$(OBJECTS_PATH)%.o)
 

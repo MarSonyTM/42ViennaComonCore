@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 12:34:47 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/30 20:22:59 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/30 21:21:01 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class AForm {
             int  getGradeToExecute() const;
 
             void beSigned(Bureaucrat const &bureaucrat);
-            virtual void execute(Bureaucrat const &executor) const = 0;
+            virtual void execute(Bureaucrat const &executor) const = 0; // pure virtual function to tbe implemented in derived classes
 
             class GradeTooHighException : public std::exception {
                 public:

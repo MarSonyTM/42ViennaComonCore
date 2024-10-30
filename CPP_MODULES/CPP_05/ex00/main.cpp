@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 09:26:32 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/29 17:34:28 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/30 19:47:00 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int main() {
         std::cout << bob << std::endl;
         bob.incrementGrade();
         std::cout << bob << std::endl;
-        bob.incrementGrade();
+        bob.incrementGrade();      // this will throw an exception
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
@@ -28,19 +28,19 @@ int main() {
         std::cout << alice << std::endl;
         alice.decrementGrade();
         std::cout << alice << std::endl;
-        alice.decrementGrade();
+        alice.decrementGrade();    // this will throw an exception
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
         std::cout << " Trying to create a Bureaucrat with a grade too low" <<std::endl;
     try {
-        Bureaucrat invalid("Too Low", 151);
+        Bureaucrat invalid("Too Low", 151); // this will throw an exception
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
         std::cout << " Trying to create a Bureaucrat with a grade too high" <<std::endl;
      try {
-        Bureaucrat invalid("Too High", 0);
+        Bureaucrat invalid("Too High", 0); // this will throw an exception
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }

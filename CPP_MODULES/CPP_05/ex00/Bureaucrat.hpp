@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 09:04:21 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/29 17:33:14 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/30 19:44:59 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,4 @@ class Bureaucrat {
         };  
 };
 
-std::ostream &operator<<(std::ostream &out, Bureaucrat const &bureucrat);
+std::ostream &operator<<(std::ostream &out, Bureaucrat const &bureaucrat);

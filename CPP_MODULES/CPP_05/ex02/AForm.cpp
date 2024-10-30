@@ -6,12 +6,11 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 12:42:07 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/30 19:05:39 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/30 20:23:37 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AForm.hpp"
-#include "Bureaucrat.hpp"
 
 AForm::AForm(std::string const &name, int gradeToSign, int gradeToExecute) 
     : _name(name), _signed(false), _gradeToSign(gradeToSign), _gradeToExecute(gradeToExecute)

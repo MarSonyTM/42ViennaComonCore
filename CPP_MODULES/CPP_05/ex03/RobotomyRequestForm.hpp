@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:39:00 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/31 14:56:42 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 14:56:25 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include "AForm.hpp"
 #include <cstdlib> 
-
+#include <ctime>
 
 class RobotomyRequestForm : public AForm
 {

@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:55:57 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/31 14:15:11 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 15:03:40 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "PresidentialPardonForm.hpp"
 
 int main() {
-    std::srand(std::time(0));
+    std::srand(std::time(0)); 
 
     try {
         Bureaucrat bob("Bob", 3);

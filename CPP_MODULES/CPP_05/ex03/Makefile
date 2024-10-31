@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 # Project Name and Compiler Settings
-NAME := Presidential
+NAME :=  Intern
 COMPILER := c++
 CXXFLAGS := -Wall -Wextra -Werror -std=c++98
 CLEANUP := rm -rf
@@ -20,7 +20,7 @@ CLEANUP := rm -rf
 OBJECTS_PATH := obj/
 
 # Source and Object Files
-SOURCE_FILES := main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp RobotomyRequestForm.cpp PresidentialPardonForm.cpp 
+SOURCE_FILES := main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp RobotomyRequestForm.cpp PresidentialPardonForm.cpp Intern.cpp
 
 OBJECTS := $(SOURCE_FILES:%.cpp=$(OBJECTS_PATH)%.o)
 

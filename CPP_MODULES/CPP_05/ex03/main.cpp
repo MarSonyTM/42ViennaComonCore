@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:23:00 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/31 16:25:48 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 16:43:40 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ int main() {
         }
         std::cout << "Memory management test completed successfully" << std::endl;
     } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr 
+        << e.what() << std::endl;
     }
 
     return (0);

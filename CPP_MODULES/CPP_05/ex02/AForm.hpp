@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 12:34:47 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/31 14:11:39 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 15:55:28 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ class AForm {
             int const _gradeToExecute;
 
     public:
+            AForm();
             AForm(std::string const &name, int _gradeToSign, int _gradeToExecute);
             AForm(AForm const &other);
             AForm &operator=(AForm const &other);

@@ -36,6 +36,8 @@ const char *Intern::FormNotFoundException::what() const throw()
         return ("Form type not found!");
     }
 
+
+// This method creates a form based on the form name and target
 AForm* Intern::makeForm(std::string const &formName, std::string const &target) const 
 {
     // Array of form types and their creation methods
@@ -48,7 +50,7 @@ AForm* Intern::makeForm(std::string const &formName, std::string const &target) 
     // Look for matching form name
     for (int i = 0; i < 3; i++) {
         if (formName == forms[i].name) {
-            AForm* form = (this->*forms[i].creator)(target);
+            AForm* form = (this->*forms[i].creator)(target); // This line calls the appropriate form creation method based on the form name
             std::cout << "Intern creates " << form->getName() << std::endl;
             return form;
         }

@@ -6,12 +6,16 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:48:03 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/30 22:11:40 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 16:02:45 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PresidentialPardonForm.hpp"
 
+PresidentialPardonForm::PresidentialPardonForm()
+    : AForm("PresidentialPardonForm", 25, 5), _target("Default") {}
+
+    
 PresidentialPardonForm::PresidentialPardonForm(std::string const target)
     : AForm("PresidentialPardonForm", 25, 5), _target(target) {}
 

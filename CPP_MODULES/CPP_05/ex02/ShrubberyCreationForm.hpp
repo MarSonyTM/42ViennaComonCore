@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:25:06 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/31 13:50:56 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 15:59:02 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ class ShrubberyCreationForm : public AForm {
     private:
         std::string _target;
     public:
+        ShrubberyCreationForm();
         ShrubberyCreationForm(std::string const &target);
         ShrubberyCreationForm(ShrubberyCreationForm const &copy);
         ShrubberyCreationForm &operator=(ShrubberyCreationForm const &copy);
@@ -28,15 +29,11 @@ class ShrubberyCreationForm : public AForm {
 
         class FileOpenException : public std::exception {
             public:
-                virtual const char* what() const throw() {
-                    return "Could not create shrubbery file";
-                }
+                virtual const char* what() const throw();
         };
 
         class FileWriteException : public std::exception {
             public:
-                virtual const char* what() const throw() {
-                    return "Failed to write to shrubbery file";
-                }
+                virtual const char* what() const throw();
         };
 };

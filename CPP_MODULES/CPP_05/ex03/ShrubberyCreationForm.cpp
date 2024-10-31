@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ShrubberyCreationForm.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:26:16 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/31 16:02:08 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 16:27:55 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ const char *ShrubberyCreationForm::FileWriteException::what() const throw()
 
 void ShrubberyCreationForm::performAction() const
 {
-    std::ofstream ofs(_target + "_shrubbery");
+    std::ofstream ofs((_target + "_shrubbery").c_str());
     if (!ofs.is_open()) {
         throw FileOpenException();
     }

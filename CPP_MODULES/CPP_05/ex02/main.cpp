@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:55:57 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/31 15:03:40 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 15:08:20 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "PresidentialPardonForm.hpp"
 
 int main() {
-    std::srand(std::time(0)); 
+    std::srand(std::time(0));  // ensure random number generation for the robotomy , each time gets a different seed , the random number is different each time the program is run
 
     try {
         Bureaucrat bob("Bob", 3);

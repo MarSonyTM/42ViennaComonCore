@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RobotomyRequestForm.hpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:39:00 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/31 15:58:57 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 16:14:29 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include "AForm.hpp"
 #include <cstdlib> 
+#include <ctime>
 
 
 class RobotomyRequestForm : public AForm

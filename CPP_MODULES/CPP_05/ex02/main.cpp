@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:55:57 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/31 15:08:20 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 16:16:43 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

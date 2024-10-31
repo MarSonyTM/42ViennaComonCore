@@ -6,11 +6,13 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 12:42:07 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/30 19:51:35 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 13:20:02 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Form.hpp"
+
+Form::Form() : _name("Default"), _signed(false), _gradeToSign(150), _gradeToExecute(150) {}
 
 Form::Form(std::string const &name, int gradeToSign, int gradeToExecute) 
     : _name(name), _signed(false), _gradeToSign(gradeToSign), _gradeToExecute(gradeToExecute)
@@ -26,8 +28,9 @@ Form::Form(Form const &other)
 
 Form &Form::operator=(Form const &other)
 {
-    if (this != &other)
+    if (this != &other) {
         _signed = other._signed;
+    }
     return (*this);
 }
 
@@ -55,6 +58,8 @@ int Form::getGradeToExecute() const
 
 void Form::beSigned(Bureaucrat const &bureaucrat)
 {
+    if (_signed)
+        throw FormAlreadySignedException();
     if (bureaucrat.getGrade() > _gradeToSign)
         throw GradeTooLowException();
     _signed = true;
@@ -62,12 +67,12 @@ void Form::beSigned(Bureaucrat const &bureaucrat)
 
 const char* Form::GradeTooHighException::what() const throw()
 {
-    return ("the grade it soo high!");
+    return ("Grade is too high!");
 }
 
 const char* Form::GradeTooLowException::what() const throw()
 {
-    return ("grade is too low!");
+    return ("Grade is too low!");
 }
 
 std::ostream &operator<<(std::ostream &out, Form const &form) 

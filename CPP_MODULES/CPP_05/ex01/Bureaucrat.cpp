@@ -6,12 +6,14 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 09:13:45 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/30 19:55:27 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 13:20:00 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
 #include "Form.hpp"
+
+Bureaucrat::Bureaucrat() : _name("Default"), _grade(150) {}
 
 Bureaucrat::Bureaucrat(std::string const &name, int grade) : _name(name), _grade(grade) {
     if (grade < 1)
@@ -67,7 +69,8 @@ void Bureaucrat::signForm(Form &form) {
     try {
         form.beSigned(*this);
         std::cout << _name << " signed " << form.getName() << std::endl;
-    } catch (std::exception &e) {
-        std::cout << _name << " couldn't sign " << form.getName() << " because " << e.what() << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << _name << " couldn't sign " << form.getName() 
+                 << " because " << e.what() << std::endl;
     }
 }

@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 12:42:07 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/30 21:44:19 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 14:14:44 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int AForm::getGradeToExecute() const
 
 void AForm::beSigned(Bureaucrat const &bureaucrat)
 {
+    if (isSigned())
+        throw FormAlreadySignedException();
     if (bureaucrat.getGrade() > _gradeToSign)
         throw GradeTooLowException();
     _signed = true;
@@ -70,9 +72,14 @@ const char* AForm::GradeTooLowException::what() const throw()
     return ("grade is too low!");
 }
 
+const char* AForm::FormAlreadySignedException::what() const throw()
+{
+    return ("form is already signed!");
+}
+
 const char* AForm::FormNotSignedException::what() const throw()
 {
-    return ("Form is not signed!");
+    return ("form is not signed!");
 }
 
 std::ostream &operator<<(std::ostream &out, AForm const &form) 
@@ -86,10 +93,10 @@ std::ostream &operator<<(std::ostream &out, AForm const &form)
 
 void AForm::execute(Bureaucrat const &executor) const
 {
-    if (!isSigned())
-        throw FormNotSignedException();
     if (executor.getGrade() > getGradeToExecute())
         throw GradeTooLowException();
+    if (!isSigned())
+        throw FormNotSignedException();
     performAction();
 }
 

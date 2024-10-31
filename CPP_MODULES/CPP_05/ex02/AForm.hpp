@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 12:34:47 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/30 21:52:25 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 14:11:39 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,12 @@ class AForm {
                 public:
                         virtual const char* what() const throw();
             };
+
+            class FormAlreadySignedException : public std::exception {
+                public:
+                        virtual const char* what() const throw();
+            };
+
 };
 
 std::ostream &operator<<(std::ostream &out, AForm const &form);

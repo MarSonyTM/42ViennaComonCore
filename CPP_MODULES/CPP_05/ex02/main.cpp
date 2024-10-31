@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 20:55:57 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/10/30 22:10:46 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/10/31 14:15:11 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "PresidentialPardonForm.hpp"
 
 int main() {
+    std::srand(std::time(0));
+
     try {
         Bureaucrat bob("Bob", 3);
         ShrubberyCreationForm formA("home");
@@ -195,14 +197,16 @@ int main() {
     // Test grade boundary conditions
     std::cout << "\n=== Grade Boundary Tests ===\n" << std::endl;
     try {
-        Bureaucrat exactGrade("ExactGrade", 25);  // Exact grade for some form
+        Bureaucrat exactGrade("ExactGrade", 45);  // Exact grade needed to execute RobotomyRequestForm
         RobotomyRequestForm robotForm("Test");
         
         std::cout << "Testing with exact required grade:" << std::endl;
-        exactGrade.signForm(robotForm);
+        // Need someone with grade 72 or better to sign it first
+        Bureaucrat signer("Signer", 72);
+        signer.signForm(robotForm);
         exactGrade.executeForm(robotForm);
 
-        Bureaucrat oneOff("OneOff", 26);  // One grade too low
+        Bureaucrat oneOff("OneOff", 46);  // One grade too low to execute
         std::cout << "\nTesting with one grade too low:" << std::endl;
         oneOff.executeForm(robotForm);
     } catch (std::exception &e) {

@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 16:23:00 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/10/31 16:23:14 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:25:48 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Intern.hpp"
 #include <string>
 #include <iostream>
+#include <sstream>
 
 int main() {
     std::cout << "\n=== Basic Form Creation Tests ===\n" << std::endl;
@@ -40,7 +41,9 @@ int main() {
         Intern intern;
         // Create and immediately delete forms
         for (int i = 0; i < 3; i++) {
-            AForm* form = intern.makeForm("robotomy request", "Test Subject " + std::to_string(i));
+            std::stringstream ss;
+            ss << "Test Subject " << i;
+            AForm* form = intern.makeForm("robotomy request", ss.str());
             delete form;
         }
         std::cout << "Memory management test completed successfully" << std::endl;

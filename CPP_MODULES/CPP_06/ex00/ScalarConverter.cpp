@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 12:10:37 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 17:06:07 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/05 17:55:54 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void ScalarConverter::convert(const std::string &literal) {
         return;
     }
 
-    // Modify output formatting for better precision
+    // Modifying the  output formatting for better precision
     std::cout.precision(1);
     std::cout << std::fixed;
 

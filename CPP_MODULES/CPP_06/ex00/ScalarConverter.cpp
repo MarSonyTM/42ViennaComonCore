@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ScalarConverter.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 12:10:37 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 12:50:32 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:06:07 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,34 @@ ScalarConverter &ScalarConverter::operator=(const ScalarConverter &) { return *t
 ScalarConverter::~ScalarConverter() {}
 
 void ScalarConverter::convert(const std::string &literal) {
+    // Initialize variables to store the converted values
     char charValue;
     int intValue;
     float floatValue;
     double doubleValue;
+
+    // special literal handling
+    if (literal == "nan" || literal == "nanf") {
+        std::cout << "char: impossible" << std::endl;
+        std::cout << "int: impossible" << std::endl;
+        std::cout << "float: nanf" << std::endl;
+        std::cout << "double: nan" << std::endl;
+        return;
+    }
+    if (literal == "+inf" || literal == "+inff") {
+        std::cout << "char: impossible" << std::endl;
+        std::cout << "int: impossible" << std::endl;
+        std::cout << "float: +inff" << std::endl;
+        std::cout << "double: +inf" << std::endl;
+        return;
+    }
+    if (literal == "-inf" || literal == "-inff") {
+        std::cout << "char: impossible" << std::endl;
+        std::cout << "int: impossible" << std::endl;
+        std::cout << "float: -inff" << std::endl;
+        std::cout << "double: -inf" << std::endl;
+        return;
+    }
 
     // Detect the type and convert
     try {
@@ -70,13 +94,21 @@ void ScalarConverter::convert(const std::string &literal) {
         return;
     }
 
+    // Modify output formatting for better precision
+    std::cout.precision(1);
+    std::cout << std::fixed;
+
+    // overflow checking for int
+    if (doubleValue > INT_MAX || doubleValue < INT_MIN)
+        std::cout << "int: impossible" << std::endl;
+    else
+        std::cout << "int: " << intValue << std::endl;
+
     // Display results
     if (isprint(charValue))
         std::cout << "char: '" << charValue << "'" << std::endl;
     else
         std::cout << "char: Non displayable" << std::endl;
-
-    std::cout << "int: " << intValue << std::endl;
 
     if (std::isnan(floatValue) || std::isinf(floatValue))
         std::cout << "float: " << floatValue << "f" << std::endl;

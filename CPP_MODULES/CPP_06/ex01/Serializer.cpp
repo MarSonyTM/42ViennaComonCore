@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Serializer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:08:58 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 13:18:38 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:27:26 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ Serializer::Serializer(const Serializer &) {}
 Serializer &Serializer::operator=(const Serializer &) { return *this; }
 Serializer::~Serializer() {}
 
-unsigned long Serializer::serialize(Data* ptr) {
-    return reinterpret_cast<unsigned long>(ptr);
+uintptr_t Serializer::serialize(Data* ptr) {
+    return reinterpret_cast<uintptr_t>(ptr);  // reinterpret_cast is used to convert a pointer to an integer type
 }
 
-Data* Serializer::deserialize(unsigned long raw) {
-    return reinterpret_cast<Data*>(raw);
-}
+Data* Serializer::deserialize(uintptr_t raw) {
+    return reinterpret_cast<Data*>(raw);      // reinterpret_cast iks used to convert an integer type to a pointer
+} 

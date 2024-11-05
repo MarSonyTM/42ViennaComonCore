@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Serializer.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:05:43 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 13:18:59 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:19:14 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <string>
+#include <stdint.h> // For uintptr_t
 
 struct Data {
     int value;
@@ -28,6 +29,6 @@ class Serializer {
         ~Serializer();
 
     public:
-        static unsigned long serialize(Data* ptr);
-        static Data* deserialize(unsigned long raw);
+        static uintptr_t serialize(Data* ptr);
+        static Data* deserialize(uintptr_t raw);
 };

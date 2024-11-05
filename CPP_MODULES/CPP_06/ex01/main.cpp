@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:16:03 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 17:27:25 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/05 17:28:29 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,4 @@ int main() {
    Using reinterpret_cast instead of serialize and deserialize is not recommended because it is less safe and can lead to undefined behavior.
    The serialize and deserialize functions are more explicit and safer than reinterpret_cast.
    
-*/k
+*/

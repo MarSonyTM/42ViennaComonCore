@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 13:18:22 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/06 13:18:23 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 13:33:42 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ Base* generate(void) {
 }
 
 void identify(Base* p) {
+    if (!p) {
+        std::cout << "NULL pointer" << std::endl;
+        return;
+    }
     if (dynamic_cast<A*>(p))
         std::cout << "A" << std::endl;
     else if (dynamic_cast<B*>(p))

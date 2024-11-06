@@ -6,7 +6,7 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 13:18:22 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/06 15:52:47 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:03:06 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <cstdlib>  // For rand()
 #include <ctime>    // For time()
 #include <iostream>
+#include <typeinfo>  // For typeid
+
 
 Base::~Base() {}
 

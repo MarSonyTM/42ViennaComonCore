@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ScalarConverter.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 12:10:37 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 17:55:54 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 15:07:28 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@ ScalarConverter &ScalarConverter::operator=(const ScalarConverter &) { return *t
 ScalarConverter::~ScalarConverter() {}
 
 void ScalarConverter::convert(const std::string &literal) {
-    // Initialize variables to store the converted values
     char charValue;
     int intValue;
     float floatValue;
     double doubleValue;
 
-    // special literal handling
+    // Special literal handling
     if (literal == "nan" || literal == "nanf") {
         std::cout << "char: impossible" << std::endl;
         std::cout << "int: impossible" << std::endl;
@@ -60,6 +59,9 @@ void ScalarConverter::convert(const std::string &literal) {
             char *end;
             long tempInt = std::strtol(literal.c_str(), &end, 10);
             if (*end == '\0') {
+                if (tempInt > INT_MAX || tempInt < INT_MIN) {
+                    throw std::out_of_range("Integer overflow");
+                }
                 intValue = static_cast<int>(tempInt);
                 charValue = static_cast<char>(intValue);
                 floatValue = static_cast<float>(intValue);
@@ -94,11 +96,11 @@ void ScalarConverter::convert(const std::string &literal) {
         return;
     }
 
-    // Modifying the  output formatting for better precision
+    // Modifying the output formatting for better precision
     std::cout.precision(1);
     std::cout << std::fixed;
 
-    // overflow checking for int
+    // Overflow checking for int
     if (doubleValue > INT_MAX || doubleValue < INT_MIN)
         std::cout << "int: impossible" << std::endl;
     else

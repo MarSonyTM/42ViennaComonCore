@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Base.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 13:18:22 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/06 13:53:39 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 15:52:47 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ Base* generate(void) {
     }
 }
 
+// This function uses dynamic_cast to identify the derived class of the Base object
 void identify(Base* p) {
     if (!p) {
         std::cout << "NULL pointer" << std::endl;
@@ -45,6 +46,8 @@ void identify(Base* p) {
         std::cout << "C" << std::endl;
 }
 
+
+// This function uses try-catch blocks to identify the derived class of the Base object
 void identify(Base& p) {
     try {
         (void)dynamic_cast<A&>(p);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Serializer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:08:58 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 17:27:26 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 15:26:39 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,3 +24,5 @@ uintptr_t Serializer::serialize(Data* ptr) {
 Data* Serializer::deserialize(uintptr_t raw) {
     return reinterpret_cast<Data*>(raw);      // reinterpret_cast iks used to convert an integer type to a pointer
 } 
+
+// The Serializer Class provides static methods to serialize and deserialize a pointer.

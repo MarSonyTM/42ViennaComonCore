@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ScalarConverter.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:48:46 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 17:00:38 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 14:05:57 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 class ScalarConverter {
     private:
-    // Private constructors and dextructor make the class non-instantiable
+    // Private constructors and destructor make the class non-instantiable
         ScalarConverter();
         ScalarConverter(const ScalarConverter &);
         ScalarConverter &operator=(const ScalarConverter &);

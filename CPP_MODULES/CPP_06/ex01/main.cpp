@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:16:03 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/06 13:45:28 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 15:37:33 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,7 @@ int main() {
    The pointers match, so the serialization and deserialization were successful.
    Using reinterpret_cast instead of serialize and deserialize is not recommended because it is less safe and can lead to undefined behavior.
    The serialize and deserialize functions are more explicit and safer than reinterpret_cast.
+
+   It allows us to convert a pointer to an integer type and vice versa, and to store as integer values in a file or database.
    
 */

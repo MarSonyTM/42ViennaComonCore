@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Serializer.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:05:43 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 17:19:14 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 15:29:00 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <string>
 #include <stdint.h> // For uintptr_t
 
-struct Data {
+struct Data {      // This Data Structure is used to test the serialization and deserialization of a pointer
     int value;
     std::string name;
 };

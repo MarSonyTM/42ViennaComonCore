@@ -6,36 +6,50 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:16:03 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 17:28:29 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 13:38:37 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Serializer.hpp"
 
 int main() {
+    // Create and initialize data
     Data originalData;
     originalData.value = 42;
     originalData.name = "Test Data";
 
-    std::cout << "Original Data Address: " << &originalData << std::endl;
-    std::cout << "Original Data Value: " << originalData.value << std::endl;
-    std::cout << "Original Data Name: " << originalData.name << std::endl;
+    // Print original values
+    std::cout << "Original Data:" << std::endl;
+    std::cout << "Address: " << &originalData << std::endl;
+    std::cout << "Value: " << originalData.value << std::endl;
+    std::cout << "Name: " << originalData.name << std::endl;
 
-    // Serialize the Data object
+    // Serialize
     uintptr_t raw = Serializer::serialize(&originalData);
-    std::cout << "Serialized Data: " << raw << std::endl;
+    std::cout << "\nSerialized value: " << raw << std::endl;
 
-    // Deserialize back to Data pointer
+    // Deserialize
     Data* deserializedData = Serializer::deserialize(raw);
-    std::cout << "Deserialized Data Address: " << deserializedData << std::endl;
-    std::cout << "Deserialized Data Value: " << deserializedData->value << std::endl;
-    std::cout << "Deserialized Data Name: " << deserializedData->name << std::endl;
 
-    // Verify the pointers match
+    // Print deserialized values
+    std::cout << "\nDeserialized Data:" << std::endl;
+    std::cout << "Address: " << deserializedData << std::endl;
+    std::cout << "Value: " << deserializedData->value << std::endl;
+    std::cout << "Name: " << deserializedData->name << std::endl;
+
+    // Verify
     if (deserializedData == &originalData) {
-        std::cout << "Serialization/Deserialization successful!" << std::endl;
+        std::cout << "\nPointers match - Serialization/Deserialization successful!" << std::endl;
     } else {
-        std::cout << "Serialization/Deserialization failed!" << std::endl;
+        std::cout << "\nPointers don't match - Serialization/Deserialization failed!" << std::endl;
+    }
+
+    // Verify data integrity
+    if (deserializedData->value == originalData.value && 
+        deserializedData->name == originalData.name) {
+        std::cout << "Data integrity verified!" << std::endl;
+    } else {
+        std::cout << "Data integrity check failed!" << std::endl;
     }
 
     return 0;

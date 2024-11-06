@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 12:46:07 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/05 17:17:12 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 13:36:35 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,23 @@ int  main(int argc, char **argv) {
                                 2. it's explicit about what conversion is being done
                                 3. it will generate a compile time error if the literal is not a valid number
                                 4. it's more readable and easier to understand
+
+Test cases to try:
+./convert 0        // Integer
+./convert 42       // Integer
+./convert -42      // Negative integer
+./convert 'a'      // Character
+./convert '*'      // Non-alphanumeric character
+./convert 42.0f    // Float
+./convert 42.42f   // Float with decimals
+./convert 42.0     // Double
+./convert 42.42    // Double with decimals
+./convert nan      // Special literal
+./convert nanf     // Special literal float
+./convert +inf     // Positive infinity
+./convert -inf     // Negative infinity
+./convert +inff    // Positive infinity float
+./convert -inff    // Negative infinity float
+./convert 2147483648  // Integer overflow
+./convert abc      // Invalid input
 */

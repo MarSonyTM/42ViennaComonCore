@@ -6,11 +6,14 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 13:18:22 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/06 13:33:42 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 13:53:39 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Base.hpp"
+#include "A.hpp"
+#include "B.hpp"
+#include "C.hpp"
 #include <cstdlib>  // For rand()
 #include <ctime>    // For time()
 #include <iostream>

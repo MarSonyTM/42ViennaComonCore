@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:16:03 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/06 13:38:37 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/06 13:45:28 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int main() {
 
     return 0;
 }
-
 
 /*
    The objective of this exercise is to understand how to serialize and deserialize a pointer.

@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 13:18:22 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/06 16:50:23 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/13 13:57:45 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 Base::~Base() {}
 
 Base* generate(void) {
-    srand(time(0));  // Seed random number generator
     int random = rand() % 3;  // Generate 0, 1, or 2
 
     switch (random) {

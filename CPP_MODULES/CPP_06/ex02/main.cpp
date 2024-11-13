@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 13:18:34 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/06 15:48:28 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/13 13:58:12 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <iostream>
 
 int main() {
+    srand(time(0));  // Initialize random seed once at program start
     // Test multiple random generations
     std::cout << "Testing multiple random generations:" << std::endl;
     for (int i = 0; i < 5; i++) {

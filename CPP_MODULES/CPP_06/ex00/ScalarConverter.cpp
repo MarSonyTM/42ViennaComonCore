@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ScalarConverter.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 12:10:37 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/06 15:07:28 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:35:07 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,15 @@ void ScalarConverter::convert(const std::string &literal) {
             // Try to convert to int
             char *end;
             long tempInt = std::strtol(literal.c_str(), &end, 10);
-            if (*end == '\0') {
+            
+            if (*end == '\0') {  // If it's an integer
                 if (tempInt > INT_MAX || tempInt < INT_MIN) {
-                    throw std::out_of_range("Integer overflow");
+                    std::cout << "char: impossible" << std::endl;
+                    std::cout << "int: impossible" << std::endl;
+                    std::cout << std::fixed << std::setprecision(0);  // No decimal places for large integers
+                    std::cout << "float: " << static_cast<float>(tempInt) << ".0f" << std::endl;
+                    std::cout << "double: " << static_cast<double>(tempInt) << ".0" << std::endl;
+                    return;
                 }
                 intValue = static_cast<int>(tempInt);
                 charValue = static_cast<char>(intValue);
@@ -96,29 +102,24 @@ void ScalarConverter::convert(const std::string &literal) {
         return;
     }
 
-    // Modifying the output formatting for better precision
-    std::cout.precision(1);
+    // Modify output formatting
+    std::cout.precision(10);
     std::cout << std::fixed;
-
-    // Overflow checking for int
-    if (doubleValue > INT_MAX || doubleValue < INT_MIN)
-        std::cout << "int: impossible" << std::endl;
-    else
-        std::cout << "int: " << intValue << std::endl;
+    std::cout.unsetf(std::ios::scientific);
 
     // Display results
     if (isprint(charValue))
         std::cout << "char: '" << charValue << "'" << std::endl;
+    else if (charValue == 0)
+        std::cout << "char: '\\0'" << std::endl;
     else
-        std::cout << "char: Non displayable" << std::endl;
+        std::cout << "char: Non printable" << std::endl;
 
-    if (std::isnan(floatValue) || std::isinf(floatValue))
-        std::cout << "float: " << floatValue << "f" << std::endl;
-    else
-        std::cout << "float: " << floatValue << "f" << std::endl;
-
-    if (std::isnan(doubleValue) || std::isinf(doubleValue))
-        std::cout << "double: " << doubleValue << std::endl;
-    else
-        std::cout << "double: " << doubleValue << std::endl;
+    std::cout << "int: " << intValue << std::endl;
+    
+    // Handle float output
+    std::cout << "float: " << floatValue << "f" << std::endl;
+    
+    // Handle double output
+    std::cout << "double: " << doubleValue << std::endl;
 }

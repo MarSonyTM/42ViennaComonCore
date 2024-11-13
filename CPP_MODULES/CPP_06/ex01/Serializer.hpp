@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Serializer.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 13:05:43 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/06 15:29:00 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/13 13:04:27 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@ class Serializer {
         ~Serializer();
 
     public:
-        static uintptr_t serialize(Data* ptr);
-        static Data* deserialize(uintptr_t raw);
+        static uintptr_t serialize(Data* ptr); // serialize the pointer to an integer type
+        static Data* deserialize(uintptr_t raw); // deserialize the integer type to a pointer
 };

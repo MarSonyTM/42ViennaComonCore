@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 12:46:07 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/06 13:36:35 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/13 12:25:01 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,21 @@ int  main(int argc, char **argv) {
                                 4. it's more readable and easier to understand
 
 Test cases to try:
-./convert 0        // Integer
-./convert 42       // Integer
-./convert -42      // Negative integer
-./convert 'a'      // Character
-./convert '*'      // Non-alphanumeric character
-./convert 42.0f    // Float
-./convert 42.42f   // Float with decimals
-./convert 42.0     // Double
-./convert 42.42    // Double with decimals
-./convert nan      // Special literal
-./convert nanf     // Special literal float
-./convert +inf     // Positive infinity
-./convert -inf     // Negative infinity
-./convert +inff    // Positive infinity float
-./convert -inff    // Negative infinity float
-./convert 2147483648  // Integer overflow
-./convert abc      // Invalid input
+./scalarconverter 0        // Integer
+./scalarconverter 42       // Integer
+./scalarconverter -42      // Negative integer
+./scalarconverter 'a'      // Character
+./scalarconverter '*'      // Non-alphanumeric character
+./scalarconverter 42.0f    // Float
+./scalarconverter 42.42f   // Float with decimals
+./scalarconverter 42.0     // Double
+./scalarconverter 42.42    // Double with decimals
+./scalarconverter nan      // Special literal
+./scalarconverter nanf     // Special literal float
+./scalarconverter +inf     // Positive infinity
+./scalarconverter -inf     // Negative infinity
+./scalarconverter +inff    // Positive infinity float
+./scalarconverter -inff    // Negative infinity float
+./scalarconverter 2147483648  // Integer overflow
+./scalarconverter abc      // Invalid input
 */

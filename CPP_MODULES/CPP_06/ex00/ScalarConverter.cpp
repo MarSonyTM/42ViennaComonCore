@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 12:10:37 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/13 12:35:07 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/13 12:56:10 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,13 @@ ScalarConverter &ScalarConverter::operator=(const ScalarConverter &) { return *t
 ScalarConverter::~ScalarConverter() {}
 
 void ScalarConverter::convert(const std::string &literal) {
+    // Initialize variables to store the converted values
     char charValue;
     int intValue;
     float floatValue;
     double doubleValue;
 
-    // Special literal handling
+    // Special literal handling (nan, Not a Number)
     if (literal == "nan" || literal == "nanf") {
         std::cout << "char: impossible" << std::endl;
         std::cout << "int: impossible" << std::endl;
@@ -48,14 +49,15 @@ void ScalarConverter::convert(const std::string &literal) {
 
     // Detect the type and convert
     try {
-        // Try to convert to char
+        // Check if input is a single character that is not a digit
         if (literal.length() == 1 && !isdigit(literal[0])) {
             charValue = literal[0];
+            // Convert char to int, float and double using static_cast
             intValue = static_cast<int>(charValue);
             floatValue = static_cast<float>(charValue);
             doubleValue = static_cast<double>(charValue);
         } else {
-            // Try to convert to int
+            // Try integer conversion first
             char *end;
             long tempInt = std::strtol(literal.c_str(), &end, 10);
             

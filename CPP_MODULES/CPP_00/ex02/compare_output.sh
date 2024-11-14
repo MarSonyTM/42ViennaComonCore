@@ -1,4 +1,4 @@
- #!/bin/bash
+#!/bin/bash
 
 # Run the program and redirect output to a file
 ./account > output.log

@@ -6,12 +6,12 @@
 #    By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 09:35:14 by mafurnic          #+#    #+#              #
-#    Updated: 2024/11/14 12:38:38 by mafurnic         ###   ########.fr        #
+#    Updated: 2024/11/15 11:49:13 by mafurnic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Project Name and Compiler Settings
-NAME :=  Identify
+NAME :=  Whatever
 COMPILER := c++
 CXXFLAGS := -Wall -Wextra -Werror -std=c++98
 CLEANUP := rm -rf
@@ -20,7 +20,7 @@ CLEANUP := rm -rf
 OBJECTS_PATH := obj/
 
 # Source and Object Files
-SOURCE_FILES := main.cpp Base.cpp
+SOURCE_FILES := $(wildcard *.cpp)
 
 OBJECTS := $(SOURCE_FILES:%.cpp=$(OBJECTS_PATH)%.o)
 

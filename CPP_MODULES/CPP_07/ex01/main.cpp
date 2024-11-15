@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 12:12:16 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/15 12:27:29 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/15 14:53:26 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ void printInt(int &x) {
 // Function to print a string
 void printString(std::string &str) {
     std::cout << str << std::endl;
+}
+
+// Add this function
+void printConstInt(const int &x) {
+    std::cout << x << std::endl;
 }
 
 int main() {
@@ -51,5 +56,15 @@ int main() {
     iter(strArray, strArrayLength, printString);
     std::cout << std::endl;
 
+    // Add this test:
+    const int constArray[] = {10, 20, 30, 40, 50};
+    std::cout << "Const array test:" << std::endl;
+    iter(constArray, 5, printConstInt);
+
     return 0;
 }
+
+/*
+    The exercise requires creating a template function iter that iterates 
+    through an array and applies a function to each element.
+*/

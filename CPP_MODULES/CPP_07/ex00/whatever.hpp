@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   whatever.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:52:03 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/15 12:00:44 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/15 13:35:46 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

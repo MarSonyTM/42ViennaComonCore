@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+         #
+#    By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/15 12:33:53 by mafurnic          #+#    #+#              #
-#    Updated: 2024/11/15 12:35:55 by mafurnic         ###   ########.fr        #
+#    Updated: 2024/11/15 13:43:12 by marianfurni      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

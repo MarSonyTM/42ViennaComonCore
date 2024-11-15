@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 12:56:15 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/15 13:09:48 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/15 13:44:13 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,41 @@ int main() {
     for (unsigned int i = 0; i < assignedArray.size(); ++i) {
         std::cout << "assignedArray[" << i << "] = " << assignedArray[i] << std::endl;
     }
-    return (0);
+
+    // Test with string array
+    Array<std::string> stringArray(3);
+    stringArray[0] = "Hello";
+    stringArray[1] = "World";
+    stringArray[2] = "!";
+    
+    std::cout << "\nString array test:" << std::endl;
+    for (unsigned int i = 0; i < stringArray.size(); i++) {
+        std::cout << stringArray[i] << " ";
+    }
+    std::cout << std::endl;
+
+    // Test const array access
+    const Array<int> constArray(3);
+    try {
+        std::cout << "\nConst array access test:" << std::endl;
+        std::cout << constArray[0] << std::endl;  // Should work
+        std::cout << constArray[5] << std::endl;  // Should throw
+    } catch (const std::exception& e) {
+        std::cout << "Exception caught: " << e.what() << std::endl;
+    }
+
+    // Test deep copy
+    Array<int> original(3);
+    original[0] = 1;
+    original[1] = 2;
+    original[2] = 3;
+    
+    Array<int> copy = original;
+    copy[0] = 100;  // Modify copy
+    
+    std::cout << "\nDeep copy test:" << std::endl;
+    std::cout << "Original[0]: " << original[0] << std::endl;  // Should still be 1
+    std::cout << "Copy[0]: " << copy[0] << std::endl;         // Should be 100
+
+    return 0;
 }

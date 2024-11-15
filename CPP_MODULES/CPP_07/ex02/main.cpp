@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 12:56:15 by mafurnic          #+#    #+#             */
-/*   Updated: 2024/11/15 13:44:13 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/15 14:07:46 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ int main() {
 
     // Test with string array
     Array<std::string> stringArray(3);
-    stringArray[0] = "Hello";
-    stringArray[1] = "World";
-    stringArray[2] = "!";
+    stringArray[0] = "42";
+    stringArray[1] = "is";
+    stringArray[2] = "Awesome";
     
     std::cout << "\nString array test:" << std::endl;
     for (unsigned int i = 0; i < stringArray.size(); i++) {
@@ -85,5 +85,13 @@ int main() {
     std::cout << "Original[0]: " << original[0] << std::endl;  // Should still be 1
     std::cout << "Copy[0]: " << copy[0] << std::endl;         // Should be 100
 
-    return 0;
+    return (0);
 }
+
+/*
+        This excercise involves creating a class template Array that can store elements
+        of any type and provides various functionalities sush as default construction,
+        construction with a yize parameter, copy construction, asignment, element
+        acces and size retrieval. The goal is to understand how to use templates to 
+        create generic classes in C++.
+*/

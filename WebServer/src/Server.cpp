@@ -428,6 +428,16 @@ std::string Server::handleDELETE(const std::string& path) {
 }
 
 void Server::handleClientData(int client_fd) {
+    // Add timeout for client operations
+    struct timeval timeout;
+    timeout.tv_sec = 5;
+    timeout.tv_usec = 0;
+    setsockopt(client_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+    setsockopt(client_fd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+
+    // Set non-blocking mode for client socket
+    setNonBlocking(client_fd);
+
     char buffer[4096];
     ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
     
@@ -522,6 +532,8 @@ void Server::handleClientData(int client_fd) {
 }
 
 void Server::removeClient(int client_fd) {
+    // Make sure to close socket properly
+    shutdown(client_fd, SHUT_RDWR);
     close(client_fd);
     _client_buffers.erase(client_fd);
     

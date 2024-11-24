@@ -190,10 +190,14 @@ std::string Server::generateDirectoryListing(const std::string& path) {
 }
 
 bool Server::isCGI(const std::string& path) {
-    // Check file extensions for CGI scripts
-    return (path.find(".php") != std::string::npos ||
-            path.find(".py") != std::string::npos ||
-            path.find(".cgi") != std::string::npos);
+    size_t ext_pos = path.find_last_of('.');
+    if (ext_pos == std::string::npos) {
+        return false;
+    }
+    
+    std::string extension = path.substr(ext_pos);
+    std::cout << "Checking CGI for extension: " << extension << std::endl;
+    return extension == ".php";  // Add more extensions if needed
 }
 
 std::string Server::getCGIExecutable(const std::string& path) {
@@ -226,13 +230,28 @@ void Server::setupCGIEnv(const std::string& method,
     setenv("SERVER_SOFTWARE", "WebServ/1.0", 1);
 }
 
-std::string Server::executeCGI(const std::string& path,
-                             const std::string& method,
-                             const std::string& query_string,
-                             const std::string& body) {
-    int input_pipe[2];  // For sending data to CGI
-    int output_pipe[2]; // For receiving data from CGI
+std::string Server::executeCGI(const std::string& path, const std::string& method,
+                              const std::string& query_string, const std::string& body) {
+    std::string cgi_path = _root_dir + path;
+    std::string php_cgi = "/opt/homebrew/bin/php-cgi";  // Updated to your actual PHP-CGI path
     
+    std::cout << "Executing CGI with:" << std::endl;
+    std::cout << "Script path: " << cgi_path << std::endl;
+    std::cout << "PHP-CGI path: " << php_cgi << std::endl;
+    
+    // Set up environment variables
+    setenv("SCRIPT_FILENAME", cgi_path.c_str(), 1);
+    setenv("REQUEST_METHOD", method.c_str(), 1);
+    setenv("QUERY_STRING", query_string.c_str(), 1);
+    setenv("CONTENT_LENGTH", std::to_string(body.length()).c_str(), 1);
+    setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", 1);
+    setenv("REDIRECT_STATUS", "200", 1);
+    setenv("GATEWAY_INTERFACE", "CGI/1.1", 1);
+    setenv("SERVER_PROTOCOL", "HTTP/1.1", 1);
+    setenv("SERVER_SOFTWARE", "WebServ/1.0", 1);
+    
+    // Create pipes for input and output
+    int input_pipe[2], output_pipe[2];
     if (pipe(input_pipe) < 0 || pipe(output_pipe) < 0) {
         throw std::runtime_error("Failed to create pipes");
     }
@@ -242,43 +261,36 @@ std::string Server::executeCGI(const std::string& path,
         throw std::runtime_error("Fork failed");
     }
     
-    if (pid == 0) { // Child process
-        close(input_pipe[1]);  // Close write end
-        close(output_pipe[0]); // Close read end
+    if (pid == 0) {  // Child process
+        close(input_pipe[1]);   // Close write end of input pipe
+        close(output_pipe[0]);  // Close read end of output pipe
         
-        // Redirect stdin/stdout
+        // Redirect stdin to input pipe
         dup2(input_pipe[0], STDIN_FILENO);
+        // Redirect stdout to output pipe
         dup2(output_pipe[1], STDOUT_FILENO);
         
-        // Set up environment variables
-        setupCGIEnv(method, query_string, std::to_string(body.length()));
-        
-        // Get CGI executable
-        std::string cgi_exec = getCGIExecutable(path);
-        if (cgi_exec.empty()) {
-            exit(1);
-        }
-        
-        // Create full path string before converting to c_str()
-        std::string script_path = _root_dir + path;
-        
-        // Execute CGI script
+        // Execute PHP-CGI
         char* const args[] = {
-            const_cast<char*>(cgi_exec.c_str()),
-            const_cast<char*>(script_path.c_str()),
+            const_cast<char*>(php_cgi.c_str()),
+            const_cast<char*>(cgi_path.c_str()),
             NULL
         };
         
-        execv(args[0], args);
-        exit(1); // If execv fails
+        if (execv(php_cgi.c_str(), args) < 0) {
+            std::cerr << "execv failed: " << strerror(errno) << std::endl;
+            exit(1);
+        }
     }
     
     // Parent process
-    close(input_pipe[0]);  // Close read end
-    close(output_pipe[1]); // Close write end
+    close(input_pipe[0]);   // Close read end of input pipe
+    close(output_pipe[1]);  // Close write end of output pipe
     
-    // Send body to CGI script
-    write(input_pipe[1], body.c_str(), body.length());
+    // Write POST data to CGI script
+    if (method == "POST" && !body.empty()) {
+        write(input_pipe[1], body.c_str(), body.length());
+    }
     close(input_pipe[1]);
     
     // Read CGI output
@@ -290,18 +302,18 @@ std::string Server::executeCGI(const std::string& path,
         buffer[bytes_read] = '\0';
         output += buffer;
     }
-    
     close(output_pipe[0]);
     
     // Wait for child process
     int status;
     waitpid(pid, &status, 0);
     
-    if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-        return output;
+    if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
+        std::cerr << "CGI script failed with status " << WEXITSTATUS(status) << std::endl;
+        throw std::runtime_error("CGI script failed with status " + std::to_string(WEXITSTATUS(status)));
     }
     
-    throw std::runtime_error("CGI execution failed");
+    return output;
 }
 
 std::string Server::handleGET(const std::string& path) {
@@ -343,58 +355,48 @@ std::string Server::handleGET(const std::string& path) {
                 return buildResponse(200, getContentType(file_path), content);
             }
         }
-        return buildResponse(404, "text/html", "<h1>404 Not Found</h1>");
+        return buildErrorResponse(404);
     } catch (const std::exception& e) {
         std::cerr << "Error handling GET request: " << e.what() << std::endl;
-        return buildResponse(500, "text/html", "<h1>500 Internal Server Error</h1>");
+        return buildErrorResponse(500);
     }
 }
 
 std::string Server::handlePOST(const std::string& path, const std::string& body) {
-    // Check body size
+    // Check body size first
     if (body.length() > _client_max_body_size) {
-        return buildErrorResponse(413); // Request Entity Too Large
+        std::cout << "Body size exceeded: " << body.length() << " > " << _client_max_body_size << std::endl;
+        return buildErrorResponse(413);
     }
-    
-    if (isCGI(path)) {
-        try {
-            std::string output = executeCGI(path, "POST", "", body);
-            return buildResponse(200, "text/html", output);
-        } catch (const std::exception& e) {
-            std::cerr << "CGI error: " << e.what() << std::endl;
+
+    // For uploads directory
+    if (path.find("/uploads/") == 0) {
+        std::string content_type = getHeader("Content-Type");
+        if (content_type.empty()) {
+            content_type = "text/plain";  // Default content type
+        }
+
+        if (content_type.find("multipart/form-data") != std::string::npos) {
+            // Handle file upload
+            if (handleFileUpload(content_type, body, "uploads")) {
+                return buildResponse(200, "text/plain", "File uploaded successfully");
+            }
+            return buildErrorResponse(500);
+        } else {
+            // Handle plain text POST
+            std::string upload_path = _root_dir + path + "post_data.txt";
+            std::ofstream file(upload_path.c_str());
+            if (file.is_open()) {
+                file << body;
+                file.close();
+                return buildResponse(200, "text/plain", "POST successful");
+            }
             return buildErrorResponse(500);
         }
     }
-    
-    // Extract headers from body
-    size_t header_end = body.find("\r\n\r\n");
-    if (header_end == std::string::npos) {
-        return buildResponse(400, "text/plain", "Bad Request: Missing headers");
-    }
 
-    std::string headers = body.substr(0, header_end);
-    std::string content_type;
-
-    // Find Content-Type header
-    size_t content_type_pos = headers.find("Content-Type: ");
-    if (content_type_pos != std::string::npos) {
-        size_t content_type_end = headers.find("\r\n", content_type_pos);
-        content_type = headers.substr(content_type_pos + 14, 
-                                    content_type_end - (content_type_pos + 14));
-    }
-
-    // Handle file upload
-    if (content_type.find("multipart/form-data") != std::string::npos) {
-        std::string result;
-        if (handleFileUpload(content_type, body.substr(header_end + 4), "uploads")) {
-            result = "File uploaded successfully";
-        } else {
-            result = "Upload failed";
-        }
-        return buildResponse(200, "text/plain", result);
-    }
-
-    return buildResponse(400, "text/plain", "Bad Request: Unsupported Content-Type");
+    // Regular POST request
+    return buildResponse(200, "text/plain", "POST successful");
 }
 
 std::string Server::handleDELETE(const std::string& path) {
@@ -440,7 +442,32 @@ void Server::handleClientData(int client_fd) {
     }
     
     buffer[bytes_read] = '\0';
+    
+    // Check if adding new data would exceed the max body size
+    if (_client_buffers[client_fd].length() + bytes_read > _client_max_body_size) {
+        std::cout << "Request body would exceed limit: " 
+                  << _client_buffers[client_fd].length() + bytes_read 
+                  << " > " << _client_max_body_size << std::endl;
+        std::string response = buildErrorResponse(413);
+        send(client_fd, response.c_str(), response.length(), 0);
+        removeClient(client_fd);
+        return;
+    }
+    
     _client_buffers[client_fd] += buffer;
+    
+    // Check Content-Length early
+    std::string content_length = getHeader("Content-Length");
+    if (!content_length.empty()) {
+        size_t length = std::atoi(content_length.c_str());
+        if (length > _client_max_body_size) {
+            std::cout << "Request body too large: " << length << " > " << _client_max_body_size << std::endl;
+            std::string response = buildErrorResponse(413);
+            send(client_fd, response.c_str(), response.length(), 0);
+            removeClient(client_fd);
+            return;
+        }
+    }
     
     // Parse the HTTP request
     std::istringstream request_stream(_client_buffers[client_fd]);
@@ -457,7 +484,27 @@ void Server::handleClientData(int client_fd) {
     if (method == "GET") {
         response = handleGET(path);
     } else if (method == "POST") {
-        response = handlePOST(path, _client_buffers[client_fd]);
+        // Get request body
+        std::string body;
+        std::string line;
+        bool headers_done = false;
+        
+        while (std::getline(request_stream, line)) {
+            if (!headers_done) {
+                if (line == "\r" || line.empty()) {
+                    headers_done = true;
+                }
+                continue;
+            }
+            body += line + "\n";
+        }
+        
+        // Check body size again
+        if (body.length() > _client_max_body_size) {
+            response = buildErrorResponse(413);
+        } else {
+            response = handlePOST(path, body);
+        }
     } else if (method == "DELETE") {
         response = handleDELETE(path);
     } else {
@@ -641,8 +688,68 @@ std::string Server::getErrorPage(int status_code) {
 }
 
 std::string Server::buildErrorResponse(int status_code) {
-    std::string content = getErrorPage(status_code);
-    return buildResponse(status_code, "text/html", content);
+    // First try to load custom error page
+    std::string error_path = _root_dir;
+    if (!error_path.empty() && error_path.back() != '/') {
+        error_path += '/';
+    }
+    
+    // Check if we have a custom error page configured
+    std::map<int, std::string>::iterator it = _error_pages.find(status_code);
+    if (it != _error_pages.end()) {
+        error_path += it->second;  // Add the configured error page path
+        std::cout << "Looking for error page at: " << error_path << std::endl;
+        
+        if (fileExists(error_path)) {
+            std::string content = readFile(error_path);
+            return buildResponse(status_code, "text/html", content);
+        }
+    }
+    
+    // Fallback to default error pages
+    std::string error_content;
+    switch (status_code) {
+        case 404:
+            error_content = "<h1>Custom 404 - Page Not Found</h1>";
+            break;
+        case 413:
+            error_content = "<h1>Custom 413 - Request Entity Too Large</h1>";
+            break;
+        case 500:
+            error_content = "<h1>Custom 500 - Internal Server Error</h1>";
+            break;
+        default:
+            error_content = "<h1>" + std::to_string(status_code) + " Error</h1>";
+    }
+    
+    return buildResponse(status_code, "text/html", error_content);
 }
 
+// Add this method to parse headers
+std::string Server::getHeader(const std::string& key) const {
+    if (_client_buffers.empty()) {
+        return "";
+    }
+
+    std::string request = _client_buffers.begin()->second;
+    std::istringstream request_stream(request);
+    std::string line;
+
+    // Skip request line
+    std::getline(request_stream, line);
+
+    // Parse headers
+    while (std::getline(request_stream, line) && line != "\r" && !line.empty()) {
+        size_t colon_pos = line.find(':');
+        if (colon_pos != std::string::npos) {
+            std::string header_key = line.substr(0, colon_pos);
+            if (strcasecmp(header_key.c_str(), key.c_str()) == 0) {
+                return line.substr(colon_pos + 2); // Skip ": "
+            }
+        }
+    }
+    return "";
+}
+
+// ... Rest of the implementation 
 // ... Rest of the implementation 

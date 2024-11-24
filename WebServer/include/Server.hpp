@@ -22,6 +22,7 @@ private:
     std::map<int, std::string> _error_pages;
     std::vector<struct pollfd> _poll_fds;
     std::map<int, std::string> _client_buffers;
+    std::string getHeader(const std::string& key) const;
     
     void setNonBlocking(int socket);
     void handleNewConnection();

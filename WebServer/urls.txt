@@ -1,6 +1,0 @@
-http://localhost:8080/
-http://localhost:8080/test.html
-http://localhost:8080/testdir/
-http://localhost:8080/uploads/
-http://localhost:8081/
-http://localhost:8081/test.html

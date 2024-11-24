@@ -1,0 +1,23 @@
+# Basic GET request
+curl -v http://localhost:8080/
+
+# Test different server_names
+curl -v --resolve example.com:8080:127.0.0.1 http://example.com:8080/
+
+# Test POST with body size limit
+curl -X POST -H "Content-Type: plain/text" --data "BODY IS HERE" http://localhost:8080/
+
+# Test file upload
+curl -X POST -F "file=@test.txt" http://localhost:8080/uploads/
+
+# Test DELETE
+curl -X DELETE http://localhost:8080/uploads/test.txt
+
+# Test CGI
+curl http://localhost:8080/cgi-bin/test.php?param=test
+
+# Test unknown method
+curl -X UNKNOWN http://localhost:8080/
+
+# Stress test with siege
+siege -b -t10S http://localhost:8080/ 

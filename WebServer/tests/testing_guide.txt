@@ -1,0 +1,118 @@
+WebServer Testing Guide
+======================
+
+1. Automated Tests
+-----------------
+Run these tests in sequence:
+
+a) Complete Test Suite:
+   $ ./tests/scripts/complete_test.sh
+   Tests:
+   - HTTP Methods (GET, POST, DELETE)
+   - Error Pages
+   - Client Body Size Limits
+   - Multiple Ports
+   - CGI Execution
+   - Directory Listing
+   - File Upload
+   - Memory Leaks
+
+b) Configuration Tests:
+   $ ./tests/scripts/test_config.sh
+   Tests:
+   - Invalid port numbers
+   - Missing root directives
+   - Invalid syntax
+   - Malformed configurations
+
+2. Manual Browser Testing
+------------------------
+Start server:
+$ ./webserv config/default.conf
+
+Test these URLs in different browsers:
+- http://localhost:8080/              (Main page)
+- http://localhost:8080/uploads/      (Directory listing)
+- http://localhost:8080/cgi-bin/test.php  (CGI execution)
+- http://localhost:8080/nonexistent   (Error page)
+
+3. Error Handling Tests
+----------------------
+Test malformed requests:
+$ curl -X INVALID http://localhost:8080/
+$ curl -H "Content-Length: abc" http://localhost:8080/
+$ curl -X POST -H "Content-Length: 999999999" http://localhost:8080/
+
+4. Configuration Testing
+-----------------------
+Test different configurations:
+
+a) Invalid Port:
+$ cat > config/invalid_port.conf << 'EOF'
+server {
+    listen 999999;
+    host 127.0.0.1;
+    root www;
+}
+EOF
+$ ./webserv config/invalid_port.conf
+
+b) Missing Root:
+$ cat > config/invalid_root.conf << 'EOF'
+server {
+    listen 8082;
+    host 127.0.0.1;
+}
+EOF
+$ ./webserv config/invalid_root.conf
+
+c) Invalid Syntax:
+$ cat > config/invalid_syntax.conf << 'EOF'
+server {
+    listen 8082
+    host 127.0.0.1
+    root www
+    missing_bracket
+EOF
+$ ./webserv config/invalid_syntax.conf
+
+5. Memory Leak Check
+-------------------
+While server is running:
+$ leaks webserv
+
+6. Final Checklist
+-----------------
+✓ All HTTP methods working
+✓ Error pages working
+✓ Client body size limit working
+✓ Multiple ports working
+✓ CGI working
+✓ Directory listing working
+✓ File upload working
+✓ Memory leaks checked
+✓ Browser compatibility verified
+✓ Configuration parsing tested
+✓ Error handling verified
+✓ C++98 compliance confirmed
+
+7. Troubleshooting
+-----------------
+If tests fail:
+1. Check server logs
+2. Verify configuration file syntax
+3. Check file permissions
+4. Verify PHP-CGI installation
+5. Check port availability
+
+Common Issues:
+- Port already in use: Kill existing server (pkill -9 webserv)
+- CGI fails: Check PHP-CGI path in config
+- Upload fails: Check directory permissions
+- Memory leaks: Run valgrind for detailed report
+
+8. Clean Up
+-----------
+After testing:
+$ make fclean
+$ pkill -9 webserv 

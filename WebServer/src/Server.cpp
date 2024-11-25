@@ -162,15 +162,11 @@ std::string Server::generateDirectoryListing(const std::string& path) {
     
     html << "<!DOCTYPE html>\n"
          << "<html>\n<head>\n"
-         << "<title>Directory Listing: " << path << "</title>\n"
-         << "<style>\n"
-         << "body { font-family: Arial, sans-serif; margin: 20px; }\n"
-         << "a { text-decoration: none; color: #0066cc; }\n"
-         << "a:hover { text-decoration: underline; }\n"
-         << "</style>\n"
+         << "<title>Directory listing for " << path << "</title>\n"
          << "</head>\n<body>\n"
-         << "<h1>Directory Listing: " << path << "</h1>\n"
-         << "<ul>\n";
+         << "<h1>Directory listing for " << path << "</h1>\n"
+         << "<div>Directory listing enabled</div>\n"
+         << "<hr>\n<ul>\n";
 
     dir = opendir((_root_dir + path).c_str());
     if (dir != NULL) {
@@ -185,17 +181,26 @@ std::string Server::generateDirectoryListing(const std::string& path) {
         closedir(dir);
     }
 
-    html << "</ul>\n</body>\n</html>";
+    html << "</ul>\n<hr>\n</body>\n</html>";
     return html.str();
 }
 
 bool Server::isCGI(const std::string& path) {
-    size_t ext_pos = path.find_last_of('.');
+    // First check if it's in the cgi-bin directory
+    if (path.find("/cgi-bin/") == std::string::npos) {
+        return false;
+    }
+    
+    // Extract the actual file extension (ignore query string)
+    size_t query_pos = path.find('?');
+    std::string clean_path = query_pos != std::string::npos ? path.substr(0, query_pos) : path;
+    
+    size_t ext_pos = clean_path.find_last_of('.');
     if (ext_pos == std::string::npos) {
         return false;
     }
     
-    std::string extension = path.substr(ext_pos);
+    std::string extension = clean_path.substr(ext_pos);
     std::cout << "Checking CGI for extension: " << extension << std::endl;
     return extension == ".php";  // Add more extensions if needed
 }
@@ -319,11 +324,41 @@ std::string Server::executeCGI(const std::string& path, const std::string& metho
 std::string Server::handleGET(const std::string& path) {
     if (isCGI(path)) {
         try {
-            std::string output = executeCGI(path, "GET", "", "");
-            return buildResponse(200, "text/html", output);
+            // Extract query string
+            size_t query_pos = path.find('?');
+            std::string query_string;
+            std::string script_path = path;
+            
+            if (query_pos != std::string::npos) {
+                query_string = path.substr(query_pos + 1);
+                script_path = path.substr(0, query_pos);
+            }
+
+            // Check if the CGI script exists
+            std::string full_path = _root_dir + script_path;
+            if (!fileExists(full_path)) {
+                std::cerr << "CGI script not found: " << full_path << std::endl;
+                return buildErrorResponse(404);
+            }
+
+            CGIHandler cgi("/opt/homebrew/bin/php-cgi", _root_dir);
+            cgi.setScriptPath(script_path);
+            cgi.setRequestMethod("GET");
+            cgi.setQueryString(query_string);
+
+            std::string cgi_response;
+            if (cgi.processCGI(cgi_response)) {
+                // If response already has HTTP headers, return as is
+                if (cgi_response.find("HTTP/1.1") == 0) {
+                    return cgi_response;
+                }
+                // Otherwise, wrap it in HTTP response
+                return buildResponse(200, "text/html", cgi_response);
+            }
+            return buildErrorResponse(500);
         } catch (const std::exception& e) {
             std::cerr << "CGI error: " << e.what() << std::endl;
-            return buildResponse(500, "text/html", "<h1>500 Internal Server Error</h1>");
+            return buildErrorResponse(500);
         }
     }
     
@@ -365,8 +400,33 @@ std::string Server::handleGET(const std::string& path) {
 std::string Server::handlePOST(const std::string& path, const std::string& body) {
     // Check body size first
     if (body.length() > _client_max_body_size) {
-        std::cout << "Body size exceeded: " << body.length() << " > " << _client_max_body_size << std::endl;
-        return buildErrorResponse(413);
+        std::cerr << "Body size exceeded: " << body.length() << " > " << _client_max_body_size << std::endl;
+        return buildResponse(413, "text/plain", "413 Request Entity Too Large");
+    }
+
+    if (isCGI(path)) {
+        try {
+            CGIHandler cgi("/opt/homebrew/bin/php-cgi", _root_dir);
+            cgi.setScriptPath(path);
+            cgi.setRequestMethod("POST");
+            cgi.setContentLength(std::to_string(body.length()));
+            cgi.setContentType(getHeader("Content-Type"));
+            cgi.setRequestBody(body);
+
+            std::string cgi_response;
+            if (cgi.processCGI(cgi_response)) {
+                // If response already has HTTP headers, return as is
+                if (cgi_response.find("HTTP/1.1") == 0) {
+                    return cgi_response;
+                }
+                // Otherwise, wrap it in HTTP response
+                return buildResponse(200, "text/html", cgi_response);
+            }
+            return buildErrorResponse(500);
+        } catch (const std::exception& e) {
+            std::cerr << "CGI error: " << e.what() << std::endl;
+            return buildErrorResponse(500);
+        }
     }
 
     // For uploads directory
@@ -453,74 +513,64 @@ void Server::handleClientData(int client_fd) {
     
     buffer[bytes_read] = '\0';
     
-    // Check if adding new data would exceed the max body size
-    if (_client_buffers[client_fd].length() + bytes_read > _client_max_body_size) {
-        std::cout << "Request body would exceed limit: " 
-                  << _client_buffers[client_fd].length() + bytes_read 
-                  << " > " << _client_max_body_size << std::endl;
-        std::string response = buildErrorResponse(413);
-        send(client_fd, response.c_str(), response.length(), 0);
-        removeClient(client_fd);
-        return;
-    }
-    
-    _client_buffers[client_fd] += buffer;
-    
-    // Check Content-Length early
-    std::string content_length = getHeader("Content-Length");
-    if (!content_length.empty()) {
-        size_t length = std::atoi(content_length.c_str());
-        if (length > _client_max_body_size) {
-            std::cout << "Request body too large: " << length << " > " << _client_max_body_size << std::endl;
-            std::string response = buildErrorResponse(413);
-            send(client_fd, response.c_str(), response.length(), 0);
-            removeClient(client_fd);
-            return;
-        }
-    }
-    
-    // Parse the HTTP request
-    std::istringstream request_stream(_client_buffers[client_fd]);
+    // Parse the request line and headers first
+    std::string request(buffer);
+    std::istringstream request_stream(request);
     std::string request_line;
     std::getline(request_stream, request_line);
     
-    std::istringstream request_line_stream(request_line);
+    // Parse headers to get Content-Length
+    std::string header_line;
+    size_t content_length = 0;
+    while (std::getline(request_stream, header_line) && !header_line.empty() && header_line != "\r") {
+        if (header_line.find("Content-Length: ") == 0) {
+            content_length = std::atoi(header_line.substr(16).c_str());
+            if (content_length > _client_max_body_size) {
+                std::cerr << "Request body too large: " << content_length << " > " 
+                         << _client_max_body_size << std::endl;
+                std::string response = buildResponse(413, "text/plain", "413 Request Entity Too Large");
+                send(client_fd, response.c_str(), response.length(), 0);
+                removeClient(client_fd);
+                return;
+            }
+        }
+    }
+    
+    // Parse request line
+    std::istringstream line_stream(request_line);
     std::string method, path, protocol;
-    request_line_stream >> method >> path >> protocol;
+    line_stream >> method >> path >> protocol;
     
-    std::cout << "Received " << method << " request for " << path << std::endl;
+    // Get request body if present
+    std::string body;
+    if (content_length > 0) {
+        // Find the start of the body (after \r\n\r\n)
+        size_t body_start = request.find("\r\n\r\n");
+        if (body_start != std::string::npos) {
+            body = request.substr(body_start + 4);
+            // If we need more data, read it
+            while (body.length() < content_length) {
+                bytes_read = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
+                if (bytes_read <= 0) break;
+                buffer[bytes_read] = '\0';
+                body += buffer;
+            }
+        }
+    }
     
+    // Handle request based on method
     std::string response;
     if (method == "GET") {
         response = handleGET(path);
     } else if (method == "POST") {
-        // Get request body
-        std::string body;
-        std::string line;
-        bool headers_done = false;
-        
-        while (std::getline(request_stream, line)) {
-            if (!headers_done) {
-                if (line == "\r" || line.empty()) {
-                    headers_done = true;
-                }
-                continue;
-            }
-            body += line + "\n";
-        }
-        
-        // Check body size again
-        if (body.length() > _client_max_body_size) {
-            response = buildErrorResponse(413);
-        } else {
-            response = handlePOST(path, body);
-        }
+        response = handlePOST(path, body);
     } else if (method == "DELETE") {
         response = handleDELETE(path);
     } else {
         response = buildResponse(405, "text/plain", "Method not supported\n");
     }
     
+    // Send response
     ssize_t sent = send(client_fd, response.c_str(), response.length(), 0);
     if (sent < 0) {
         std::cerr << "Error sending response: " << strerror(errno) << std::endl;
@@ -528,6 +578,7 @@ void Server::handleClientData(int client_fd) {
         std::cout << "Sent " << sent << " bytes response" << std::endl;
     }
     
+    // Close connection
     removeClient(client_fd);
 }
 

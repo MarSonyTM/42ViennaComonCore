@@ -5,12 +5,14 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
 SRCS = src/main.cpp \
        src/Server.cpp \
-       src/Config.cpp
+       src/Config.cpp \
+       src/CGIHandler.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
 HEADERS = include/Server.hpp \
-          include/Config.hpp
+          include/Config.hpp \
+          include/CGIHandler.hpp
 
 INC = -I./include
 

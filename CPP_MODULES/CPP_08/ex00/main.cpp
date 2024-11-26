@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 13:54:26 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/26 15:26:46 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/26 15:53:09 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <vector>
 #include <list>
 #include "easyfind.hpp"
+#include <climits>
 
 int main(void)
 {

@@ -6,59 +6,63 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 13:54:26 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/26 13:54:27 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/26 15:14:21 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "easyfind.hpp"
 #include <iostream>
 #include <vector>
 #include <list>
+#include "easyfind.hpp"
 
-int main() {
+int main(void)
+{
     // Test with vector
-    std::vector<int> vec;
-    vec.push_back(1);
-    vec.push_back(2);
-    vec.push_back(3);
-    vec.push_back(4);
-    vec.push_back(5);
+    std::vector<int> numbers;
+    for (int i = 1; i <= 5; i++)
+        numbers.push_back(i * 10);  // Creates {10, 20, 30, 40, 50}
 
+    // Test 1: Finding existing value in vector
     try {
-        // Should find 3
-        std::vector<int>::iterator result = easyfind(vec, 3);
-        std::cout << "Found value: " << *result << std::endl;
-
-        // Should find 5
-        result = easyfind(vec, 5);
-        std::cout << "Found value: " << *result << std::endl;
-
-        // Should throw exception
-        result = easyfind(vec, 6);
-        std::cout << "Found value: " << *result << std::endl;
+        std::vector<int>::iterator it = easyfind(numbers, 30);
+        std::cout << "Test 1 - Found value: " << *it << std::endl;
     }
-    catch (const std::exception& e) {
-        std::cout << "Error: " << e.what() << std::endl;
+    catch (std::exception& e) {
+        std::cout << "Test 1 Error: " << e.what() << std::endl;
+    }
+
+    // Test 2: Finding non-existing value in vector
+    try {
+        std::vector<int>::iterator it = easyfind(numbers, 25);
+        std::cout << "Test 2 - Found value: " << *it << std::endl;
+    }
+    catch (std::exception& e) {
+        std::cout << "Test 2 Error: " << e.what() << std::endl;
     }
 
     // Test with list
     std::list<int> lst;
-    lst.push_back(10);
-    lst.push_back(20);
-    lst.push_back(30);
+    lst.push_back(100);
+    lst.push_back(200);
+    lst.push_back(300);
 
+    // Test 3: Finding existing value in list
     try {
-        // Should find 20
-        std::list<int>::iterator result = easyfind(lst, 20);
-        std::cout << "Found value: " << *result << std::endl;
-
-        // Should throw exception
-        result = easyfind(lst, 25);
-        std::cout << "Found value: " << *result << std::endl;
+        std::list<int>::iterator it = easyfind(lst, 200);
+        std::cout << "Test 3 - Found value: " << *it << std::endl;
     }
-    catch (const std::exception& e) {
-        std::cout << "Error: " << e.what() << std::endl;
+    catch (std::exception& e) {
+        std::cout << "Test 3 Error: " << e.what() << std::endl;
     }
 
-    return 0;
+    // Test 4: Finding non-existing value in list
+    try {
+        std::list<int>::iterator it = easyfind(lst, 150);
+        std::cout << "Test 4 - Found value: " << *it << std::endl;
+    }
+    catch (std::exception& e) {
+        std::cout << "Test 4 Error: " << e.what() << std::endl;
+    }
+
+    return (0);
 } 

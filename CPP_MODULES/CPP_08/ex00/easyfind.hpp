@@ -6,14 +6,14 @@
 /*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 13:54:28 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/26 15:48:33 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:55:43 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <algorithm>
-#include <stdexcept>
+#include <algorithm> // std::find
+#include <stdexcept> // std::runtime_error
 
 template<typename T>
 typename T::iterator easyfind(T& container, int value) {

@@ -12,6 +12,15 @@
 #include <dirent.h>
 #include <sys/wait.h>
 
+// Helper function for number to string conversion
+namespace {
+    std::string numberToString(long number) {
+        std::ostringstream ss;
+        ss << number;
+        return ss.str();
+    }
+}
+
 Server::Server(const std::string& host, int port, const std::string& root, size_t max_body_size)
     : _server_socket(-1), _port(port), _host(host), _root_dir(root), 
       _client_max_body_size(max_body_size) {
@@ -174,7 +183,7 @@ std::string Server::generateDirectoryListing(const std::string& path) {
             std::string name = entry->d_name;
             if (name != "." && name != "..") {
                 html << "<li><a href=\"" << path 
-                     << (path.back() == '/' ? "" : "/") 
+                     << (path[path.length() - 1] == '/' ? "" : "/") 
                      << name << "\">" << name << "</a></li>\n";
             }
         }
@@ -238,24 +247,22 @@ void Server::setupCGIEnv(const std::string& method,
 std::string Server::executeCGI(const std::string& path, const std::string& method,
                               const std::string& query_string, const std::string& body) {
     std::string cgi_path = _root_dir + path;
-    std::string php_cgi = "/opt/homebrew/bin/php-cgi";  // Updated to your actual PHP-CGI path
-    
-    std::cout << "Executing CGI with:" << std::endl;
-    std::cout << "Script path: " << cgi_path << std::endl;
-    std::cout << "PHP-CGI path: " << php_cgi << std::endl;
+    std::string php_cgi = "/usr/bin/php-cgi";
     
     // Set up environment variables
     setenv("SCRIPT_FILENAME", cgi_path.c_str(), 1);
     setenv("REQUEST_METHOD", method.c_str(), 1);
     setenv("QUERY_STRING", query_string.c_str(), 1);
-    setenv("CONTENT_LENGTH", std::to_string(body.length()).c_str(), 1);
+    setenv("CONTENT_LENGTH", numberToString(body.length()).c_str(), 1);
     setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", 1);
     setenv("REDIRECT_STATUS", "200", 1);
     setenv("GATEWAY_INTERFACE", "CGI/1.1", 1);
     setenv("SERVER_PROTOCOL", "HTTP/1.1", 1);
     setenv("SERVER_SOFTWARE", "WebServ/1.0", 1);
+    setenv("PATH_INFO", path.c_str(), 1);
+    setenv("PATH_TRANSLATED", cgi_path.c_str(), 1);
     
-    // Create pipes for input and output
+    // Create pipes and execute CGI
     int input_pipe[2], output_pipe[2];
     if (pipe(input_pipe) < 0 || pipe(output_pipe) < 0) {
         throw std::runtime_error("Failed to create pipes");
@@ -315,7 +322,7 @@ std::string Server::executeCGI(const std::string& path, const std::string& metho
     
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
         std::cerr << "CGI script failed with status " << WEXITSTATUS(status) << std::endl;
-        throw std::runtime_error("CGI script failed with status " + std::to_string(WEXITSTATUS(status)));
+        throw std::runtime_error("CGI script failed with status " + numberToString(WEXITSTATUS(status)));
     }
     
     return output;
@@ -341,18 +348,14 @@ std::string Server::handleGET(const std::string& path) {
                 return buildErrorResponse(404);
             }
 
-            CGIHandler cgi("/opt/homebrew/bin/php-cgi", _root_dir);
+            // Update CGI path for Ubuntu
+            CGIHandler cgi("/usr/bin/php-cgi", _root_dir);
             cgi.setScriptPath(script_path);
             cgi.setRequestMethod("GET");
             cgi.setQueryString(query_string);
 
             std::string cgi_response;
             if (cgi.processCGI(cgi_response)) {
-                // If response already has HTTP headers, return as is
-                if (cgi_response.find("HTTP/1.1") == 0) {
-                    return cgi_response;
-                }
-                // Otherwise, wrap it in HTTP response
                 return buildResponse(200, "text/html", cgi_response);
             }
             return buildErrorResponse(500);
@@ -406,23 +409,16 @@ std::string Server::handlePOST(const std::string& path, const std::string& body)
 
     if (isCGI(path)) {
         try {
-            CGIHandler cgi("/opt/homebrew/bin/php-cgi", _root_dir);
-            cgi.setScriptPath(path);
-            cgi.setRequestMethod("POST");
-            cgi.setContentLength(std::to_string(body.length()));
-            cgi.setContentType(getHeader("Content-Type"));
-            cgi.setRequestBody(body);
-
-            std::string cgi_response;
-            if (cgi.processCGI(cgi_response)) {
-                // If response already has HTTP headers, return as is
-                if (cgi_response.find("HTTP/1.1") == 0) {
-                    return cgi_response;
-                }
-                // Otherwise, wrap it in HTTP response
-                return buildResponse(200, "text/html", cgi_response);
+            std::string query_string;
+            size_t query_pos = path.find('?');
+            std::string script_path = path;
+            
+            if (query_pos != std::string::npos) {
+                query_string = path.substr(query_pos + 1);
+                script_path = path.substr(0, query_pos);
             }
-            return buildErrorResponse(500);
+
+            return executeCGI(script_path, "POST", query_string, body);
         } catch (const std::exception& e) {
             std::cerr << "CGI error: " << e.what() << std::endl;
             return buildErrorResponse(500);
@@ -525,9 +521,9 @@ void Server::handleClientData(int client_fd) {
     while (std::getline(request_stream, header_line) && !header_line.empty() && header_line != "\r") {
         if (header_line.find("Content-Length: ") == 0) {
             content_length = std::atoi(header_line.substr(16).c_str());
+            // Check body size immediately when we get Content-Length
             if (content_length > _client_max_body_size) {
-                std::cerr << "Request body too large: " << content_length << " > " 
-                         << _client_max_body_size << std::endl;
+                std::cerr << "Body size exceeded: " << content_length << " > " << _client_max_body_size << std::endl;
                 std::string response = buildResponse(413, "text/plain", "413 Request Entity Too Large");
                 send(client_fd, response.c_str(), response.length(), 0);
                 removeClient(client_fd);
@@ -746,14 +742,14 @@ std::string Server::getErrorPage(int status_code) {
         case 500:
             return "<h1>500 Internal Server Error</h1>";
         default:
-            return "<h1>" + std::to_string(status_code) + " Error</h1>";
+            return "<h1>" + numberToString(status_code) + " Error</h1>";
     }
 }
 
 std::string Server::buildErrorResponse(int status_code) {
     // First try to load custom error page
     std::string error_path = _root_dir;
-    if (!error_path.empty() && error_path.back() != '/') {
+    if (!error_path.empty() && error_path[error_path.length() - 1] != '/') {
         error_path += '/';
     }
     
@@ -782,7 +778,7 @@ std::string Server::buildErrorResponse(int status_code) {
             error_content = "<h1>Custom 500 - Internal Server Error</h1>";
             break;
         default:
-            error_content = "<h1>" + std::to_string(status_code) + " Error</h1>";
+            error_content = "<h1>" + numberToString(status_code) + " Error</h1>";
     }
     
     return buildResponse(status_code, "text/html", error_content);

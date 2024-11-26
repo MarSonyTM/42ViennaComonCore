@@ -1,7 +1,0 @@
---------------------------VcDadGbsnKH70pNtnNbNdx
-Content-Disposition: form-data; name="file"; filename="test_upload.txt"
-Content-Type: text/plain
-
-test file content
-
---------------------------VcDadGbsnKH70pNtnNbNdx--

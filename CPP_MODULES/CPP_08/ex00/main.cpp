@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 13:54:26 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/26 15:22:55 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/26 15:26:46 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 int main(void)
 {
-    // Test with vector
+    // Original tests
     std::vector<int> numbers;
     for (int i = 1; i <= 5; i++)
         numbers.push_back(i * 10);  // Creates {10, 20, 30, 40, 50}
@@ -40,28 +40,57 @@ int main(void)
         std::cout << "Test 2 Error: " << e.what() << std::endl;
     }
 
-    // Test with list
-    std::list<int> lst;
-    lst.push_back(100);
-    lst.push_back(200);
-    lst.push_back(300);
+    // Edge Cases:
 
-    // Test 3: Finding existing value in list
+    // Test 3: Empty container
+    std::vector<int> empty_vec;
     try {
-        std::list<int>::iterator it = easyfind(lst, 200);
+        std::vector<int>::iterator it = easyfind(empty_vec, 1);
         std::cout << "Test 3 - Found value: " << *it << std::endl;
     }
     catch (std::exception& e) {
         std::cout << "Test 3 Error: " << e.what() << std::endl;
     }
 
-    // Test 4: Finding non-existing value in list
+    // Test 4: Container with negative numbers
+    std::list<int> negative_nums;
+    negative_nums.push_back(-100);
+    negative_nums.push_back(-200);
+    negative_nums.push_back(-300);
+
     try {
-        std::list<int>::iterator it = easyfind(lst, 150);
+        std::list<int>::iterator it = easyfind(negative_nums, -200);
         std::cout << "Test 4 - Found value: " << *it << std::endl;
     }
     catch (std::exception& e) {
         std::cout << "Test 4 Error: " << e.what() << std::endl;
+    }
+
+    // Test 5: Container with duplicate values
+    std::vector<int> duplicates;
+    duplicates.push_back(42);
+    duplicates.push_back(42);
+    duplicates.push_back(42);
+
+    try {
+        std::vector<int>::iterator it = easyfind(duplicates, 42);
+        std::cout << "Test 5 - Found first occurrence of: " << *it << std::endl;
+    }
+    catch (std::exception& e) {
+        std::cout << "Test 5 Error: " << e.what() << std::endl;
+    }
+
+    // Test 6: Finding INT_MAX
+    std::list<int> extreme_values;
+    extreme_values.push_back(INT_MAX);
+    extreme_values.push_back(INT_MIN);
+
+    try {
+        std::list<int>::iterator it = easyfind(extreme_values, INT_MAX);
+        std::cout << "Test 6 - Found extreme value: " << *it << std::endl;
+    }
+    catch (std::exception& e) {
+        std::cout << "Test 6 Error: " << e.what() << std::endl;
     }
 
     return (0);

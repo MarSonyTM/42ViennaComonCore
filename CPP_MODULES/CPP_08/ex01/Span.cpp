@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Span.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
+/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:53:11 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/26 17:53:12 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/27 12:46:05 by mafurnic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

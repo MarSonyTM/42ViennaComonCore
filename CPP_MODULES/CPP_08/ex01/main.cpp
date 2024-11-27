@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:53:07 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/27 14:05:08 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/27 14:06:50 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ int main() {
         fullSpan.addNumber(2);  // Should throw exception
 
         // Add this test to main.cpp
-        std::vector<int> numbers;
+        std::vector<int> numbers1;
         for (int i = 1; i <= 5; ++i)
             numbers.push_back(i);
 
-        Span sp(10);
+        Span sp1(10);
         try {
             // Add range of numbers efficiently
             sp.addRange(numbers.begin(), numbers.end());

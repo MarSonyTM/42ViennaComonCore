@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Span.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:42:54 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/27 13:49:04 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:11:12 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

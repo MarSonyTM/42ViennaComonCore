@@ -6,12 +6,11 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:42:54 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/27 14:11:12 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/27 16:03:27 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SPAN_HPP
-#define SPAN_HPP
+#pragma once
 
 #include <vector>
 #include <algorithm>
@@ -26,8 +25,8 @@ public:
     // Orthodox Canonical Form
     Span();
     Span(unsigned int N); // Constructor with maximum number of elements
-    Span(const Span& other);
-    Span& operator=(const Span& other);
+    Span(const Span &other);
+    Span& operator=(const Span &other);
     ~Span();
 
     // Member functions
@@ -35,14 +34,23 @@ public:
     unsigned int shortestSpan() const; // Find shortest span between two numbers
     unsigned int longestSpan() const; // Find longest span between two numbers
 
-    // Bonus: Add range of numbers
+    //Add range of numbers
     template<typename Iterator>
-    void addRange(Iterator begin, Iterator end) {
-    if (std::distance(begin, end) + _numbers.size() > _N) {
-        throw std::runtime_error("Span will be full");
+    void addRange(Iterator begin, Iterator end)
+    {   
+        // check if the range will fit in the container
+        if (std::distance(begin, end) + _numbers.size() > _N)
+        {
+            throw std::runtime_error("Span will be full");
     }
-    _numbers.insert(_numbers.end(), begin, end);
+    _numbers.insert(_numbers.end(), begin, end); // insert the range at the end of the container
 }
 };
 
-#endif 
+/*
+        the  AddRange function is essentially a bulk push_back operation 
+        that prechecks if the range will fit in the container,
+        and then inserts the range at the end of the container.
+        More efficient than adding each number individually.
+*/
+

@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:53:23 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/26 17:53:24 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/27 16:07:42 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include <list>
 #include "MutantStack.hpp"
 
-void testMutantStack() {
+void testMutantStack()
+{
     std::cout << "=== Testing MutantStack ===" << std::endl;
     MutantStack<int> mstack;
 
@@ -88,3 +89,9 @@ int main() {
     testList();
     return 0;
 } 
+
+
+/*
+    The key insight is that std::stack is an adapter class that uses a container (default: deque) internally.
+    By accessing this->c, we get access to that underlying container and its iterators.
+*/

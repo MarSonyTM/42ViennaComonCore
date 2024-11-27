@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafurnic <mafurnic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:53:07 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/27 12:48:32 by mafurnic         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:05:08 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,23 @@ int main() {
         Span fullSpan(1);
         fullSpan.addNumber(1);
         fullSpan.addNumber(2);  // Should throw exception
+
+        // Add this test to main.cpp
+        std::vector<int> numbers;
+        for (int i = 1; i <= 5; ++i)
+            numbers.push_back(i);
+
+        Span sp(10);
+        try {
+            // Add range of numbers efficiently
+            sp.addRange(numbers.begin(), numbers.end());
+            
+            // Test spans
+            std::cout << "Shortest span: " << sp.shortestSpan() << std::endl;
+            std::cout << "Longest span: " << sp.longestSpan() << std::endl;
+        } catch (std::exception& e) {
+            std::cout << "Exception: " << e.what() << std::endl;
+        }
     }
     catch (const std::exception& e) {
         std::cout << "Exception caught: " << e.what() << std::endl;

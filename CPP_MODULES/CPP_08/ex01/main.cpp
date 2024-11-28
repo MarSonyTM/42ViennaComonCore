@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:53:07 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/27 15:18:48 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/28 11:48:34 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int main()
             numbers.push_back(rand());
         }
         
-        bigSpan.addRange(numbers.begin(), numbers.end());
+        bigSpan.addRange(numbers.begin(), numbers.end()); // add range of numbers to the span
         std::cout << "Shortest span: " << bigSpan.shortestSpan() << std::endl;
         std::cout << "Longest span: " << bigSpan.longestSpan() << std::endl;
 

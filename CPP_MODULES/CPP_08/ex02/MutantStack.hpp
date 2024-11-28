@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:53:27 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/27 16:10:09 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/28 11:55:32 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ public:
     ~MutantStack() {}
 
     // Iterator typedefs - using the underlying container's iterators
-    typedef typename std::stack<T>::container_type::iterator iterator;
-    typedef typename std::stack<T>::container_type::const_iterator const_iterator;
-    typedef typename std::stack<T>::container_type::reverse_iterator reverse_iterator;
-    typedef typename std::stack<T>::container_type::const_reverse_iterator const_reverse_iterator;
+    typedef typename std::stack<T>::container_type::iterator iterator; // regular forward iterator can modify elements
+    typedef typename std::stack<T>::container_type::const_iterator const_iterator; // constant forward iterator cannot modify elements
+    typedef typename std::stack<T>::container_type::reverse_iterator reverse_iterator; // reverse iterator can modify elements
+    typedef typename std::stack<T>::container_type::const_reverse_iterator const_reverse_iterator; // constant reverse iterator cannot modify elements
 
     // Iterator functions
     iterator begin() { return this->c.begin(); }    // return the beginning of the underlying container

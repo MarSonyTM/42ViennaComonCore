@@ -6,11 +6,12 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:53:11 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/27 15:17:27 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/28 11:37:51 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Span.hpp"
+#include <algorithm>
 
 // Orthodox Canonical Form implementations
 Span::Span() : _N(0) {}

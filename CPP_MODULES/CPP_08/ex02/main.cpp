@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:53:23 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/27 16:07:42 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/28 11:58:59 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void testMutantStack()
     // Testing basic stack operations
     mstack.push(5);
     mstack.push(17);
-    std::cout << "Top: " << mstack.top() << std::endl;
+    std::cout << "Top: " << mstack.top() << std::endl; // display the top element   
     mstack.pop();
-    std::cout << "Size: " << mstack.size() << std::endl;
+    std::cout << "Size: " << mstack.size() << std::endl; // display the size of the stack
 
     // Adding more elements
     mstack.push(3);
@@ -34,13 +34,13 @@ void testMutantStack()
 
     // Testing iterators
     std::cout << "Iterator test:" << std::endl;
-    MutantStack<int>::iterator it = mstack.begin();
-    MutantStack<int>::iterator ite = mstack.end();
-    ++it;
-    --it;
+    MutantStack<int>::iterator it = mstack.begin(); // get the beginning of the stack   
+    MutantStack<int>::iterator ite = mstack.end(); // get the end of the stack
+    ++it; // increment the iterator
+    --it; // decrement the iterator
     while (it != ite) {
-        std::cout << *it << std::endl;
-        ++it;
+        std::cout << *it << std::endl; // display the element
+        ++it; // increment the iterator
     }
 
     // Testing copy constructor and assignment
@@ -62,31 +62,33 @@ void testList() {
     std::list<int> lst;
 
     // Performing same operations as MutantStack
-    lst.push_back(5);
-    lst.push_back(17);
-    std::cout << "Back: " << lst.back() << std::endl;
-    lst.pop_back();
-    std::cout << "Size: " << lst.size() << std::endl;
+    lst.push_back(5); // add element to the end of the list
+    lst.push_back(17); // add element to the end of the list
+    std::cout << "Back: " << lst.back() << std::endl; // display the last element
+    lst.pop_back(); // remove the last element
+    std::cout << "Size: " << lst.size() << std::endl; // display the size of the list
 
-    lst.push_back(3);
+    lst.push_back(3); // add element to the end of the list
     lst.push_back(5);
     lst.push_back(737);
-    lst.push_back(0);
+    lst.push_back(0); 
 
     std::cout << "Iterator test:" << std::endl;
-    std::list<int>::iterator it = lst.begin();
-    std::list<int>::iterator ite = lst.end();
-    ++it;
-    --it;
-    while (it != ite) {
+    std::list<int>::iterator it = lst.begin(); // get the beginning of the list
+    std::list<int>::iterator ite = lst.end(); // get the end of the list    
+    ++it; // increment the iterator
+    --it; // decrement the iterator
+    while (it != ite)
+    {
         std::cout << *it << std::endl;
         ++it;
     }
 }
 
-int main() {
-    testMutantStack();
-    testList();
+int main()
+{
+    testMutantStack(); // test the MutantStack
+    testList(); // test the List
     return 0;
 } 
 

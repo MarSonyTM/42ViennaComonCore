@@ -6,14 +6,13 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:42:54 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/11/27 16:03:27 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/11/28 11:37:33 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <vector>
-#include <algorithm>
 #include <stdexcept>
 
 class Span {

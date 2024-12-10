@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/10 16:11:16 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/10 16:53:33 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
                 value_str.erase(value_str.length() - 1);
             
             if (!isValidDate(date)) {
-                std::cout << "Error: bad input => " << date << std::endl;
+                std::cout << "Error: invalid date format or out of range => " << date << std::endl;
                 continue;
             }
 

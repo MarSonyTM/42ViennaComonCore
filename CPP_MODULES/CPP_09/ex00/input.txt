@@ -1,23 +1,45 @@
 date | value
-2011-01-03 | 3
-2011-01-03 | 2
-2011-01-03 | 1
-2011-01-03 | 1.2
-2011-01-09 | 1
-2012-01-11 | -1
-2001-42-42
-2012-01-11 | 1
-2012-01-11 | 2147483648
-2012-01-11 | 214748
-2020-01-01 | 1000
-2020-01-01 | 1001
-2020-01-01 | -23.123
+# Valid cases
+2020-01-01 | 500
+2019-12-31 | 1
+2012-02-29 | 10      # Leap year
+2016-02-29 | 20      # Leap year
+
+# Invalid dates
+2012-02-30 | 10      # Invalid day in February (leap year)
+2011-02-29 | 10      # Invalid day in February (non-leap year)
+2019-04-31 | 5       # Invalid day in April
+2019-13-01 | 5       # Invalid month
+2008-01-01 | 10      # Before Bitcoin (2009)
+2025-01-01 | 10      # Future date
+
+# Invalid values
+2020-01-01 | -5      # Negative value
+2020-01-01 | 1001    # Value too large
+2020-01-01 | abc     # Non-numeric value
+2020-01-01 | 5.5.5   # Invalid number format
+
+# Format errors
+2020-01-01 |5        # Missing space
+2020-01-01| 5        # Missing space
+2020/01/01 | 5       # Wrong date separator
+20200101 | 5         # No date separators
+2020-1-1 | 5         # Missing leading zeros
+
+# Edge cases for values
 2020-01-01 | 0
-2020-01-01 | 0.3
-2020-01-01 | 1.2345
-2019-12-12 | 2
-2019-14-23 | 2
-2019-01-32 | 2
-2008-01-01 | 2
-2009-01-02 | 2
-2023-12-01 | 2
+2020-01-01 | 1000
+2020-01-01 | 0.0001
+2020-01-01 | 999.999
+
+# Date boundary tests
+2009-01-01 | 10      # First possible date
+2009-01-02 | 10      # Second day of Bitcoin
+2019-12-31 | 10      # End of 2019
+2020-01-01 | 10      # Start of 2020
+
+# Invalid line formats
+| 5
+2020-01-01 |
+2020-01-01
+random text 

@@ -6,11 +6,13 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:52:04 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/12 12:52:05 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/12 13:00:29 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
+#include <limits>
+#include <cctype>
 
 // Orthodox Canonical Form
 PmergeMe::PmergeMe() {}
@@ -157,18 +159,51 @@ double PmergeMe::getTimeInMicroseconds(clock_t start, clock_t end) const {
 // Main functionality
 void PmergeMe::processInput(int argc, char* argv[]) {
     if (argc < 2)
-        throw Error("Error");
+        throw Error("Error: no input sequence provided");
         
     // Parse and validate input
     for (int i = 1; i < argc; ++i) {
-        std::istringstream iss(argv[i]);
-        int num;
-        if (!(iss >> num) || num < 0 || iss.rdbuf()->in_avail() != 0)
-            throw Error("Error");
-        _vec.push_back(num);
-        _deq.push_back(num);
+        std::string arg = argv[i];
+        
+        // Check for empty argument
+        if (arg.empty())
+            throw Error("Error: empty argument");
+            
+        // Check for non-digit characters (except spaces)
+        for (size_t j = 0; j < arg.length(); ++j) {
+            if (!std::isdigit(arg[j]) && !std::isspace(arg[j])) {
+                throw Error("Error: invalid character in input '" + std::string(1, arg[j]) + "'");
+            }
+        }
+        
+        // Parse number
+        std::istringstream iss(arg);
+        long num;
+        if (!(iss >> num)) {
+            throw Error("Error: invalid number format in '" + arg + "'");
+        }
+        
+        // Check for remaining characters
+        std::string remaining;
+        if (iss >> remaining) {
+            throw Error("Error: invalid format - extra characters after number");
+        }
+        
+        // Check number range
+        if (num < 0) {
+            throw Error("Error: negative number not allowed '" + arg + "'");
+        }
+        if (num > std::numeric_limits<int>::max()) {
+            throw Error("Error: number too large '" + arg + "'");
+        }
+        
+        _vec.push_back(static_cast<int>(num));
+        _deq.push_back(static_cast<int>(num));
     }
     
+    if (_vec.empty())
+        throw Error("Error: empty sequence");
+        
     // Display before sorting
     std::cout << "Before: ";
     for (size_t i = 0; i < _vec.size(); ++i)
@@ -178,14 +213,24 @@ void PmergeMe::processInput(int argc, char* argv[]) {
     // Sort using both containers and measure time
     clock_t start, end;
     
-    start = clock();
-    mergeInsertSortVector(_vec, 0, _vec.size() - 1);
-    end = clock();
+    // Only perform sort if we have more than one element
+    if (_vec.size() > 1) {
+        start = clock();
+        mergeInsertSortVector(_vec, 0, _vec.size() - 1);
+        end = clock();
+    } else {
+        start = end = clock();
+        std::cout << "Note: Sequence contains only one element, no sorting needed." << std::endl;
+    }
     double vecTime = getTimeInMicroseconds(start, end);
     
-    start = clock();
-    mergeInsertSortDeque(_deq, 0, _deq.size() - 1);
-    end = clock();
+    if (_deq.size() > 1) {
+        start = clock();
+        mergeInsertSortDeque(_deq, 0, _deq.size() - 1);
+        end = clock();
+    } else {
+        start = end = clock();
+    }
     double deqTime = getTimeInMicroseconds(start, end);
     
     // Display results

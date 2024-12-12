@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:26 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/10 15:24:17 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/12 11:01:45 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,13 @@ int main(int argc, char *argv[])
     }
 
     return 0;
-} 
+}
+
+
+/*
+     Using std::map because:
+     . perfect for storing data->price mapping
+     . automatically sorted by key
+     . efficient for searching and retrieval
+     . easy to find the closest date
+*/

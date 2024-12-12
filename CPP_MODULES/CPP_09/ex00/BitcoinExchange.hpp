@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:20:48 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/10 15:24:42 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/12 10:43:40 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 class BitcoinExchange {
 private:
-    std::map<std::string, double> _database;
+    std::map<std::string, double> _database; // stores data->price mapping
 
     // Private helper methods
     bool isValidDate(const std::string& date) const;

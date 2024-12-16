@@ -6,11 +6,12 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/16 17:04:33 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/16 17:27:08 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
+#include <cstdlib>
 
 // Orthodox Canonical Form implementations
 BitcoinExchange::BitcoinExchange() {}
@@ -36,9 +37,9 @@ bool BitcoinExchange::isValidDate(const std::string& date) const {
     if (date[4] != '-' || date[7] != '-') return false;
 
     try {
-        int year = std::stoi(date.substr(0, 4));
-        int month = std::stoi(date.substr(5, 2));
-        int day = std::stoi(date.substr(8, 2));
+        int year = std::atoi(date.substr(0, 4).c_str());
+        int month = std::atoi(date.substr(5, 2).c_str());
+        int day = std::atoi(date.substr(8, 2).c_str());
 
         if (year < 2009 || month < 1 || month > 12 || day < 1 || day > 31)
             return false;

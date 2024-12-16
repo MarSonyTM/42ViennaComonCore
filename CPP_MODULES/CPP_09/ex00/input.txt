@@ -1,4 +1,4 @@
-
+date | value
 # Valid cases
 2020-01-01 | 500
 2019-12-31 | 1
@@ -41,5 +41,5 @@
 # Invalid line formats
 | 5
 2020-01-01 |
-2020-01-01  
+2020-01-01
 random text 

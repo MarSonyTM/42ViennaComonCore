@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/12 10:47:51 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/16 17:04:33 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,8 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
 
     while (std::getline(file, line)) {
         try {
-            // Skip empty lines or comments
-            if (line.empty() || line[0] == '#')
+            // Skip empty lines, comments, or lines with only whitespace
+            if (line.empty() || line[0] == '#' || line.find_first_not_of(" \t\n\r") == std::string::npos)
                 continue;
 
             size_t separator = line.find(" | ");
@@ -136,7 +136,13 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
             std::string date = line.substr(0, separator);
             std::string value_str = line.substr(separator + 3);
             
-            // Trim whitespace
+            // Trim whitespace from date and value
+            while (!date.empty() && std::isspace(date[0]))
+                date.erase(0, 1);
+            while (!date.empty() && std::isspace(date[date.length() - 1]))
+                date.erase(date.length() - 1);
+            while (!value_str.empty() && std::isspace(value_str[0]))
+                value_str.erase(0, 1);
             while (!value_str.empty() && std::isspace(value_str[value_str.length() - 1]))
                 value_str.erase(value_str.length() - 1);
             

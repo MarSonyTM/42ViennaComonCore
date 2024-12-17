@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:26 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/16 21:39:41 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/17 10:50:33 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    try {
+    try {  //create BitcoinExchange object and load the database
         BitcoinExchange exchange("data.csv"); // loading the Bitcoin price database
         exchange.processInputFile(argv[1]); // processing the input file 
     } catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << e.what() << std::endl; 
         return 1;
     }
 

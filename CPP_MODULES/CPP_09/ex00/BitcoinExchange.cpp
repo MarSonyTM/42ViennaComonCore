@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/16 17:27:08 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/17 11:00:16 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,20 @@ BitcoinExchange::~BitcoinExchange() {}
 
 // Private helper methods
 bool BitcoinExchange::isValidDate(const std::string& date) const {
-    if (date.length() != 10) return false;
-    if (date[4] != '-' || date[7] != '-') return false;
+    if (date.length() != 10) return false; // check if the date is 10 characters long
+    if (date[4] != '-' || date[7] != '-') return false; // check if the date is in the format YYYY-MM-DD
 
     try {
-        int year = std::atoi(date.substr(0, 4).c_str());
-        int month = std::atoi(date.substr(5, 2).c_str());
-        int day = std::atoi(date.substr(8, 2).c_str());
+        int year = std::atoi(date.substr(0, 4).c_str()); // convert the year to an integer
+        int month = std::atoi(date.substr(5, 2).c_str()); // convert the month to an integer
+        int day = std::atoi(date.substr(8, 2).c_str()); // convert the day to an integer
 
-        if (year < 2009 || month < 1 || month > 12 || day < 1 || day > 31)
+        if (year < 2009 || month < 1 || month > 12 || day < 1 || day > 31)  
             return false;
 
         // Basic month length validation
         if (month == 4 || month == 6 || month == 9 || month == 11) {
-            if (day > 30) return false;
+            if (day > 30) return false; // check if the day is greater than 30
         } else if (month == 2) {
             bool isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
             if (day > (isLeap ? 29 : 28)) return false;
@@ -63,14 +63,14 @@ bool BitcoinExchange::isValidValue(const double value) const {
 }
 
 void BitcoinExchange::loadDatabase(const std::string& filename) {
-    std::ifstream file(filename.c_str());
+    std::ifstream file(filename.c_str());   // open the database file
     if (!file.is_open()) {
         throw FileError("Could not open database file: " + filename);
     }
 
     std::string line;
     // Skip header
-    std::getline(file, line);
+    std::getline(file, line);  
 
     while (std::getline(file, line)) {
         std::istringstream iss(line);

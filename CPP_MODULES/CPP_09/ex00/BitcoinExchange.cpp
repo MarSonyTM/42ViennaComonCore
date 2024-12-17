@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/17 13:13:05 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/17 13:41:48 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,30 +81,10 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
     }
 
     std::string line;
-    // Validate header
-    if (!std::getline(file, line)) {
-        throw FileError("Error: empty database file.");
-    }
+    bool hasData = false;
 
-    // Skip empty lines before header
-    while (line.empty() || line.find_first_not_of(" \t\n\r") == std::string::npos) {
-        if (!std::getline(file, line)) {
-            throw FileError("Error: empty database file.");
-        }
-    }
-
-    // Trim whitespace from header before checking
-    std::string header = line;
-    while (!header.empty() && std::isspace(header[0]))
-        header.erase(0, 1);
-    while (!header.empty() && std::isspace(header[header.length() - 1]))
-        header.erase(header.length() - 1);
-
-    if (header != "date,exchange_rate") {
-        throw FileError("Error: bad input => " + line);
-    }
-
-    std::string prev_date = "";
+    // Skip header line
+    std::getline(file, line);
 
     while (std::getline(file, line)) {
         // Skip empty lines
@@ -136,12 +116,6 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
             throw FileError("Error: bad input => " + line);
         }
 
-        // Check date sequence
-        if (!prev_date.empty() && date <= prev_date) {
-            throw FileError("Error: dates not in ascending order => " + line);
-        }
-        prev_date = date;
-
         // Validate and convert exchange rate
         char* end;
         double value = std::strtod(value_str.c_str(), &end);
@@ -155,10 +129,11 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
         }
 
         _database[date] = value;
+        hasData = true;
     }
 
-    if (_database.empty()) {
-        throw FileError("Error: no valid data in database.");
+    if (!hasData) {
+        throw FileError("Error: empty database file.");
     }
 }
 
@@ -182,7 +157,11 @@ double BitcoinExchange::getExchangeRate(const std::string& date) const {
     }
 
     std::string closest_date = findClosestDate(date);
-    return _database.at(closest_date);
+    double rate = _database.at(closest_date);
+    if (closest_date != date) {
+        std::cerr << "Warning: Using rate " << rate << " from " << closest_date << " instead of " << date << std::endl;
+    }
+    return rate;
 }
 
 void BitcoinExchange::processInputFile(const std::string& input_file) {
@@ -209,7 +188,7 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
                     continue;
             }
 
-            size_t separator = line.find(" | "); 
+            size_t separator = line.find(" | ");
             if (separator == std::string::npos) {
                 std::cerr << "Error: bad input => " << line << std::endl;
                 continue;

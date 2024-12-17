@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/17 11:11:22 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/17 12:11:32 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,28 +63,91 @@ bool BitcoinExchange::isValidValue(const double value) const {
 }
 
 void BitcoinExchange::loadDatabase(const std::string& filename) {
-    std::ifstream file(filename.c_str());   // open the database file
+    std::ifstream file(filename.c_str());
     if (!file.is_open()) {
+        std::cout << "Error: could not open file." << std::endl;
         throw FileError("Could not open database file: " + filename);
     }
 
     std::string line;
-    // Skip header
-    std::getline(file, line);  
+    // Validate header
+    if (!std::getline(file, line)) {
+        std::cout << "Error: empty database file." << std::endl;
+        throw FileError("Empty database file");
+    }
+
+    // Trim whitespace from header before checking
+    std::string header = line;
+    while (!header.empty() && std::isspace(header[0]))
+        header.erase(0, 1);
+    while (!header.empty() && std::isspace(header[header.length() - 1]))
+        header.erase(header.length() - 1);
+
+    if (header != "date,exchange_rate") {
+        std::cout << "Error: bad input => " << line << std::endl;
+        throw FileError("Invalid database header");
+    }
+
+    std::string prev_date = "";
 
     while (std::getline(file, line)) {
-        std::istringstream iss(line);
-        std::string date;
-        double value;
-        
-        if (std::getline(iss, date, ',') && iss >> value) {
-            if (isValidDate(date)) {
-                _database[date] = value;
-            }
+        // Skip empty lines
+        if (line.empty() || line.find_first_not_of(" \t\n\r") == std::string::npos)
+            continue;
+
+        // Find comma position
+        size_t comma_pos = line.find(',');
+        if (comma_pos == std::string::npos) {
+            std::cout << "Error: bad input => " << line << std::endl;
+            throw FileError("Invalid line format in database");
         }
+
+        // Split into date and value
+        std::string date = line.substr(0, comma_pos);
+        std::string value_str = line.substr(comma_pos + 1);
+
+        // Trim whitespace
+        while (!date.empty() && std::isspace(date[0]))
+            date.erase(0, 1);
+        while (!date.empty() && std::isspace(date[date.length() - 1]))
+            date.erase(date.length() - 1);
+        while (!value_str.empty() && std::isspace(value_str[0]))
+            value_str.erase(0, 1);
+        while (!value_str.empty() && std::isspace(value_str[value_str.length() - 1]))
+            value_str.erase(value_str.length() - 1);
+
+        // Validate date format
+        if (!isValidDate(date)) {
+            std::cout << "Error: bad input => " << line << std::endl;
+            throw FileError("Invalid date format in database");
+        }
+
+        // Check date sequence
+        if (!prev_date.empty() && date <= prev_date) {
+            std::cout << "Error: dates not in ascending order => " << line << std::endl;
+            throw FileError("Dates not in ascending order in database");
+        }
+        prev_date = date;
+
+        // Validate and convert exchange rate
+        char* end;
+        double value = std::strtod(value_str.c_str(), &end);
+        if (*end != '\0' || value_str.empty()) {
+            std::cout << "Error: bad input => " << line << std::endl;
+            throw FileError("Invalid exchange rate format in database");
+        }
+
+        // Validate exchange rate value
+        if (value < 0) {
+            std::cout << "Error: not a positive number." << std::endl;
+            throw FileError("Negative exchange rate in database");
+        }
+
+        _database[date] = value;
     }
-    
+
     if (_database.empty()) {
+        std::cout << "Error: no valid data in database." << std::endl;
         throw FileError("No valid data in database file");
     }
 }

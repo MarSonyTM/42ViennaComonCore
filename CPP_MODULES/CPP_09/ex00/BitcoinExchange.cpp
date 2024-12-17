@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/17 12:52:14 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/17 13:13:05 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,13 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
     // Validate header
     if (!std::getline(file, line)) {
         throw FileError("Error: empty database file.");
+    }
+
+    // Skip empty lines before header
+    while (line.empty() || line.find_first_not_of(" \t\n\r") == std::string::npos) {
+        if (!std::getline(file, line)) {
+            throw FileError("Error: empty database file.");
+        }
     }
 
     // Trim whitespace from header before checking

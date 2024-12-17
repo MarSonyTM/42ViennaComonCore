@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/17 14:03:57 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/17 15:12:18 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ bool BitcoinExchange::isValidDate(const std::string& date) const {
 void BitcoinExchange::loadDatabase(const std::string& filename) {
     std::ifstream file(filename.c_str());
     if (!file.is_open()) {
-        throw FileError("Error: could not open file.");
+        throw FileError("Error: could not open database file.");
     }
 
     std::string line;
@@ -94,7 +94,7 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
         // Find comma position
         size_t comma_pos = line.find(',');
         if (comma_pos == std::string::npos) {
-            throw FileError("Error: bad input => " + line);
+            throw FileError("Error: database bad input => " + line);
         }
 
         // Split into date and value
@@ -125,7 +125,7 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
 
         // Validate exchange rate value
         if (value < 0) {
-            throw FileError("Error: not a positive number.");
+            throw FileError("Error: not a positive number => " + line);
         }
 
         _database[date] = value;
@@ -167,7 +167,7 @@ double BitcoinExchange::getExchangeRate(const std::string& date) const {
 void BitcoinExchange::processInputFile(const std::string& input_file) {
     std::ifstream file(input_file.c_str());
     if (!file.is_open()) {
-        throw FileError("Error: could not open file.");
+        throw FileError("Error: could not open input file.");
     }
 
     std::string line;
@@ -191,7 +191,7 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
 
             size_t separator = line.find(" | ");
             if (separator == std::string::npos) {
-                std::cerr << "Error: bad input => " << line << std::endl;
+                std::cerr << "Error: input file bad format => " << line << std::endl;
                 continue;
             }
 
@@ -224,11 +224,11 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
 
             // Then check value constraints
             if (value < 0) {
-                std::cerr << "Error: not a positive number." << std::endl;
+                std::cerr << "Error: not a positive number => " << line << std::endl;
                 continue;
             }
             if (value > 1000) {
-                std::cerr << "Error: too large a number." << std::endl;
+                std::cerr << "Error: too large a number => " << line << std::endl;
                 continue;
             }
 

@@ -6,12 +6,13 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/17 12:11:32 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/17 12:35:57 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
 #include <cstdlib>
+#include <iostream>
 
 // Orthodox Canonical Form implementations
 BitcoinExchange::BitcoinExchange() {}
@@ -65,15 +66,13 @@ bool BitcoinExchange::isValidValue(const double value) const {
 void BitcoinExchange::loadDatabase(const std::string& filename) {
     std::ifstream file(filename.c_str());
     if (!file.is_open()) {
-        std::cout << "Error: could not open file." << std::endl;
-        throw FileError("Could not open database file: " + filename);
+        throw FileError("Error: could not open file.");
     }
 
     std::string line;
     // Validate header
     if (!std::getline(file, line)) {
-        std::cout << "Error: empty database file." << std::endl;
-        throw FileError("Empty database file");
+        throw FileError("Error: empty database file.");
     }
 
     // Trim whitespace from header before checking
@@ -84,8 +83,7 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
         header.erase(header.length() - 1);
 
     if (header != "date,exchange_rate") {
-        std::cout << "Error: bad input => " << line << std::endl;
-        throw FileError("Invalid database header");
+        throw FileError("Error: bad input => " + line);
     }
 
     std::string prev_date = "";
@@ -98,8 +96,7 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
         // Find comma position
         size_t comma_pos = line.find(',');
         if (comma_pos == std::string::npos) {
-            std::cout << "Error: bad input => " << line << std::endl;
-            throw FileError("Invalid line format in database");
+            throw FileError("Error: bad input => " + line);
         }
 
         // Split into date and value
@@ -118,14 +115,12 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
 
         // Validate date format
         if (!isValidDate(date)) {
-            std::cout << "Error: bad input => " << line << std::endl;
-            throw FileError("Invalid date format in database");
+            throw FileError("Error: bad input => " + line);
         }
 
         // Check date sequence
         if (!prev_date.empty() && date <= prev_date) {
-            std::cout << "Error: dates not in ascending order => " << line << std::endl;
-            throw FileError("Dates not in ascending order in database");
+            throw FileError("Error: dates not in ascending order => " + line);
         }
         prev_date = date;
 
@@ -133,22 +128,19 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
         char* end;
         double value = std::strtod(value_str.c_str(), &end);
         if (*end != '\0' || value_str.empty()) {
-            std::cout << "Error: bad input => " << line << std::endl;
-            throw FileError("Invalid exchange rate format in database");
+            throw FileError("Error: bad input => " + line);
         }
 
         // Validate exchange rate value
         if (value < 0) {
-            std::cout << "Error: not a positive number." << std::endl;
-            throw FileError("Negative exchange rate in database");
+            throw FileError("Error: not a positive number.");
         }
 
         _database[date] = value;
     }
 
     if (_database.empty()) {
-        std::cout << "Error: no valid data in database." << std::endl;
-        throw FileError("No valid data in database file");
+        throw FileError("Error: no valid data in database.");
     }
 }
 
@@ -193,7 +185,7 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
 
             size_t separator = line.find(" | "); 
             if (separator == std::string::npos) {
-                std::cout << "Error: bad input => " << line << std::endl;
+                std::cerr << "Error: bad input => " << line << std::endl;
                 continue;
             }
 
@@ -211,23 +203,23 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
                 value_str.erase(value_str.length() - 1);
             
             if (!isValidDate(date)) {
-                std::cout << "Error: invalid date format or out of range => " << date << std::endl;
+                std::cerr << "Error: invalid date format or out of range => " << date << std::endl;
                 continue;
             }
 
             double value;
             std::istringstream iss(value_str);
             if (!(iss >> value) || !iss.eof()) {
-                std::cout << "Error: invalid value." << std::endl;
+                std::cerr << "Error: invalid value." << std::endl;
                 continue;
             }
 
             if (value < 0) {
-                std::cout << "Error: not a positive number." << std::endl;
+                std::cerr << "Error: not a positive number." << std::endl;
                 continue;
             }
             if (value > 1000) {
-                std::cout << "Error: too large a number." << std::endl;
+                std::cerr << "Error: too large a number." << std::endl;
                 continue;
             }
 
@@ -235,7 +227,7 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
             std::cout << date << " => " << value << " = " << (value * rate) << std::endl;
 
         } catch (const std::exception& e) {
-            std::cout << "Error: " << e.what() << std::endl;
+            std::cerr << "Error: " << e.what() << std::endl;
         }
     }
 } 

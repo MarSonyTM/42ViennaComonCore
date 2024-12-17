@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/17 11:00:16 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/17 11:11:22 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
             if (line.empty() || line[0] == '#' || line.find_first_not_of(" \t\n\r") == std::string::npos)
                 continue;
 
-            size_t separator = line.find(" | ");
+            size_t separator = line.find(" | "); 
             if (separator == std::string::npos) {
                 std::cout << "Error: bad input => " << line << std::endl;
                 continue;

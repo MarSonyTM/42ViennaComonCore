@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/17 12:35:57 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/17 12:52:14 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,33 +34,44 @@ BitcoinExchange::~BitcoinExchange() {}
 
 // Private helper methods
 bool BitcoinExchange::isValidDate(const std::string& date) const {
-    if (date.length() != 10) return false; // check if the date is 10 characters long
-    if (date[4] != '-' || date[7] != '-') return false; // check if the date is in the format YYYY-MM-DD
+    if (date.length() != 10) return false;
+    if (date[4] != '-' || date[7] != '-') return false;
+
+    // Check if all other characters are digits
+    for (int i = 0; i < 10; i++) {
+        if (i != 4 && i != 7 && !std::isdigit(date[i]))
+            return false;
+    }
 
     try {
-        int year = std::atoi(date.substr(0, 4).c_str()); // convert the year to an integer
-        int month = std::atoi(date.substr(5, 2).c_str()); // convert the month to an integer
-        int day = std::atoi(date.substr(8, 2).c_str()); // convert the day to an integer
+        int year = std::atoi(date.substr(0, 4).c_str());
+        int month = std::atoi(date.substr(5, 2).c_str());
+        int day = std::atoi(date.substr(8, 2).c_str());
 
-        if (year < 2009 || month < 1 || month > 12 || day < 1 || day > 31)  
+        // Check year range (Bitcoin started in 2009)
+        if (year < 2009) return false;
+        
+        // Check for future dates (using 2022 as the limit based on data.csv)
+        if (year > 2022) return false;
+
+        // Check month range
+        if (month < 1 || month > 12) return false;
+
+        // Check days per month
+        const int daysInMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        int maxDays = daysInMonth[month];
+
+        // Adjust February for leap years
+        if (month == 2 && ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)))
+            maxDays = 29;
+
+        if (day < 1 || day > maxDays)
             return false;
 
-        // Basic month length validation
-        if (month == 4 || month == 6 || month == 9 || month == 11) {
-            if (day > 30) return false; // check if the day is greater than 30
-        } else if (month == 2) {
-            bool isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-            if (day > (isLeap ? 29 : 28)) return false;
-        }
-
         return true;
-    } catch (const std::exception&) {
+    } catch (...) {
         return false;
     }
-}
-
-bool BitcoinExchange::isValidValue(const double value) const {
-    return value >= 0 && value <= 1000;
 }
 
 void BitcoinExchange::loadDatabase(const std::string& filename) {
@@ -179,9 +190,17 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
 
     while (std::getline(file, line)) {
         try {
-            // Skip empty lines, comments, or lines with only whitespace
-            if (line.empty() || line[0] == '#' || line.find_first_not_of(" \t\n\r") == std::string::npos)
+            // Skip empty lines or lines with only whitespace
+            if (line.empty() || line.find_first_not_of(" \t\n\r") == std::string::npos)
                 continue;
+
+            // Handle comments - skip if line starts with # or is empty after removing comment
+            size_t comment_pos = line.find('#');
+            if (comment_pos != std::string::npos) {
+                line = line.substr(0, comment_pos);
+                if (line.find_first_not_of(" \t\n\r") == std::string::npos)
+                    continue;
+            }
 
             size_t separator = line.find(" | "); 
             if (separator == std::string::npos) {
@@ -203,17 +222,20 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
                 value_str.erase(value_str.length() - 1);
             
             if (!isValidDate(date)) {
-                std::cerr << "Error: invalid date format or out of range => " << date << std::endl;
+                std::cerr << "Error: bad input => " << line << std::endl;
                 continue;
             }
 
+            // First try to convert the value
             double value;
-            std::istringstream iss(value_str);
-            if (!(iss >> value) || !iss.eof()) {
-                std::cerr << "Error: invalid value." << std::endl;
+            char* end;
+            value = std::strtod(value_str.c_str(), &end);
+            if (*end != '\0' || value_str.empty()) {
+                std::cerr << "Error: bad input => " << line << std::endl;
                 continue;
             }
 
+            // Then check value constraints
             if (value < 0) {
                 std::cerr << "Error: not a positive number." << std::endl;
                 continue;
@@ -224,10 +246,22 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
             }
 
             double rate = getExchangeRate(date);
-            std::cout << date << " => " << value << " = " << (value * rate) << std::endl;
+            
+            // Determine input precision
+            size_t decimal_pos = value_str.find('.');
+            int precision = 2;  // default precision
+            if (decimal_pos != std::string::npos) {
+                precision = value_str.length() - decimal_pos - 1;
+            }
+            
+            std::cout << std::fixed;
+            std::cout.precision(precision);
+            std::cout << date << " => " << value;
+            std::cout.precision(2);  // reset to 2 decimal places for result
+            std::cout << " = " << (value * rate) << std::endl;
 
         } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << std::endl;
+            std::cerr << e.what() << std::endl;
         }
     }
 } 

@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/17 13:41:48 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/17 14:03:57 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
     }
 
     std::string line;
+    bool hasValidData = false;
     // Skip header
     std::getline(file, line);
 
@@ -232,6 +233,7 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
             }
 
             double rate = getExchangeRate(date);
+            hasValidData = true;
             
             // Determine input precision
             size_t decimal_pos = value_str.find('.');
@@ -249,5 +251,9 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
         } catch (const std::exception& e) {
             std::cerr << e.what() << std::endl;
         }
+    }
+
+    if (!hasValidData) {
+        throw FileError("Error: no valid input found in file.");
     }
 } 

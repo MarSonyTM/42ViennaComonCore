@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:20:47 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/18 14:30:53 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/18 14:54:14 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int RPN::calculate(const std::string& expression) {
 
     while (iss >> token) {
         if (isValidNumber(token)) {
-            int num = token[0] - '0';
+            int num = token[0] - '0'; 
             if (num >= 10) {
                 throw RPNError("Error: number >= 10");
             }

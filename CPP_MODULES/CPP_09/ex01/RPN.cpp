@@ -6,11 +6,13 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:20:47 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/18 14:54:14 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/18 15:03:19 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./RPN.hpp"
+#include "RPN.hpp"
+#include <cstdlib>
+#include <limits>
 
 // Orthodox Canonical Form
 RPN::RPN() {}
@@ -46,30 +48,36 @@ void RPN::performOperation(char op) {
 
     switch (op) {
         case '+': {
-            if ((b > 0 && a > INT_MAX - b) || (b < 0 && a < INT_MIN - b))
+            if ((b > 0 && a > std::numeric_limits<int>::max() - b) || 
+                (b < 0 && a < std::numeric_limits<int>::min() - b))
                 throw RPNError("Error: addition overflow");
             _operands.push(a + b);
             break;
         }
         case '-': {
-            if ((b < 0 && a > INT_MAX + b) || (b > 0 && a < INT_MIN + b))
+            if ((b < 0 && a > std::numeric_limits<int>::max() + b) || 
+                (b > 0 && a < std::numeric_limits<int>::min() + b))
                 throw RPNError("Error: subtraction overflow");
             _operands.push(a - b);
             break;
         }
         case '*': {
             if (a != 0 && b != 0) {
-                if (std::abs(static_cast<long long>(a)) > 1000000 || 
-                    std::abs(static_cast<long long>(b)) > 1000000 ||
-                    std::abs(static_cast<long long>(a) * static_cast<long long>(b)) > INT_MAX)
+                if (labs(static_cast<long>(a)) > 1000000 || 
+                    labs(static_cast<long>(b)) > 1000000 ||
+                    labs(static_cast<long>(a) * static_cast<long>(b)) > std::numeric_limits<int>::max())
                     throw RPNError("Error: multiplication overflow");
                 
                 if (a > 0) {
-                    if (b > 0 && a > INT_MAX / b) throw RPNError("Error: multiplication overflow");
-                    if (b < 0 && a > INT_MIN / b) throw RPNError("Error: multiplication overflow");
+                    if (b > 0 && a > std::numeric_limits<int>::max() / b) 
+                        throw RPNError("Error: multiplication overflow");
+                    if (b < 0 && a > std::numeric_limits<int>::min() / b) 
+                        throw RPNError("Error: multiplication overflow");
                 } else if (a < 0) {
-                    if (b > 0 && a < INT_MIN / b) throw RPNError("Error: multiplication overflow");
-                    if (b < 0 && b < INT_MAX / a) throw RPNError("Error: multiplication overflow");
+                    if (b > 0 && a < std::numeric_limits<int>::min() / b) 
+                        throw RPNError("Error: multiplication overflow");
+                    if (b < 0 && b < std::numeric_limits<int>::max() / a) 
+                        throw RPNError("Error: multiplication overflow");
                 }
             }
             _operands.push(a * b);
@@ -78,7 +86,7 @@ void RPN::performOperation(char op) {
         case '/': {
             if (b == 0)
                 throw RPNError("Error: division by zero");
-            if (a == INT_MIN && b == -1)
+            if (a == std::numeric_limits<int>::min() && b == -1)
                 throw RPNError("Error: division overflow");
             _operands.push(a / b);
             break;
@@ -93,7 +101,7 @@ int RPN::calculate(const std::string& expression) {
 
     while (iss >> token) {
         if (isValidNumber(token)) {
-            int num = token[0] - '0'; 
+            int num = token[0] - '0';
             if (num >= 10) {
                 throw RPNError("Error: number >= 10");
             }

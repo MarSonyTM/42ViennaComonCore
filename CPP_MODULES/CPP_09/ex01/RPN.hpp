@@ -6,18 +6,18 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:20:42 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/18 14:25:09 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/18 15:03:32 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef RPN_HPP
+#define RPN_HPP
 
 #include <stack>
 #include <string>
 #include <sstream>
 #include <stdexcept>
 #include <iostream>
-#include <climits>
 
 class RPN {
 private:
@@ -43,4 +43,6 @@ public:
         public:
             explicit RPNError(const std::string& msg) : std::runtime_error(msg) {}
     };
-}; 
+};
+
+#endif

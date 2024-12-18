@@ -6,13 +6,19 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:20:47 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/18 15:03:19 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/18 15:05:21 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
 #include <cstdlib>
 #include <limits>
+#include <stdlib.h>
+
+// Helper function for absolute value (to avoid labs compatibility issues)
+static long absolute(long value) {
+    return value < 0 ? -value : value;
+}
 
 // Orthodox Canonical Form
 RPN::RPN() {}
@@ -63,9 +69,9 @@ void RPN::performOperation(char op) {
         }
         case '*': {
             if (a != 0 && b != 0) {
-                if (labs(static_cast<long>(a)) > 1000000 || 
-                    labs(static_cast<long>(b)) > 1000000 ||
-                    labs(static_cast<long>(a) * static_cast<long>(b)) > std::numeric_limits<int>::max())
+                if (absolute(static_cast<long>(a)) > 1000000 || 
+                    absolute(static_cast<long>(b)) > 1000000 ||
+                    absolute(static_cast<long>(a) * static_cast<long>(b)) > std::numeric_limits<int>::max())
                     throw RPNError("Error: multiplication overflow");
                 
                 if (a > 0) {

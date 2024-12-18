@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:20:47 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/18 15:25:55 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/18 15:29:21 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@ bool RPN::isOperator(char c) const {
 bool RPN::isValidNumber(const std::string& token) const {
     if (token.length() != 1) return false;
     return token[0] >= '0' && token[0] <= '9';
+}
+
+long RPN::absolute(long value) const {
+    return value < 0 ? -value : value;
 }
 
 void RPN::performOperation(char op) {

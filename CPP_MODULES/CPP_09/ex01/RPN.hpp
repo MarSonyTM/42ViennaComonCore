@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:20:42 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/18 15:25:40 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/18 15:29:01 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ private:
     bool isOperator(char c) const;
     void performOperation(char op);
     bool isValidNumber(const std::string& token) const;
-    long absolute(long value) const { return value < 0 ? -value : value; }
+    long absolute(long value) const;
 
 public:
     // Orthodox Canonical Form

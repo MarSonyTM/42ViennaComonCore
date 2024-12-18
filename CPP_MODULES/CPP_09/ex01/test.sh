@@ -6,11 +6,11 @@
 #    By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/12 12:31:01 by marianfurni       #+#    #+#              #
-#    Updated: 2024/12/18 15:09:59 by marianfurni      ###   ########.fr        #
+#    Updated: 2024/12/18 15:13:43 by marianfurni      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#!/bin/bash
+#!/bin/sh
 
 # Colors
 RED='\033[0;31m'
@@ -36,11 +36,10 @@ test_rpn() {
     printf "Got: %s\n" "$result"
     
     if [ "$expected" = "Error" ]; then
-        if [[ "$result" == Error:* ]]; then
-            printf "${GREEN}✓ Test passed${NC}\n"
-        else
-            printf "${RED}✗ Test failed${NC}\n"
-        fi
+        case "$result" in
+            Error:*) printf "${GREEN}✓ Test passed${NC}\n" ;;
+            *) printf "${RED}✗ Test failed${NC}\n" ;;
+        esac
     elif [ "$result" = "$expected" ]; then
         printf "${GREEN}✓ Test passed${NC}\n"
     else

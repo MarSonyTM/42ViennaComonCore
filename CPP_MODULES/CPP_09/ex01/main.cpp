@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:30:50 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/12 12:30:51 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/18 14:12:39 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        std::cerr << "Error" << std::endl;
+        std::cerr << "Error: wrong number of arguments" << std::endl;
         return 1;
     }
 
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
         std::cout << result << std::endl;
     }
     catch (const std::exception& e) {
-        std::cerr << "Error" << std::endl;
+        std::cerr << e.what() << std::endl;
         return 1;
     }
 

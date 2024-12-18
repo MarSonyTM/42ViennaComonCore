@@ -6,7 +6,7 @@
 #    By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/12 12:31:01 by marianfurni       #+#    #+#              #
-#    Updated: 2024/12/12 12:31:02 by marianfurni      ###   ########.fr        #
+#    Updated: 2024/12/18 14:13:59 by marianfurni      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,13 @@ test_rpn() {
     result=$(./RPN "$expression" 2>&1)
     echo "Got: $result"
     
-    if [ "$result" == "$expected" ]; then
+    if [ "$expected" = "Error" ]; then
+        if [[ $result == Error:* ]]; then
+            echo -e "${GREEN}✓ Test passed${NC}"
+        else
+            echo -e "${RED}✗ Test failed${NC}"
+        fi
+    elif [ "$result" == "$expected" ]; then
         echo -e "${GREEN}✓ Test passed${NC}"
     else
         echo -e "${RED}✗ Test failed${NC}"

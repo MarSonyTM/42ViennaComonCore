@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:20:47 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/12 12:30:55 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/18 14:11:26 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool RPN::isValidNumber(const std::string& token) const {
 
 void RPN::performOperation(char op) {
     if (_operands.size() < 2) {
-        throw RPNError("Error: not enough operands");
+        throw RPNError("Error: insufficient operands");
     }
 
     int b = _operands.top(); _operands.pop();
@@ -46,16 +46,28 @@ void RPN::performOperation(char op) {
 
     switch (op) {
         case '+':
+            if ((b > 0 && a > INT_MAX - b) || (b < 0 && a < INT_MIN - b))
+                throw RPNError("Error: addition overflow");
             _operands.push(a + b);
             break;
         case '-':
+            if ((b < 0 && a > INT_MAX + b) || (b > 0 && a < INT_MIN + b))
+                throw RPNError("Error: subtraction overflow");
             _operands.push(a - b);
             break;
         case '*':
+            if (a > 0) {
+                if (b > 0 && a > INT_MAX / b) throw RPNError("Error: multiplication overflow");
+                if (b < 0 && b < INT_MIN / a) throw RPNError("Error: multiplication overflow");
+            } else if (a < 0) {
+                if (b > 0 && a < INT_MIN / b) throw RPNError("Error: multiplication overflow");
+                if (b < 0 && a < INT_MAX / b) throw RPNError("Error: multiplication overflow");
+            }
             _operands.push(a * b);
             break;
         case '/':
             if (b == 0) throw RPNError("Error: division by zero");
+            if (a == INT_MIN && b == -1) throw RPNError("Error: division overflow");
             _operands.push(a / b);
             break;
     }
@@ -78,12 +90,12 @@ int RPN::calculate(const std::string& expression) {
             performOperation(token[0]);
         }
         else {
-            throw RPNError("Error: invalid token");
+            throw RPNError("Error: invalid token '" + token + "'");
         }
     }
 
     if (_operands.size() != 1) {
-        throw RPNError("Error: invalid expression");
+        throw RPNError("Error: wrong number of operators");
     }
 
     return _operands.top();

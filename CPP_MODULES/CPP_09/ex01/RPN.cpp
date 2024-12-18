@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:20:47 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/18 15:05:21 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/18 15:25:55 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 #include <cstdlib>
 #include <limits>
 #include <stdlib.h>
-
-// Helper function for absolute value (to avoid labs compatibility issues)
-static long absolute(long value) {
-    return value < 0 ? -value : value;
-}
 
 // Orthodox Canonical Form
 RPN::RPN() {}

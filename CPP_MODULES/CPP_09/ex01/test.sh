@@ -6,7 +6,7 @@
 #    By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/12 12:31:01 by marianfurni       #+#    #+#              #
-#    Updated: 2024/12/18 14:13:59 by marianfurni      ###   ########.fr        #
+#    Updated: 2024/12/18 14:33:04 by marianfurni      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,6 +66,41 @@ test_rpn "9 8 7 6 5 4 3 2 1 * * * * * * * *" "362880" "Long multiplication chain
 test_rpn "1 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 +" "45" "Long addition chain"
 test_rpn "9 8 - 7 - 6 - 5 - 4 - 3 - 2 - 1 -" "-27" "Long subtraction chain"
 test_rpn "8 4 2 / /" "4" "Division chain"
+
+# Specific Overflow Tests
+echo -e "\n${BLUE}=== Specific Overflow Tests ===${NC}"
+# Multiplication overflow tests
+test_rpn "9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 *" "Error" "Large multiplication overflow" # 9^10
+test_rpn "9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 *" "Error" "Sequential multiplication overflow" # 9^9
+test_rpn "9 9 * 9 * 9 * 9 * 9 * 9 * 9 *" "Error" "Mixed multiplication overflow" # 9^8
+
+# Division special cases
+test_rpn "5 0 /" "Error" "Division by zero"
+test_rpn "9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 0 /" "Error" "Division by zero after overflow"
+
+# Mixed overflow cases
+test_rpn "9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 +" "Error" "Addition after overflow"
+test_rpn "9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 -" "Error" "Subtraction after overflow"
+
+# Remove the non-overflow test cases
+test_rpn "9 9 * 9 * 9 * 9 * 9 * 2 +" "531443" "Large number addition (not overflow)"
+test_rpn "9 9 * 9 * 9 * 9 * 9 * 2 -" "531439" "Large number subtraction (not overflow)"
+
+# Addition chain overflow
+test_rpn "2147483647 1 +" "Error" "Addition overflow at INT_MAX"
+test_rpn "-2147483648 -1 +" "Error" "Addition overflow at INT_MIN"
+
+# Subtraction chain overflow
+test_rpn "-2147483648 1 -" "Error" "Subtraction overflow below INT_MIN"
+test_rpn "2147483647 -1 -" "Error" "Subtraction overflow above INT_MAX"
+
+# Division overflow
+test_rpn "-2147483648 -1 /" "Error" "Division overflow with INT_MIN / -1"
+test_rpn "5 0 /" "Error" "Division by zero"
+test_rpn "2147483647 0 /" "Error" "Division by zero with INT_MAX"
+
+# Mixed overflow cases
+test_rpn "9 9 * 9 * 9 * 9 * 9 * 0 /" "Error" "Division by zero after overflow"
 
 # Comprehensive Error Cases
 echo -e "\n${BLUE}=== Comprehensive Error Cases ===${NC}"

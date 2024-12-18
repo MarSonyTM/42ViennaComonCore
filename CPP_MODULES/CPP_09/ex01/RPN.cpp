@@ -6,11 +6,11 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:20:47 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/18 14:11:26 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/18 14:30:53 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "RPN.hpp"
+#include "./RPN.hpp"
 
 // Orthodox Canonical Form
 RPN::RPN() {}
@@ -45,31 +45,44 @@ void RPN::performOperation(char op) {
     int a = _operands.top(); _operands.pop();
 
     switch (op) {
-        case '+':
+        case '+': {
             if ((b > 0 && a > INT_MAX - b) || (b < 0 && a < INT_MIN - b))
                 throw RPNError("Error: addition overflow");
             _operands.push(a + b);
             break;
-        case '-':
+        }
+        case '-': {
             if ((b < 0 && a > INT_MAX + b) || (b > 0 && a < INT_MIN + b))
                 throw RPNError("Error: subtraction overflow");
             _operands.push(a - b);
             break;
-        case '*':
-            if (a > 0) {
-                if (b > 0 && a > INT_MAX / b) throw RPNError("Error: multiplication overflow");
-                if (b < 0 && b < INT_MIN / a) throw RPNError("Error: multiplication overflow");
-            } else if (a < 0) {
-                if (b > 0 && a < INT_MIN / b) throw RPNError("Error: multiplication overflow");
-                if (b < 0 && a < INT_MAX / b) throw RPNError("Error: multiplication overflow");
+        }
+        case '*': {
+            if (a != 0 && b != 0) {
+                if (std::abs(static_cast<long long>(a)) > 1000000 || 
+                    std::abs(static_cast<long long>(b)) > 1000000 ||
+                    std::abs(static_cast<long long>(a) * static_cast<long long>(b)) > INT_MAX)
+                    throw RPNError("Error: multiplication overflow");
+                
+                if (a > 0) {
+                    if (b > 0 && a > INT_MAX / b) throw RPNError("Error: multiplication overflow");
+                    if (b < 0 && a > INT_MIN / b) throw RPNError("Error: multiplication overflow");
+                } else if (a < 0) {
+                    if (b > 0 && a < INT_MIN / b) throw RPNError("Error: multiplication overflow");
+                    if (b < 0 && b < INT_MAX / a) throw RPNError("Error: multiplication overflow");
+                }
             }
             _operands.push(a * b);
             break;
-        case '/':
-            if (b == 0) throw RPNError("Error: division by zero");
-            if (a == INT_MIN && b == -1) throw RPNError("Error: division overflow");
+        }
+        case '/': {
+            if (b == 0)
+                throw RPNError("Error: division by zero");
+            if (a == INT_MIN && b == -1)
+                throw RPNError("Error: division overflow");
             _operands.push(a / b);
             break;
+        }
     }
 }
 

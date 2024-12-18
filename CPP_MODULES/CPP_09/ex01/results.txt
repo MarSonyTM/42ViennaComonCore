@@ -1,0 +1,323 @@
+Compiling...
+rm -f main.o RPN.o
+rm -f RPN
+c++ -Wall -Wextra -Werror -std=c++98 -c main.cpp -o main.o
+c++ -Wall -Wextra -Werror -std=c++98 -c RPN.cpp -o RPN.o
+c++ -Wall -Wextra -Werror -std=c++98 main.o RPN.o -o RPN
+
+=== Basic Tests from Subject ===
+
+Testing: Basic test 1
+Expression: 8 9 * 9 - 9 - 9 - 4 - 1 +
+Expected: 42
+Got: 42
+✓ Test passed
+
+Testing: Basic test 2
+Expression: 7 7 * 7 -
+Expected: 42
+Got: 42
+✓ Test passed
+
+Testing: Basic test 3
+Expression: 1 2 * 2 / 2 * 2 4 - +
+Expected: 0
+Got: 0
+✓ Test passed
+
+=== Advanced Tests ===
+
+Testing: Complex expression 1
+Expression: 9 8 * 4 * 4 / 2 + 9 - 8 - 8 - 1 - 6 -
+Expected: 42
+Got: 42
+✓ Test passed
+
+Testing: Complex expression 2
+Expression: 1 2 * 2 / 2 + 5 * 6 - 1 3 * - 4 5 * * 8 /
+Expected: 15
+Got: 15
+✓ Test passed
+
+=== Additional Complex Operations ===
+
+Testing: Multiple operations with precedence
+Expression: 3 4 + 5 * 7 2 - *
+Expected: 175
+Got: 175
+✓ Test passed
+
+Testing: Long multiplication chain
+Expression: 9 8 7 6 5 4 3 2 1 * * * * * * * *
+Expected: 362880
+Got: 362880
+✓ Test passed
+
+Testing: Long addition chain
+Expression: 1 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 +
+Expected: 45
+Got: 45
+✓ Test passed
+
+Testing: Long subtraction chain
+Expression: 9 8 - 7 - 6 - 5 - 4 - 3 - 2 - 1 -
+Expected: -27
+Got: -27
+✓ Test passed
+
+Testing: Division chain
+Expression: 8 4 2 / /
+Expected: 4
+Got: 4
+✓ Test passed
+
+=== Specific Overflow Tests ===
+
+Testing: Large multiplication overflow
+Expression: 9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 *
+Expected: Error
+Got: Error: multiplication overflow
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Sequential multiplication overflow
+Expression: 9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 *
+Expected: Error
+Got: Error: multiplication overflow
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Mixed multiplication overflow
+Expression: 9 9 * 9 * 9 * 9 * 9 * 9 * 9 *
+Expected: Error
+Got: Error: multiplication overflow
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Division by zero
+Expression: 5 0 /
+Expected: Error
+Got: Error: division by zero
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Division by zero after overflow
+Expression: 9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 0 /
+Expected: Error
+Got: Error: multiplication overflow
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Addition after overflow
+Expression: 9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 +
+Expected: Error
+Got: Error: multiplication overflow
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Subtraction after overflow
+Expression: 9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 -
+Expected: Error
+Got: Error: multiplication overflow
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Large number addition
+Expression: 9 9 * 9 * 9 * 9 * 9 * 2 +
+Expected: 531443
+Got: 531443
+✓ Test passed
+
+Testing: Large number subtraction
+Expression: 9 9 * 9 * 9 * 9 * 9 * 2 -
+Expected: 531439
+Got: 531439
+✓ Test passed
+
+=== Comprehensive Error Cases ===
+
+Testing: Parentheses not allowed
+Expression: (1 + 1)
+Expected: Error
+Got: Error: invalid token '(1'
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Too many operands
+Expression: 1 2 3 +
+Expected: Error
+Got: Error: wrong number of operators
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Not enough operands
+Expression: 1 +
+Expected: Error
+Got: Error: insufficient operands
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Invalid operator
+Expression: 1 2 &
+Expected: Error
+Got: Error: invalid token '&'
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Empty expression
+Expression: 
+Expected: Error
+Got: Error: wrong number of operators
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Number >= 10
+Expression: 10 2 +
+Expected: Error
+Got: Error: invalid token '10'
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Division by zero
+Expression: 5 0 /
+Expected: Error
+Got: Error: division by zero
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Too many operators
+Expression: 1 2 + +
+Expected: Error
+Got: Error: insufficient operands
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Decimal numbers
+Expression: 1.5 2 +
+Expected: Error
+Got: Error: invalid token '1.5'
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Invalid characters
+Expression: a b +
+Expected: Error
+Got: Error: invalid token 'a'
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Only operator
+Expression: +
+Expected: Error
+Got: Error: insufficient operands
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Only numbers, no operator
+Expression: 1 2
+Expected: Error
+Got: Error: wrong number of operators
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Only operators, no numbers
+Expression: * * *
+Expected: Error
+Got: Error: insufficient operands
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Infix notation instead of RPN
+Expression: 1 + 2
+Expected: Error
+Got: Error: insufficient operands
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: No spaces between tokens
+Expression: 1 2+
+Expected: Error
+Got: Error: invalid token '2+'
+./test.sh: 39: [[: not found
+✗ Test failed
+
+Testing: Only spaces
+Expression:   
+Expected: Error
+Got: Error: wrong number of operators
+./test.sh: 39: [[: not found
+✗ Test failed
+
+=== Edge Cases and Boundary Tests ===
+
+Testing: Zero addition
+Expression: 0 0 +
+Expected: 0
+Got: 0
+✓ Test passed
+
+Testing: Zero divided by number
+Expression: 0 1 /
+Expected: 0
+Got: 0
+✓ Test passed
+
+Testing: Maximum valid numbers
+Expression: 9 9 *
+Expected: 81
+Got: 81
+✓ Test passed
+
+Testing: Multiple operations
+Expression: 1 2 + 3 + 4 + 5 +
+Expected: 15
+Got: 15
+✓ Test passed
+
+Testing: Simple subtraction
+Expression: 9 1 -
+Expected: 8
+Got: 8
+✓ Test passed
+
+Testing: Multiple multiplications
+Expression: 2 3 * 4 *
+Expected: 24
+Got: 24
+✓ Test passed
+
+=== Mixed Operations Tests ===
+
+Testing: Mixed arithmetic 1
+Expression: 3 4 + 5 * 2 /
+Expected: 17
+Got: 17
+✓ Test passed
+
+Testing: Mixed arithmetic 2
+Expression: 9 3 / 2 * 4 +
+Expected: 10
+Got: 10
+✓ Test passed
+
+Testing: Mixed arithmetic 3
+Expression: 5 3 - 4 * 2 /
+Expected: 4
+Got: 4
+✓ Test passed
+
+Testing: Mixed arithmetic 4
+Expression: 1 2 + 3 * 4 - 5 +
+Expected: 10
+Got: 10
+✓ Test passed
+
+Testing: Mixed arithmetic 5
+Expression: 7 3 * 5 + 2 - 4 /
+Expected: 6
+Got: 6
+✓ Test passed
+
+Cleaning up...
+rm -f main.o RPN.o
+rm -f RPN

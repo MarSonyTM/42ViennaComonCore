@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:20:48 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/17 10:55:29 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/20 10:12:09 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@
 class BitcoinExchange {
 private:
     std::map<std::string, double> _database; // the main container that stores bitcoin data->price mapping
+    static const double MAX_ALLOWED_VALUE; // Maximum value from database
 
     // Private helper methods
     bool isValidDate(const std::string& date) const; 
-    bool isValidValue(const double value) const;
+    bool isValidNumber(const std::string& str) const;
     void loadDatabase(const std::string& filename);
     std::string findClosestDate(const std::string& date) const;
 

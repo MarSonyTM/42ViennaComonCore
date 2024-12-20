@@ -6,13 +6,19 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/17 15:12:18 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/20 10:22:44 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
 #include <cstdlib>
 #include <iostream>
+#include <cfloat>
+#include <cerrno>
+#include <cmath>
+
+// Define the static member
+const double BitcoinExchange::MAX_ALLOWED_VALUE = 66063.56;
 
 // Orthodox Canonical Form implementations
 BitcoinExchange::BitcoinExchange() {}
@@ -39,7 +45,7 @@ bool BitcoinExchange::isValidDate(const std::string& date) const {
 
     // Check if all other characters are digits
     for (int i = 0; i < 10; i++) {
-        if (i != 4 && i != 7 && !std::isdigit(date[i]))
+        if (i != 4 && i != 7 && !std::isdigit(date[i])) // check if the character is not a digit and not the separator
             return false;
     }
 
@@ -118,14 +124,20 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
 
         // Validate and convert exchange rate
         char* end;
+        errno = 0;  // Reset errno before conversion
         double value = std::strtod(value_str.c_str(), &end);
-        if (*end != '\0' || value_str.empty()) {
+        if (*end != '\0' || value_str.empty() || errno == ERANGE) {
             throw FileError("Error: bad input => " + line);
         }
 
         // Validate exchange rate value
         if (value < 0) {
             throw FileError("Error: not a positive number => " + line);
+        }
+
+        // Check if the value exceeds the maximum allowed value
+        if (value > MAX_ALLOWED_VALUE) {
+            throw FileError("Error: unrealistic exchange rate (max allowed: " + std::to_string(MAX_ALLOWED_VALUE) + ") => " + line);
         }
 
         _database[date] = value;
@@ -162,6 +174,19 @@ double BitcoinExchange::getExchangeRate(const std::string& date) const {
         std::cerr << "Warning: Using rate " << rate << " from " << closest_date << " instead of " << date << std::endl;
     }
     return rate;
+}
+
+bool BitcoinExchange::isValidNumber(const std::string& str) const
+{
+    if (str.empty())
+        return false;
+    
+    for (size_t i = 0; i < str.length(); ++i)
+    {
+        if (!std::isdigit(str[i]) && str[i] != '.' && (i != 0 || str[i] != '-'))
+            return false;
+    }
+    return true;
 }
 
 void BitcoinExchange::processInputFile(const std::string& input_file) {
@@ -213,11 +238,20 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
                 continue;
             }
 
-            // First try to convert the value
+            // First validate the number format
+            if (!isValidNumber(value_str)) {
+                std::cerr << "Error: bad input => " << line << std::endl;
+                continue;
+            }
+
+            // Then try to convert the value
             double value;
             char* end;
+            errno = 0;  // Reset errno before conversion
             value = std::strtod(value_str.c_str(), &end);
-            if (*end != '\0' || value_str.empty()) {
+            
+            // Check for conversion errors or overflow
+            if (*end != '\0' || errno == ERANGE) {
                 std::cerr << "Error: bad input => " << line << std::endl;
                 continue;
             }
@@ -227,6 +261,7 @@ void BitcoinExchange::processInputFile(const std::string& input_file) {
                 std::cerr << "Error: not a positive number => " << line << std::endl;
                 continue;
             }
+            // According to subject, value must not be above 1000
             if (value > 1000) {
                 std::cerr << "Error: too large a number => " << line << std::endl;
                 continue;

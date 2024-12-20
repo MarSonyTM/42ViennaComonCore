@@ -6,16 +6,14 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/20 10:45:17 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/20 11:11:03 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
 #include <cstdlib> // std::atoi, std::strtod
 #include <iostream> // std::cout, std::cerr
-#include <cfloat> // std::numeric_limits
 #include <cerrno> // std::errno
-#include <cmath> // std::abs
 #include <sstream> // std::ostringstream
 
 // Helper function declaration to convert double to string for error messages

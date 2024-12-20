@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/20 10:22:44 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/20 10:28:03 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@
 #include <cfloat>
 #include <cerrno>
 #include <cmath>
+#include <sstream>
+
+// Helper function declaration
+std::string doubleToString(double value) {
+    std::ostringstream oss;
+    oss << value;
+    return oss.str();
+}
 
 // Define the static member
 const double BitcoinExchange::MAX_ALLOWED_VALUE = 66063.56;
@@ -137,7 +145,7 @@ void BitcoinExchange::loadDatabase(const std::string& filename) {
 
         // Check if the value exceeds the maximum allowed value
         if (value > MAX_ALLOWED_VALUE) {
-            throw FileError("Error: unrealistic exchange rate (max allowed: " + std::to_string(MAX_ALLOWED_VALUE) + ") => " + line);
+            throw FileError("Error: unrealistic exchange rate (max allowed: " + doubleToString(MAX_ALLOWED_VALUE) + ") => " + line);
         }
 
         _database[date] = value;

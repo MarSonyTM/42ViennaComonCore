@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:20:47 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/18 15:29:21 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/20 11:19:18 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,14 +105,14 @@ int RPN::calculate(const std::string& expression) {
     std::string token;
 
     while (iss >> token) {
-        if (isValidNumber(token)) {
+        if (isValidNumber(token)) {    // Check if the token is a number , if so push it to the stack
             int num = token[0] - '0';
             if (num >= 10) {
                 throw RPNError("Error: number >= 10");
             }
             _operands.push(num);
         }
-        else if (token.length() == 1 && isOperator(token[0])) {
+        else if (token.length() == 1 && isOperator(token[0])) { // Check if the token is an operator, if so perform the operation
             performOperation(token[0]);
         }
         else {
@@ -124,5 +124,5 @@ int RPN::calculate(const std::string& expression) {
         throw RPNError("Error: wrong number of operators");
     }
 
-    return _operands.top();
+    return _operands.top(); // Return the result
 } 

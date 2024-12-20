@@ -6,19 +6,19 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:23:17 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/20 10:28:03 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/20 10:45:17 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
-#include <cstdlib>
-#include <iostream>
-#include <cfloat>
-#include <cerrno>
-#include <cmath>
-#include <sstream>
+#include <cstdlib> // std::atoi, std::strtod
+#include <iostream> // std::cout, std::cerr
+#include <cfloat> // std::numeric_limits
+#include <cerrno> // std::errno
+#include <cmath> // std::abs
+#include <sstream> // std::ostringstream
 
-// Helper function declaration
+// Helper function declaration to convert double to string for error messages
 std::string doubleToString(double value) {
     std::ostringstream oss;
     oss << value;
@@ -48,16 +48,18 @@ BitcoinExchange::~BitcoinExchange() {}
 
 // Private helper methods
 bool BitcoinExchange::isValidDate(const std::string& date) const {
+    // Check length and forma (yyyy-mm-dd)
     if (date.length() != 10) return false;
     if (date[4] != '-' || date[7] != '-') return false;
 
-    // Check if all other characters are digits
+    // Check if all other characters are digits exept for dashes
     for (int i = 0; i < 10; i++) {
         if (i != 4 && i != 7 && !std::isdigit(date[i])) // check if the character is not a digit and not the separator
             return false;
     }
 
     try {
+        // extract year, month, day from date
         int year = std::atoi(date.substr(0, 4).c_str());
         int month = std::atoi(date.substr(5, 2).c_str());
         int day = std::atoi(date.substr(8, 2).c_str());
@@ -89,6 +91,7 @@ bool BitcoinExchange::isValidDate(const std::string& date) const {
 }
 
 void BitcoinExchange::loadDatabase(const std::string& filename) {
+    // Open the database file
     std::ifstream file(filename.c_str());
     if (!file.is_open()) {
         throw FileError("Error: could not open database file.");

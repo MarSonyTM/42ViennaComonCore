@@ -6,18 +6,18 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:20:48 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/20 10:12:09 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/20 10:37:59 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <map>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <stdexcept>
+#include <map> // map container
+#include <string> // string container
+#include <fstream> // file stream
+#include <sstream> // string stream
+#include <iostream> // input/output stream
+#include <stdexcept> // standard exception
 
 class BitcoinExchange {
 private:

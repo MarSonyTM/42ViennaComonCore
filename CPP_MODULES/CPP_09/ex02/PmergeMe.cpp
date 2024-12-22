@@ -6,7 +6,7 @@
 /*   By: marianfurnica <marianfurnica@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:52:04 by marianfurni       #+#    #+#             */
-/*   Updated: 2024/12/12 13:00:29 by marianfurni      ###   ########.fr       */
+/*   Updated: 2024/12/20 12:51:17 by marianfurni      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,19 @@ PmergeMe::~PmergeMe() {}
 // Helper methods for vector
 void PmergeMe::mergeInsertSortVector(std::vector<int>& arr, int left, int right) {
     if (right - left > 10) {  // Use merge sort for larger sequences
-        int mid = (left + right) / 2;
-        mergeInsertSortVector(arr, left, mid);
-        mergeInsertSortVector(arr, mid + 1, right);
-        mergeVector(arr, left, mid, right);
+        int mid = (left + right) / 2; //mid is the middle of the array
+        mergeInsertSortVector(arr, left, mid);  //sort the left half
+        mergeInsertSortVector(arr, mid + 1, right); //sort the right half
+        mergeVector(arr, left, mid, right); //merge the two halves
     } else {  // Use insertion sort for small sequences
         insertionSortVector(arr, left, right);
     }
-}
+} 
 
 void PmergeMe::insertionSortVector(std::vector<int>& arr, int left, int right) {
-    for (int i = left + 1; i <= right; i++) {
+    for (int i = left + 1; i <= right; i++) { 
         int key = arr[i];
-        int j = i - 1;
+        int j = i - 1; 
         while (j >= left && arr[j] > key) {
             arr[j + 1] = arr[j];
             j--;

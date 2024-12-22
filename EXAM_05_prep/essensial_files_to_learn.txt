@@ -1,0 +1,85 @@
+Let me break down the files needed for each exercise:
+cpp_module_00:
+Warlock.hpp
+Warlock.cpp
+main.cpp (for testing)
+Total new files: 2 (excluding main)
+cpp_module_01:
+New files you need to write:
+ASpell.hpp
+ASpell.cpp
+ATarget.hpp
+ATarget.cpp
+Fwoosh.hpp
+Fwoosh.cpp
+Dummy.hpp
+Dummy.cpp
+Modified Warlock.hpp
+Modified Warlock.cpp
+Total new files: 8 (excluding modified Warlock files)
+cpp_module_02:
+New files you need to write:
+Fireball.hpp
+Fireball.cpp
+Polymorph.hpp
+Polymorph.cpp
+BrickWall.hpp
+BrickWall.cpp
+SpellBook.hpp
+SpellBook.cpp
+TargetGenerator.hpp
+TargetGenerator.cpp
+Modified Warlock.hpp
+Modified Warlock.cpp
+Total new files: 10 (excluding modified Warlock files)
+Files that get copied/reused:
+From module_01 to module_02:
+ASpell.hpp/cpp
+ATarget.hpp/cpp
+Dummy.hpp/cpp (though not required in module_02)
+So for each exercise, you need to write:
+cpp_module_00: 2 files
+cpp_module_01: 8 new files
+cpp_module_02: 10 new files
+The rest are either copied from previous modules or are test files (main.cpp).
+
+Here's a strategic approach for the exam:
+Start with cpp_module_00 (Warlock basics)
+Write Warlock.hpp first:
+Private attributes (name, title)
+Private constructors to prevent copying
+Public constructor with name and title
+Getters and setters
+Write Warlock.cpp:
+Constructor with message
+Destructor with message
+Simple getters/setters implementation
+Introduce function
+Move to cpp_module_01 (Spells and Targets)
+Write abstract classes first:
+ASpell.hpp (name, effects, clone pure virtual)
+ATarget.hpp (type, clone pure virtual)
+Implement concrete classes:
+Fwoosh spell (simple spell with fixed name/effects)
+Dummy target (simple target with fixed type)
+Modify Warlock:
+Add spell management (map of spells)
+Add learn/forget/launch functions
+Finally, cpp_module_02 (SpellBook and Generator)
+Create new concrete classes first:
+Fireball spell
+Polymorph spell
+BrickWall target
+Create management classes:
+SpellBook (similar to Warlock's spell management)
+TargetGenerator (similar pattern to SpellBook)
+Modify Warlock to use SpellBook
+Key Tips:
+Copy-Paste Strategy:
+Keep the first module's files as templates
+Most classes follow similar patterns (constructors, destructors, clone)
+SpellBook and TargetGenerator have similar structures
+Memory Management:
+Always clone spells/targets when storing
+Delete in destructors
+Prevent copying (private copy constructor/assignment)

@@ -187,3 +187,189 @@ Feel free to submit issues and enhancement requests!
 
 ---
 *Made with ❤️ for insurance software developers* 
+
+## 🛠️ Development Tools & Setup
+
+### Essential Development Tools 🔧
+<details>
+<summary><b>Lombok - Code Generation</b></summary>
+
+```java
+// Example: Self-employed Insurance Policy Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class SelfEmployedPolicy {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String businessName;
+    private String ownerName;
+    private String businessType;
+    private LocalDate coverageStartDate;
+    private BigDecimal monthlyPremium;
+    
+    @Enumerated(EnumType.STRING)
+    private CoverageType coverageType;
+}
+```
+
+Benefits:
+- ✨ Automatic getter/setter generation
+- 📝 Reduced boilerplate code
+- 🐛 Fewer bugs from manual code
+- 🔄 Easy to maintain
+</details>
+
+<details>
+<summary><b>JHipster - Application Generator</b></summary>
+
+```bash
+# Generate Self-employed Insurance Application
+jhipster
+
+# Recommended choices:
+- Monolithic application
+- PostgreSQL database
+- React frontend
+- JWT authentication
+- REST APIs
+```
+
+Generated Features:
+- 👤 User management system
+- 🔒 Security setup
+- 📊 Database configuration
+- 📱 Responsive UI
+- 📝 API documentation
+</details>
+
+### Self-Employed Insurance Application Features 📋
+
+<details>
+<summary><b>Core Business Requirements</b></summary>
+
+```mermaid
+mindmap
+  root((Self-Employed Insurance))
+    Policy Management
+      Quick Quote
+      Policy Creation
+      Document Generation
+    Risk Assessment
+      Business Type Analysis
+      Coverage Calculation
+      Premium Determination
+    Claims Processing
+      Online Submission
+      Document Upload
+      Status Tracking
+    Billing
+      Monthly Premiums
+      Payment Processing
+      Invoice Generation
+```
+</details>
+
+### Database Schema for Self-Employed System 🗃️
+
+```mermaid
+erDiagram
+    SelfEmployedPolicy ||--o{ Coverage : has
+    SelfEmployedPolicy ||--o{ Claims : manages
+    SelfEmployedPolicy {
+        string businessName
+        string ownerName
+        string businessType
+        date startDate
+        decimal premium
+    }
+    Coverage {
+        string type
+        decimal amount
+        boolean active
+    }
+    Claims {
+        date submissionDate
+        string status
+        decimal amount
+    }
+```
+
+### API Structure 🔌
+
+```mermaid
+sequenceDiagram
+    Client->>+API: Get Quote Request
+    API->>+RiskAssessment: Evaluate Business
+    RiskAssessment->>+PremiumCalculator: Calculate Premium
+    PremiumCalculator-->>-API: Premium Quote
+    API-->>-Client: Quote Response
+```
+
+### Development Environment Setup 💻
+
+```bash
+# Project initialization
+spring init --dependencies=web,data-jpa,security,lombok --name=self-employed-insurance
+
+# Essential dependencies in pom.xml
+<dependencies>
+    <!-- Spring Boot Starter -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    
+    <!-- Lombok for code generation -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.22</version>
+    </dependency>
+    
+    <!-- Database -->
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+    </dependency>
+</dependencies>
+```
+
+### Quick Start Guide 🚀
+
+1. **Setup Development Environment**:
+   ```bash
+   # Install required tools
+   npm install -g generator-jhipster
+   ```
+
+2. **Generate Project Structure**:
+   ```bash
+   jhipster
+   # Select options for self-employed insurance system
+   ```
+
+3. **Implement Core Features**:
+   ```java
+   @RestController
+   @RequestMapping("/api/policies")
+   public class PolicyController {
+       @PostMapping("/quote")
+       public QuoteResponse getQuote(@RequestBody BusinessInfo info) {
+           // Implementation
+       }
+   }
+   ```
+
+### Best Practices for Insurance Applications ✅
+
+- 🔒 Implement strict data validation
+- 📊 Use proper logging for audit trails
+- 🔐 Ensure GDPR compliance
+- 📄 Generate PDF documents for policies
+- 💰 Implement secure payment processing
+
+[previous content continues...] 

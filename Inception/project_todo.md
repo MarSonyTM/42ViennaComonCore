@@ -1,9 +1,12 @@
 # Inception Project Todo List
 
 ## Environment Setup Notes
-- Project can be developed on both school computers and personal Mac
-- Requires VM setup in both environments
-- When moving between environments:
+- [x] Project can be developed on both school computers and personal Mac
+- [x] Requires VM setup in both environments
+  - [x] Virtual Machine with Ubuntu 24.04.1 LTS is set up
+  - [ ] Docker installation pending
+  - [ ] Docker Compose installation pending
+- [ ] When moving between environments:
   1. Clone Git repository
   2. Rebuild Docker images
   3. Recreate volumes
@@ -12,10 +15,10 @@
 ## Detailed Todo List
 
 ### 1. Initial Setup
-- [ ] Create Virtual Machine
-  - Ubuntu/Debian (x86_64 version)
-  - Sufficient resources (CPU, RAM, Storage)
-  - Docker and Docker Compose installed
+- [x] Create Virtual Machine
+  - [x] Ubuntu (x86_64 version) - Running Ubuntu 24.04.1 LTS
+  - [x] Sufficient resources (CPU, RAM, Storage)
+  - [ ] Docker and Docker Compose installed
 - [ ] Create Project Structure:
 ```
 Inception/
@@ -172,3 +175,9 @@ Inception/
 8. Containers must restart on crash
 9. WordPress admin username restrictions
 10. Environment variables mandatory 
+
+## Next Steps:
+1. Install Docker and Docker Compose
+2. Create the basic project structure
+3. Set up initial configuration files (Makefile, .env, docker-compose.yml)
+4. Begin service configuration starting with NGINX 

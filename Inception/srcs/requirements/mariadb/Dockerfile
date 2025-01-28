@@ -7,7 +7,8 @@ RUN apk update && apk add --no-cache \
     mariadb-client \
     mariadb-server-utils \
     && mkdir -p /run/mysqld \
-    && chown -R mysql:mysql /run/mysqld \
+    && mkdir -p /var/log/mysql \
+    && chown -R mysql:mysql /run/mysqld /var/log/mysql \
     && chmod 777 /run/mysqld
 
 # Copy configuration and initialization scripts

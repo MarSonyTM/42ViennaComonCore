@@ -57,79 +57,79 @@ Inception/
 - [ ] Configure domain name (login.42.fr -> local IP)
 
 ### 3. NGINX Setup
-- [ ] Create Dockerfile
-  - Use penultimate stable Alpine/Debian
-  - No latest tag
-- [ ] SSL/TLS Configuration
-  - TLSv1.2 or TLSv1.3 only
-  - Port 443 only
-- [ ] Reverse Proxy Setup
-  - Forward to WordPress container
-  - Handle SSL termination
+- [x] Create Dockerfile
+  - [x] Use penultimate stable Alpine/Debian (Alpine 3.17)
+  - [x] No latest tag
+- [x] SSL/TLS Configuration
+  - [x] TLSv1.2 or TLSv1.3 only
+  - [x] Port 443 only
+- [x] Reverse Proxy Setup
+  - [x] Forward to WordPress container
+  - [x] Handle SSL termination
 
 ### 4. MariaDB Setup
-- [ ] Create Dockerfile
-  - Use penultimate stable Alpine/Debian
-  - No latest tag
-- [ ] Database Configuration
-  - Initialize database
-  - Create required users
-  - Set up secure passwords
-- [ ] Volume Setup
-  - Configure persistence
-  - Set correct permissions
+- [x] Create Dockerfile
+  - [x] Use penultimate stable Alpine/Debian (Alpine 3.17)
+  - [x] No latest tag
+- [x] Database Configuration
+  - [x] Initialize database
+  - [x] Create required users
+  - [x] Set up secure passwords
+- [x] Volume Setup
+  - [x] Configure persistence
+  - [x] Set correct permissions
 
 ### 5. WordPress Setup
-- [ ] Create Dockerfile
-  - Use penultimate stable Alpine/Debian
-  - No latest tag
-- [ ] PHP-FPM Configuration
-  - Install and configure php-fpm
-  - Optimize settings
-- [ ] WordPress Setup
-  - Install WordPress files
-  - Configure wp-config.php
-- [ ] Volume Configuration
-  - Website files persistence
-  - Correct permissions
+- [x] Create Dockerfile
+  - [x] Use penultimate stable Alpine/Debian (Alpine 3.17)
+  - [x] No latest tag
+- [x] PHP-FPM Configuration
+  - [x] Install and configure php-fpm
+  - [x] Optimize settings
+- [x] WordPress Setup
+  - [x] Install WordPress files
+  - [x] Configure wp-config.php
+- [x] Volume Configuration
+  - [x] Website files persistence
+  - [x] Correct permissions
 
 ### 6. Network & Volumes
-- [ ] Docker Network
-  - Create custom network
-  - No host network usage
-  - No links allowed
-- [ ] Volume Setup
-  - WordPress files in /home/login/data
-  - MariaDB data in /home/login/data
-  - Proper permissions and ownership
+- [x] Docker Network
+  - [x] Create custom network
+  - [x] No host network usage
+  - [x] No links allowed
+- [x] Volume Setup
+  - [x] WordPress files in /home/login/data
+  - [x] MariaDB data in /home/login/data
+  - [x] Proper permissions and ownership
 
 ### 7. Security & Best Practices
-- [ ] Environment Variables
-  - Move all credentials to .env
-  - Use Docker secrets where appropriate
-- [ ] Container Configuration
-  - Proper restart policies
-  - No infinite loops
-  - No hacky solutions (tail -f, sleep infinity, etc.)
-- [ ] Process Management
-  - Understand PID 1
-  - Proper daemon usage
-  - Clean shutdown handling
+- [x] Environment Variables
+  - [x] Move all credentials to .env
+  - [x] Use Docker secrets where appropriate
+- [x] Container Configuration
+  - [x] Proper restart policies
+  - [x] No infinite loops
+  - [x] No hacky solutions (tail -f, sleep infinity, etc.)
+- [x] Process Management
+  - [x] Understand PID 1
+  - [x] Proper daemon usage
+  - [x] Clean shutdown handling
 
 ### 8. Testing & Verification
-- [ ] Container Tests
-  - Crash recovery
-  - Proper startup
-  - Clean shutdown
-- [ ] Functionality Tests
-  - SSL/TLS verification
-  - WordPress access
-  - Database persistence
-  - File persistence
-- [ ] Security Tests
-  - No exposed passwords
-  - Proper network isolation
-  - SSL/TLS configuration
+- [x] Container Tests
+  - [x] Proper startup
+  - [x] Clean shutdown
+  - [x] Crash recovery (using unless-stopped policy)
+- [x] Functionality Tests
+  - [x] SSL/TLS verification (TLSv1.2/1.3)
+  - [x] WordPress access
+  - [x] Database persistence
+  - [x] File persistence
+- [x] Security Tests
+  - [x] No exposed passwords
+  - [x] Proper network isolation
+  - [x] SSL/TLS configuration
 
 ### 9. Optional Bonus Features
 - [ ] Redis Cache
@@ -195,4 +195,8 @@ Inception/
 - Makefile created with all necessary targets
 - README.md created with command documentation
 - Environment variables and secrets configured
-- Next task: Set up docker-compose.yml 
+- MariaDB container configured and working
+- WordPress container configured and working
+- NGINX container configured and working
+- All mandatory requirements verified and working
+- Next task: Update README with comprehensive documentation 

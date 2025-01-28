@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  nginx:
+    build:
+      context: requirements/nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: ${RESTART_POLICY}
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception_network
+    depends_on:
+      - wordpress
+
   mariadb:
     build:
       context: requirements/mariadb
@@ -21,6 +36,25 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  wordpress:
+    build:
+      context: requirements/wordpress
+      dockerfile: Dockerfile
+    container_name: wordpress
+    restart: ${RESTART_POLICY}
+    env_file:
+      - .env
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception_network
+    secrets:
+      - db_password
+      - credentials
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
 networks:
   inception_network:

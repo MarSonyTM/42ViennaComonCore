@@ -1,20 +1,23 @@
 #!/bin/sh
 
-# Wait for MySQL to be ready for connections
-while ! mysqladmin ping -h localhost --silent; do
-    sleep 1
-done
-
 # Initialize MySQL data directory if it's empty
 if [ ! -d "/var/lib/mysql/mysql" ]; then
     # Initialize MySQL data directory
     mysql_install_db --user=mysql --datadir=/var/lib/mysql > /dev/null
+fi
 
-    # Start MySQL server in background
-    mysqld --user=mysql --bootstrap << EOF
-USE mysql;
-FLUSH PRIVILEGES;
+# Start MariaDB server
+/usr/bin/mysqld --user=mysql --datadir=/var/lib/mysql &
 
+# Wait for MariaDB to be ready
+until mysqladmin ping -h "localhost" --silent; do
+    sleep 1
+done
+
+# Check if WordPress database exists
+if ! mysql -u root -e "USE ${MYSQL_DATABASE}" 2>/dev/null; then
+    # Configure MariaDB
+    mysql -u root << EOF
 # Create database
 CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
 
@@ -32,5 +35,8 @@ FLUSH PRIVILEGES;
 EOF
 fi
 
-# Start MySQL server
-exec mysqld --user=mysql 
+# Stop the temporary MariaDB server
+mysqladmin -u root shutdown
+
+# Start MariaDB server in the foreground
+exec mysqld --user=mysql --console 

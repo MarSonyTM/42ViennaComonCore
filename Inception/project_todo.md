@@ -4,8 +4,8 @@
 - [x] Project can be developed on both school computers and personal Mac
 - [x] Requires VM setup in both environments
   - [x] Virtual Machine with Ubuntu 24.04.1 LTS is set up
-  - [ ] Docker installation pending
-  - [ ] Docker Compose installation pending
+  - [x] Docker installation completed (version 26.1.3)
+  - [x] Docker Compose installation completed (version 2.27.1)
 - [ ] When moving between environments:
   1. Clone Git repository
   2. Rebuild Docker images
@@ -18,8 +18,8 @@
 - [x] Create Virtual Machine
   - [x] Ubuntu (x86_64 version) - Running Ubuntu 24.04.1 LTS
   - [x] Sufficient resources (CPU, RAM, Storage)
-  - [ ] Docker and Docker Compose installed
-- [ ] Create Project Structure:
+  - [x] Docker and Docker Compose installed
+- [x] Create Project Structure:
 ```
 Inception/
 ├── Makefile
@@ -177,7 +177,10 @@ Inception/
 10. Environment variables mandatory 
 
 ## Next Steps:
-1. Install Docker and Docker Compose
-2. Create the basic project structure
-3. Set up initial configuration files (Makefile, .env, docker-compose.yml)
+1. ~~Install Docker and Docker Compose~~ ✓
+2. ~~Create the basic project structure~~ ✓
+3. Set up initial configuration files:
+   - Create basic Makefile
+   - Configure .env file
+   - Set up docker-compose.yml
 4. Begin service configuration starting with NGINX 

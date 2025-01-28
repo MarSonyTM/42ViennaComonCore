@@ -46,12 +46,12 @@ Inception/
 ```
 
 ### 2. Environment Configuration
-- [ ] Create `.env` file with:
+- [x] Create `.env` file with:
   - Domain name (login.42.fr)
   - MySQL credentials
   - WordPress settings
   - SSL certificate paths
-- [ ] Setup secrets management
+- [x] Setup secrets management
   - Ensure no credentials in Dockerfiles
   - Use Docker secrets for sensitive data
 - [ ] Configure domain name (login.42.fr -> local IP)
@@ -180,7 +180,19 @@ Inception/
 1. ~~Install Docker and Docker Compose~~ ✓
 2. ~~Create the basic project structure~~ ✓
 3. Set up initial configuration files:
-   - Create basic Makefile
-   - Configure .env file
+   - ~~Create basic Makefile~~ ✓
+   - Configure .env file (Next)
+     * Domain name (login.42.fr)
+     * MySQL credentials
+     * WordPress settings
+     * SSL certificate paths
    - Set up docker-compose.yml
 4. Begin service configuration starting with NGINX 
+
+## Current Progress (Last Updated):
+- Environment setup complete
+- Project structure created
+- Makefile created with all necessary targets
+- README.md created with command documentation
+- Environment variables and secrets configured
+- Next task: Set up docker-compose.yml 

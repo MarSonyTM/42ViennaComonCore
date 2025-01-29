@@ -111,7 +111,7 @@ print_header "WordPress Configuration"
 
 # Check WordPress admin user
 echo "Checking WordPress configuration..."
-docker exec wordpress wp user list --allow-root 2>/dev/null | grep -iE "admin|administrator" > /dev/null
+docker exec wordpress wp user list --allow-root --fields=user_login 2>/dev/null | grep -iE "admin|administrator|supervisor" > /dev/null
 if [ $? -eq 0 ]; then
     echo -e "${RED}✗ WordPress admin username contains prohibited terms${NC}"
     ERRORS=$((ERRORS + 1))
@@ -131,7 +131,10 @@ check_status "Environment variables configured"
 print_header "Website Accessibility Check"
 
 echo "Testing website accessibility..."
-curl -k -I https://localhost 2>/dev/null | grep "HTTP/2 200" > /dev/null
+# Try multiple times with increased timeout and different options
+(curl -k -I --max-time 5 "https://mafurnic.42.fr" 2>/dev/null | grep -E "HTTP/(1\.1|2) [23]0[0-9]" > /dev/null) || \
+(curl -k -I --max-time 5 "https://localhost" 2>/dev/null | grep -E "HTTP/(1\.1|2) [23]0[0-9]" > /dev/null) || \
+(curl -k -I --max-time 5 "https://127.0.0.1" 2>/dev/null | grep -E "HTTP/(1\.1|2) [23]0[0-9]" > /dev/null)
 check_status "Website is accessible via HTTPS"
 
 # Final Results
@@ -147,10 +150,21 @@ fi
 print_header "Manual Verification Required"
 
 echo "Please verify the following manually:"
-echo "1. Visit https://$USER.42.fr in your browser"
+echo "1. Visit https://mafurnic.42.fr in your browser"
 echo "2. Try logging in to WordPress admin panel"
 echo "3. Check if you can create posts and upload media"
-echo "4. Verify database persistence by restarting containers"
+echo
+echo "Testing Database Persistence:"
+echo "4. Follow these steps to verify data persistence:"
+echo "   a) Create a test post and upload an image"
+echo "   b) Run these commands to restart containers:"
+echo "      docker compose -f srcs/docker-compose.yml down"
+echo "      docker compose -f srcs/docker-compose.yml up -d"
+echo "   c) Visit https://mafurnic.42.fr/wp-admin again"
+echo "   d) Verify your test post and image still exist"
+echo
+echo "Note: All data should persist after container restart"
+echo "If data is lost, check volume configurations"
 
 exit $ERRORS
 

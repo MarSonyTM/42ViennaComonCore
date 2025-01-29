@@ -407,6 +407,51 @@ docker-compose up -d
    - Uploads persist
    - User settings maintained
 
+### Database Persistence Testing
+1. Initial Setup Verification:
+   ```bash
+   # Access WordPress and create test content
+   - Visit https://mafurnic.42.fr/wp-admin
+   - Login as admin
+   - Create a new post titled "Persistence Test"
+   - Upload a test image
+   ```
+
+2. Container Restart Test:
+   ```bash
+   # Stop all containers
+   docker compose -f srcs/docker-compose.yml down
+
+   # Verify containers are stopped
+   docker ps
+
+   # Start containers again
+   docker compose -f srcs/docker-compose.yml up -d
+
+   # Wait for containers to be healthy
+   docker ps  # Check STATUS column
+   ```
+
+3. Data Verification Steps:
+   - Visit https://mafurnic.42.fr/wp-admin again
+   - Login with same credentials
+   - Verify:
+     * Test post still exists
+     * Uploaded image is still available
+     * User settings remain unchanged
+     * Theme and plugin settings persist
+
+4. Expected Results:
+   - All content should remain intact after container restart
+   - No database connection errors
+   - No need to reinstall WordPress
+   - All media files should be accessible
+
+Note: If any data is lost after restart, check:
+- Volume mount points
+- Database dumps
+- WordPress file permissions
+
 ## 8. Troubleshooting Guide
 
 ### Common Issues
@@ -550,13 +595,3 @@ docker volume inspect mariadb_data
   docker exec wordpress ps aux | grep root
   docker exec mariadb ps aux | grep root
   ```
-
-# First time
-make
-
-# Second time (should be quick, no rebuild)
-make
-
-# After changing a file
-touch srcs/requirements/nginx/conf/nginx.conf
-make  # Will rebuild only what's necessary

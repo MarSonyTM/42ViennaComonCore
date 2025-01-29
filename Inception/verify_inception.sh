@@ -131,7 +131,7 @@ check_status "Environment variables configured"
 print_header "Website Accessibility Check"
 
 echo "Testing website accessibility..."
-curl -k -I "https://${USER}.42.fr" 2>/dev/null | grep -E "HTTP/(1\.1|2) 200" > /dev/null
+curl -k -I "https://mafurnic.42.fr" 2>/dev/null | grep -E "HTTP/(1\.1|2) 200" > /dev/null
 check_status "Website is accessible via HTTPS"
 
 # Final Results
@@ -147,7 +147,7 @@ fi
 print_header "Manual Verification Required"
 
 echo "Please verify the following manually:"
-echo "1. Visit https://$USER.42.fr in your browser"
+echo "1. Visit https://mafurnic.42.fr in your browser"
 echo "2. Try logging in to WordPress admin panel"
 echo "3. Check if you can create posts and upload media"
 echo "4. Verify database persistence by restarting containers"

@@ -48,18 +48,17 @@ echo "Cleaning up existing Docker resources..."
 docker compose -f srcs/docker-compose.yml down -v 2>/dev/null
 docker system prune -af --volumes 2>/dev/null
 
-# Get hostname for domain configuration
-HOSTNAME=$(hostname -s)
-DOMAIN="${USER}.42.fr"
+# Set fixed domain
+DOMAIN="mafurnic.42.fr"
 
 # Update all dynamic values in .env
 sed -i.bak \
     -e "s|DOMAIN_NAME=.*|DOMAIN_NAME=$DOMAIN|" \
     -e "s|WP_VOLUME_PATH=.*|WP_VOLUME_PATH=$DATA_PATH/wordpress|" \
     -e "s|DB_VOLUME_PATH=.*|DB_VOLUME_PATH=$DATA_PATH/mariadb|" \
-    -e "s|supervisor@.*\.42\.fr|supervisor@$DOMAIN|" \
-    -e "s|WP_USER=.*|WP_USER=$USER|" \
-    -e "s|WP_USER_EMAIL=.*|WP_USER_EMAIL=$USER@student.42.fr|" \
+    -e "s|manager@.*\.42\.fr|manager@$DOMAIN|" \
+    -e "s|WP_USER=.*|WP_USER=mafurnic|" \
+    -e "s|WP_USER_EMAIL=.*|WP_USER_EMAIL=mafurnic@student.42.fr|" \
     -e "s|WP_ADMIN_USER=.*|WP_ADMIN_USER=manager|" \
     srcs/.env
 

@@ -2,7 +2,7 @@
 FROM alpine:3.17
 
 # Install required packages
-RUN apk update && apk add --no-cache \
+RUN apk add --no-cache \
     php81 \
     php81-fpm \
     php81-mysqli \
@@ -15,23 +15,32 @@ RUN apk update && apk add --no-cache \
     php81-openssl \
     php81-xml \
     php81-zip \
+    php81-redis \
     php81-phar \
     curl \
+    mariadb-client \
     netcat-openbsd \
     && mkdir -p /var/www/html
 
-# Configure PHP-FPM
-COPY ./conf/www.conf /etc/php81/php-fpm.d/
-COPY ./tools/wp-setup.sh /usr/local/bin/
+# Install wp-cli
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp
 
-# Make the setup script executable
+# Copy configuration and setup script
+COPY conf/www.conf /etc/php81/php-fpm.d/www.conf
+COPY tools/wp-setup.sh /usr/local/bin/wp-setup.sh
 RUN chmod +x /usr/local/bin/wp-setup.sh
+
+# Create directory for PHP-FPM socket and logs
+RUN mkdir -p /var/run/php-fpm81 \
+    && mkdir -p /var/log/php81
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Expose port 9000 for PHP-FPM
+# Expose PHP-FPM port
 EXPOSE 9000
 
-# Set entrypoint
-ENTRYPOINT ["/usr/local/bin/wp-setup.sh"]
+# Start PHP-FPM with setup script
+CMD ["/usr/local/bin/wp-setup.sh"]

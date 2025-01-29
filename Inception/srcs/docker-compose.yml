@@ -1,6 +1,8 @@
 version: '3.8'
 
+# Service Definitions
 services:
+  # NGINX Service - SSL Termination & Reverse Proxy
   nginx:
     build:
       context: requirements/nginx
@@ -8,14 +10,15 @@ services:
     container_name: nginx
     restart: ${RESTART_POLICY}
     ports:
-      - "443:443"
+      - "443:443"  # HTTPS only - TLSv1.2/1.3
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/html  # WordPress files
     networks:
       - inception_network
     depends_on:
-      - wordpress
+      - wordpress  # Ensures WordPress is ready before NGINX starts
 
+  # MariaDB Service - Database Backend
   mariadb:
     build:
       context: requirements/mariadb
@@ -23,20 +26,22 @@ services:
     container_name: mariadb
     restart: ${RESTART_POLICY}
     env_file:
-      - .env
+      - .env  # Environment variables for DB configuration
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql  # Persistent database storage
     networks:
       - inception_network
-    secrets:
+    secrets:  # Secure credentials management
       - db_root_password
       - db_password
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+    healthcheck:  # Ensures database is responsive
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$(cat /run/secrets/db_root_password)"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
 
+  # WordPress Service - PHP-FPM Application
   wordpress:
     build:
       context: requirements/wordpress
@@ -44,39 +49,48 @@ services:
     container_name: wordpress
     restart: ${RESTART_POLICY}
     env_file:
-      - .env
+      - .env  # Environment variables for WP configuration
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/html  # WordPress files
     networks:
       - inception_network
-    secrets:
+    secrets:  # Secure credentials management
       - db_password
       - credentials
     depends_on:
       mariadb:
-        condition: service_healthy
+        condition: service_healthy  # Ensures DB is ready before WP starts
+    healthcheck:  # Ensures PHP-FPM is responsive
+      test: ["CMD", "php-fpm", "-t"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
+# Network Configuration
 networks:
   inception_network:
     name: ${NETWORK_NAME}
-    driver: bridge
+    driver: bridge  # Isolated network for inter-container communication
 
+# Secrets Management
 secrets:
   db_root_password:
-    file: ../secrets/db_root_password.txt
+    file: ../secrets/db_root_password.txt  # MariaDB root password
   db_password:
-    file: ../secrets/db_password.txt
+    file: ../secrets/db_password.txt  # WordPress DB user password
   credentials:
-    file: ../secrets/credentials.txt
+    file: ../secrets/credentials.txt  # WordPress users credentials
 
+# Volume Configuration
 volumes:
-  wordpress_data:
+  wordpress_data:  # WordPress files persistence
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ${WP_VOLUME_PATH}
-  mariadb_data:
+  mariadb_data:  # Database files persistence
     driver: local
     driver_opts:
       type: none

@@ -274,7 +274,7 @@ docker-compose up -d
 3. Author Account Access:
    - URL: `https://mafurnic.42.fr/wp-admin`
    - Login Credentials:
-     * Username: `mafurnic`
+     * Username: `manager`
      * Password: Check `secrets/credentials.txt`
    - Expected: Successful login with author privileges
 

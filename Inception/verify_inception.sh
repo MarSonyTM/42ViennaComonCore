@@ -111,7 +111,7 @@ print_header "WordPress Configuration"
 
 # Check WordPress admin user
 echo "Checking WordPress configuration..."
-docker exec wordpress wp user list --allow-root 2>/dev/null | grep -iE "admin|administrator" > /dev/null
+docker exec wordpress wp user list --allow-root --fields=user_login 2>/dev/null | grep -iE "admin|administrator|supervisor" > /dev/null
 if [ $? -eq 0 ]; then
     echo -e "${RED}✗ WordPress admin username contains prohibited terms${NC}"
     ERRORS=$((ERRORS + 1))
@@ -131,7 +131,7 @@ check_status "Environment variables configured"
 print_header "Website Accessibility Check"
 
 echo "Testing website accessibility..."
-curl -k -I https://localhost 2>/dev/null | grep "HTTP/2 200" > /dev/null
+curl -k -I "https://${USER}.42.fr" 2>/dev/null | grep -E "HTTP/(1\.1|2) 200" > /dev/null
 check_status "Website is accessible via HTTPS"
 
 # Final Results

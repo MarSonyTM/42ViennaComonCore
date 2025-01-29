@@ -60,6 +60,7 @@ sed -i.bak \
     -e "s|supervisor@.*\.42\.fr|supervisor@$DOMAIN|" \
     -e "s|WP_USER=.*|WP_USER=$USER|" \
     -e "s|WP_USER_EMAIL=.*|WP_USER_EMAIL=$USER@student.42.fr|" \
+    -e "s|WP_ADMIN_USER=.*|WP_ADMIN_USER=manager|" \
     srcs/.env
 
 # Clean up backup files (macOS creates these with sed)

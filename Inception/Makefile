@@ -9,8 +9,12 @@ NAME = inception
 # Docker Compose file
 COMPOSE_FILE = srcs/docker-compose.yml
 
-# Data directory
-DATA_PATH = /home/$(USER)/data
+# Detect OS and set paths accordingly
+ifeq ($(shell uname),Darwin)
+    DATA_PATH = /Users/$(USER)/data
+else
+    DATA_PATH = /home/$(USER)/data
+endif
 
 # All required directories
 DIRS = $(DATA_PATH)/wordpress \

@@ -84,15 +84,7 @@ secrets:
 
 # Volume Configuration
 volumes:
-  wordpress_data:  # WordPress files persistence
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${WP_VOLUME_PATH}
-  mariadb_data:  # Database files persistence
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${DB_VOLUME_PATH}
+  wordpress_data:
+    name: wordpress_data
+  mariadb_data:
+    name: mariadb_data

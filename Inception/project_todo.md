@@ -54,7 +54,7 @@ Inception/
 - [x] Setup secrets management
   - Ensure no credentials in Dockerfiles
   - Use Docker secrets for sensitive data
-- [ ] Configure domain name (login.42.fr -> local IP)
+- [x] Configure domain name (login.42.fr -> local IP)
 
 ### 3. NGINX Setup
 - [x] Create Dockerfile
@@ -131,73 +131,58 @@ Inception/
   - [x] Proper network isolation
   - [x] SSL/TLS configuration
 
-### 9. Optional Bonus Features
-- [ ] Redis Cache
-  - Setup container
-  - Configure WordPress integration
-- [ ] FTP Server
-  - Setup vsftpd
-  - Configure WordPress volume access
-- [ ] Static Website
-  - Choose non-PHP language
-  - Create simple site
-- [ ] Adminer
-  - Setup container
-  - Configure database access
-- [ ] Additional Service
-  - Choose useful service
-  - Prepare justification
-
-### 10. Documentation & Submission
+### 9. Documentation & Submission
 - [x] Documentation
   - [x] Setup instructions
   - [x] Configuration details
   - [x] Troubleshooting guide
 - [x] Code Cleanup
   - [x] Remove unnecessary files
-  - [ ] Clean up configurations
-- [ ] Structure Verification
-  - [ ] Check folder names
-  - [ ] Verify file permissions
-- [ ] Git Repository
-  - [ ] Clean commit history
-  - [ ] No credentials in repo
-  - [ ] Ready for peer review
+  - [x] Clean up configurations
+- [x] Structure Verification
+  - [x] Check folder names
+  - [x] Verify file permissions
+- [x] Git Repository
+  - [x] Clean commit history
+  - [x] No credentials in repo
+  - [x] Ready for peer review
 
 ## Important Rules to Remember
-1. No passwords in Dockerfiles
-2. No infinite loops in containers
-3. No latest tags
-4. No ready-made Docker images (except base Alpine/Debian)
-5. No network:host or --link usage
-6. All services in dedicated containers
-7. NGINX as only entrypoint
-8. Containers must restart on crash
-9. WordPress admin username restrictions
-10. Environment variables mandatory 
+1. No passwords in Dockerfiles ✓
+2. No infinite loops in containers ✓
+3. No latest tags ✓
+4. No ready-made Docker images (except base Alpine/Debian) ✓
+5. No network:host or --link usage ✓
+6. All services in dedicated containers ✓
+7. NGINX as only entrypoint ✓
+8. Containers must restart on crash ✓
+9. WordPress admin username restrictions ✓
+10. Environment variables mandatory ✓
 
 ## Next Steps:
 1. ~~Install Docker and Docker Compose~~ ✓
 2. ~~Create the basic project structure~~ ✓
-3. Set up initial configuration files:
+3. ~~Set up initial configuration files:~~ ✓
    - ~~Create basic Makefile~~ ✓
-   - Configure .env file (Next)
-     * Domain name (login.42.fr)
-     * MySQL credentials
-     * WordPress settings
-     * SSL certificate paths
-   - Set up docker-compose.yml
-4. Begin service configuration starting with NGINX 
+   - ~~Configure .env file~~ ✓
+     * ~~Domain name (login.42.fr)~~ ✓
+     * ~~MySQL credentials~~ ✓
+     * ~~WordPress settings~~ ✓
+     * ~~SSL certificate paths~~ ✓
+   - ~~Set up docker-compose.yml~~ ✓
+4. ~~Begin service configuration starting with NGINX~~ ✓
 
 ## Current Progress (Last Updated):
-- Environment setup complete
-- Project structure created
-- Makefile created with all necessary targets
-- README.md created with comprehensive documentation
-- Environment variables and secrets configured
-- MariaDB container configured and working
-- WordPress container configured and working
-- NGINX container configured and working
-- All mandatory requirements verified and working
-- Documentation completed with detailed instructions
-- Next task: Code cleanup and structure verification 
+- Environment setup complete ✓
+- Project structure created ✓
+- Makefile created with all necessary targets ✓
+- README.md created with comprehensive documentation ✓
+- Environment variables and secrets configured ✓
+- MariaDB container configured and working ✓
+- WordPress container configured and working ✓
+- NGINX container configured and working ✓
+- All mandatory requirements verified and working ✓
+- Documentation completed with detailed instructions ✓
+- All structure verification completed ✓
+- All configurations cleaned up ✓
+- Project ready for submission ✓ 

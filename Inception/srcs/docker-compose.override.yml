@@ -1,6 +1,14 @@
 version: '3.8'
 volumes:
   wordpress_data:
-    name: wordpress_data
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/mafurnic/data/wordpress
   mariadb_data:
-    name: mariadb_data
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/mafurnic/data/mariadb

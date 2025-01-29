@@ -257,6 +257,156 @@ docker-compose up -d
 # Verify data exists
 ```
 
+### WordPress Site Access
+
+1. Main Website Access:
+   - Open browser and navigate to: `https://mafurnic.42.fr`
+   - Expected: WordPress site loads (you'll see a security warning for self-signed certificate)
+   - Action: Click "Advanced" → "Proceed to site" (wording varies by browser)
+
+2. Admin Panel Access:
+   - URL: `https://mafurnic.42.fr/wp-admin`
+   - Login Credentials:
+     * Username: `supervisor`
+     * Password: Check `secrets/credentials.txt`
+   - Expected: Successful login to WordPress dashboard
+
+3. Author Account Access:
+   - URL: `https://mafurnic.42.fr/wp-admin`
+   - Login Credentials:
+     * Username: `mafurnic`
+     * Password: Check `secrets/credentials.txt`
+   - Expected: Successful login with author privileges
+
+### Testing Checklist
+
+1. SSL Certificate:
+   - ✓ Browser shows HTTPS (though marked as not trusted due to self-signing)
+   - ✓ Certificate details show correct domain
+   - ✓ TLS version is 1.2 or 1.3
+
+2. WordPress Functionality:
+   - ✓ Create new post (as admin)
+   - ✓ Upload media
+   - ✓ Install plugin (admin only)
+   - ✓ Change theme (admin only)
+   - ✓ Create new page
+   - ✓ Add comments
+
+3. User Permissions:
+   - Admin (supervisor):
+     * ✓ Can access dashboard
+     * ✓ Can install plugins
+     * ✓ Can modify themes
+     * ✓ Can manage users
+   - Author (mafurnic):
+     * ✓ Can access dashboard
+     * ✓ Can create posts
+     * ✓ Cannot install plugins
+     * ✓ Cannot modify themes
+
+4. Performance:
+   - ✓ Pages load quickly
+   - ✓ Images display correctly
+   - ✓ No PHP errors visible
+   - ✓ No database connection errors
+
+### Common Issues and Solutions
+
+1. Cannot Access Site:
+   ```bash
+   # Check if containers are running
+   docker ps
+   
+   # Check NGINX logs
+   docker logs nginx
+   
+   # Verify hosts file
+   cat /etc/hosts
+   ```
+
+2. Certificate Warnings:
+   - Expected behavior with self-signed certificates
+   - Verify certificate details in browser:
+     * Should match domain name
+     * Should be issued to your domain
+
+3. Login Issues:
+   ```bash
+   # Check WordPress logs
+   docker logs wordpress
+   
+   # Verify database connection
+   docker exec wordpress wp db check --allow-root
+   ```
+
+4. Database Connection:
+   ```bash
+   # Check MariaDB status
+   docker logs mariadb
+   
+   # Verify WordPress config
+   docker exec wordpress wp config list --allow-root
+   ```
+
+### Final Verification Steps
+
+1. Complete Site Test:
+   - Access homepage
+   - Login as admin
+   - Create test post
+   - Upload test image
+   - Logout
+   - Login as author
+   - Create another post
+   - Verify restrictions
+
+2. Security Verification:
+   - Try accessing database port (should fail)
+   - Verify only 443 is exposed
+   - Check SSL/TLS version
+   - Verify admin restrictions
+
+3. Performance Test:
+   - Load homepage multiple times
+   - Access wp-admin
+   - Upload large image
+   - Create post with images
+
+4. Cleanup Test:
+   ```bash
+   # Stop all containers
+   docker compose -f srcs/docker-compose.yml down
+   
+   # Start again
+   docker compose -f srcs/docker-compose.yml up -d
+   
+   # Verify all content persists
+   ```
+
+### Expected Results
+
+1. Website Access:
+   - HTTPS works (with expected certificate warning)
+   - All pages load correctly
+   - Images and media work
+
+2. Admin Access:
+   - Dashboard accessible
+   - All admin functions work
+   - Plugin installation works
+   - User management works
+
+3. Author Access:
+   - Limited dashboard access
+   - Can create/edit own posts
+   - Cannot access admin functions
+
+4. Data Persistence:
+   - Posts remain after container restart
+   - Uploads persist
+   - User settings maintained
+
 ## 8. Troubleshooting Guide
 
 ### Common Issues
@@ -400,110 +550,13 @@ docker volume inspect mariadb_data
   docker exec wordpress ps aux | grep root
   docker exec mariadb ps aux | grep root
   ```
-- [ ] Check SSL/TLS security:
-  ```bash
-  curl -k -v https://mafurnic.42.fr 2>&1 | grep "SSL connection"
-  ```
 
-## 11. Performance Test
-- [ ] Basic load test:
-  ```bash
-  ab -n 100 -c 10 https://mafurnic.42.fr/
-  ```
-
-## Expected Results
-
-### Container Status
-- All containers should be running with "Up" status
-- No error messages in container logs
-- All services accessible on their respective ports
-
-### Volume Check
-- Both WordPress and MariaDB volumes should exist
-- Data should persist after container restart
-
-### Network Check
-- Custom network should exist
-- All containers should be able to communicate
-
-### SSL/TLS
-- Valid SSL certificate (self-signed is acceptable)
-- TLS 1.2 or 1.3 only
-
-### WordPress
-- Site accessible via HTTPS
-- Admin login working
-- Posts and pages can be created
-
-### Database
-- MariaDB running and accessible
-- WordPress database exists and is populated
-
-### NGINX
-- Valid configuration
-- Proper connection to PHP-FPM
-- Static files being served correctly
-
-### Security
-- No unnecessary root processes
-- Proper SSL/TLS configuration
-- No direct database access from outside
-
-## Troubleshooting Common Issues
-
-1. **Container Won't Start**
-   - Check logs with `docker logs [container_name]`
-   - Verify port availability
-   - Check volume permissions
-
-2. **WordPress Not Accessible**
-   - Verify NGINX configuration
-   - Check PHP-FPM connection
-   - Verify database connection
-
-3. **Database Connection Issues**
-   - Check environment variables
-   - Verify network connectivity
-   - Check database user permissions
-
-4. **SSL Certificate Issues**
-   - Verify certificate path in NGINX config
-   - Check certificate validity
-   - Ensure proper TLS version
-
-5. **Volume Permission Issues**
-   - Check directory ownership
-   - Verify mount points
-   - Check SELinux context if applicable
-
-## Quick Commands for Evaluation
-
-```bash
-# Start all services
+# First time
 make
 
-# Check all containers
-docker ps
+# Second time (should be quick, no rebuild)
+make
 
-# View logs
-docker logs nginx
-docker logs wordpress
-docker logs mariadb
-
-# Check volumes
-docker volume ls
-
-# Verify network
-docker network ls
-
-# Test WordPress
-curl -k https://mafurnic.42.fr
-
-# Restart all services
-make re
-
-# Clean everything
-make fclean
-```
-
-Remember to run these commands from the project root directory. 
+# After changing a file
+touch srcs/requirements/nginx/conf/nginx.conf
+make  # Will rebuild only what's necessary

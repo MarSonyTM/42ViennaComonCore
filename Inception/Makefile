@@ -26,7 +26,11 @@ all: setup up
 # Create necessary directories and setup environment
 setup: $(DIRS)
 	@printf "$(GREEN)Setting up directories...$(RESET)\n"
+ifeq ($(shell uname),Darwin)
+	@chown -R $(USER):staff $(DATA_PATH)
+else
 	@chown -R $(USER):$(USER) $(DATA_PATH)
+endif
 
 $(DIRS):
 	@mkdir -p $@

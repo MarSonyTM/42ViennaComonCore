@@ -1,142 +1,509 @@
 # Inception Project Evaluation Guide
 
 ## 1. Project Overview
-This project involves setting up a small infrastructure composed of different services using Docker containers. The main components are:
+This project implements a complete web hosting infrastructure using Docker containerization. The goal is to create a modular, secure, and maintainable system where each service runs in isolation.
 
-### Mandatory Services:
-- **NGINX**: Web server with TLS/SSL
-- **WordPress + php-fpm**: Content Management System
-- **MariaDB**: Database server
+### Understanding Docker's Role
+Docker allows us to create isolated environments (containers) for each service. Think of containers as lightweight virtual machines that share the host's kernel but run independently. This isolation ensures:
+- Security: If one service is compromised, others remain safe
+- Resource management: Each container has its own resource limits
+- Easy deployment: The entire stack can be launched with one command
+- Consistency: The same setup works across different environments
 
-### Key Requirements:
-- Each service runs in its own container
-- Containers are built using Alpine Linux
-- Each service has its own Dockerfile
-- Containers restart automatically if they crash
+### Mandatory Services Explained:
 
-## 2. Infrastructure Setup
+#### NGINX (Web Server)
+- Acts as the front door to your application
+- Handles all incoming HTTPS traffic
+- Provides SSL/TLS encryption for secure communication
+- Reverse proxies requests to WordPress
+- Why NGINX? It's lightweight, fast, and excellent at handling concurrent connections
 
-### Docker Compose Configuration
-- Located in: `srcs/docker-compose.yml`
-- Defines all services, networks, and volumes
-- Uses version '3.8'
+#### WordPress + php-fpm
+- WordPress: Content Management System for website creation
+- PHP-FPM: PHP FastCGI Process Manager
+  - Handles PHP processing separately from web server
+  - More efficient than traditional PHP modules
+  - Better resource management and performance
 
-### Directory Structure:
+#### MariaDB
+- Fork of MySQL database
+- Stores all WordPress data:
+  - Posts, pages, users
+  - Site configuration
+  - Plugin data
+- Provides data persistence and reliability
+
+## 2. Infrastructure Deep Dive
+
+### Docker Compose Configuration Explained
+The `docker-compose.yml` file orchestrates your entire infrastructure:
+```yaml
+version: '3.8'  # Latest stable version with all features we need
+
+services:
+  nginx:
+    build: ./requirements/nginx
+    ports:
+      - "443:443"  # Only HTTPS port exposed
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception_network
+    # ... more configuration
+
+  wordpress:
+    build: ./requirements/wordpress
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on:
+      - mariadb
+    # ... more configuration
+
+  mariadb:
+    build: ./requirements/mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    # ... more configuration
+```
+
+### Directory Structure Explained
 ```
 srcs/
-├── docker-compose.yml
-├── .env (environment variables)
-├── requirements/
-│   ├── nginx/
-│   ├── wordpress/
-│   └── mariadb/
-└── volumes/
-    ├── wordpress/
-    └── mariadb/
+├── docker-compose.yml   # Main orchestration file
+├── .env                 # Environment variables (passwords, configs)
+├── requirements/        # Service-specific configurations
+│   ├── nginx/          # NGINX web server files
+│   │   ├── Dockerfile  # Container build instructions
+│   │   └── conf/       # NGINX configuration
+│   ├── wordpress/      # WordPress files
+│   │   ├── Dockerfile
+│   │   └── tools/      # Setup scripts
+│   └── mariadb/        # Database files
+│       ├── Dockerfile
+│       └── conf/       # MariaDB configuration
+└── volumes/            # Persistent data storage
+    ├── wordpress/      # WordPress files
+    └── mariadb/        # Database files
 ```
 
-## 3. Service Details
+## 3. Detailed Service Implementation
 
-### NGINX Container
-- **Port**: 443 only (HTTPS)
-- **SSL/TLS**: TLSv1.2 or TLSv1.3 only
-- **Configuration**: Located in `srcs/requirements/nginx/conf/`
-- **Key Points**:
-  - Acts as reverse proxy for WordPress
-  - SSL certificate properly configured
-  - No HTTP (port 80) access
+### NGINX Container Implementation
+```nginx
+# Key NGINX Configuration Elements
+server {
+    listen 443 ssl;  # Only HTTPS
+    ssl_protocols TLSv1.2 TLSv1.3;  # Modern SSL only
+    
+    # SSL Configuration
+    ssl_certificate /etc/nginx/ssl/inception.crt;
+    ssl_certificate_key /etc/nginx/ssl/inception.key;
+    
+    # WordPress Proxy Settings
+    location / {
+        proxy_pass http://wordpress:9000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
 
-### WordPress Container
-- **Setup**: Using php-fpm (no Apache)
-- **Configuration**: Located in `srcs/requirements/wordpress/`
-- **Key Points**:
-  - Connected to MariaDB
-  - wp-config.php properly configured
-  - PHP-FPM running on port 9000
+Key Implementation Points:
+1. SSL/TLS Setup:
+   - Self-signed certificates generated during build
+   - Modern protocols only (TLSv1.2/1.3)
+   - Secure cipher configuration
 
-### MariaDB Container
-- **Purpose**: Database for WordPress
-- **Configuration**: Located in `srcs/requirements/mariadb/`
-- **Key Points**:
-  - Data persistence through volumes
-  - Secure password configuration
-  - No root access from outside
+2. Reverse Proxy:
+   - Forwards requests to WordPress container
+   - Handles all static file serving
+   - Manages PHP-FPM communication
 
-## 4. Volume Configuration
+### WordPress Container Implementation
+Key Components:
+1. PHP-FPM Configuration:
+```ini
+[www]
+user = wordpress
+group = wordpress
+listen = 9000
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3
+```
 
-### WordPress Volume
-- **Path**: `/var/www/html`
-- **Purpose**: Stores WordPress files
-- **Persistence**: Data remains after container restart
+2. WordPress Setup:
+   - wp-config.php generation
+   - Database connection configuration
+   - WP-CLI for management
+   - Custom PHP optimizations
 
-### MariaDB Volume
-- **Path**: `/var/lib/mysql`
-- **Purpose**: Stores database files
-- **Persistence**: Data remains after container restart
+3. Security Measures:
+   - Non-root user execution
+   - File permissions hardening
+   - PHP security settings
 
-## 5. Network Configuration
-- Custom network named `inception_network`
-- Type: bridge
-- Containers can communicate using service names
-- Only necessary ports exposed
+### MariaDB Container Implementation
+Key Setup Elements:
+1. Database Initialization:
+```sql
+CREATE DATABASE wordpress;
+CREATE USER 'wp_user'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wp_user'@'%';
+FLUSH PRIVILEGES;
+```
 
-## 6. Security Aspects
-- No passwords in Dockerfiles
-- Using environment variables in `.env` file
-- SSL/TLS properly configured
-- No root user in containers
-- Secure database access
+2. Security Configuration:
+   - Remote root access disabled
+   - Password policies enforced
+   - Network access restrictions
 
-## 7. Testing Checklist
+## 4. Volume Management Explained
 
-### Basic Functionality
-1. Check all containers are running:
+### WordPress Volume Details
+```yaml
+volumes:
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/wordpress/data
+      o: bind
+```
+- Persists through container restarts
+- Stores themes, plugins, uploads
+- Maintains WordPress core files
+
+### MariaDB Volume Implementation
+```yaml
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/mariadb/data
+      o: bind
+```
+- Stores database files
+- Maintains data integrity
+- Survives container recreation
+
+## 5. Network Architecture
+
+### Network Implementation
+```yaml
+networks:
+  inception_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+```
+
+Communication Flow:
+1. External → NGINX (443)
+2. NGINX → WordPress (9000)
+3. WordPress → MariaDB (3306)
+
+## 6. Security Implementation
+
+### Environment Variables
 ```bash
+# .env file structure
+DOMAIN_NAME=your.domain.com
+MYSQL_ROOT_PASSWORD=secure_root_pw
+MYSQL_USER=wordpress_user
+MYSQL_PASSWORD=secure_user_pw
+```
+
+### SSL/TLS Implementation
+- Certificate generation in Dockerfile
+- Modern cipher suites only
+- Perfect forward secrecy enabled
+
+## 7. Testing Procedures
+
+### Basic Functionality Testing
+1. Container Health:
+```bash
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+```
+
+2. HTTPS Verification:
+```bash
+curl -Ik https://localhost:443
+```
+
+### Service Testing Steps
+1. WordPress Admin Access:
+   - Navigate to https://localhost:443/wp-admin
+   - Login with credentials
+   - Create test post
+
+2. Database Verification:
+```bash
+docker exec -it mariadb mysql -u wp_user -p
+```
+
+### Volume Testing
+1. Data Persistence Test:
+```bash
+# Create test data
+docker-compose down
+docker-compose up -d
+# Verify data exists
+```
+
+## 8. Troubleshooting Guide
+
+### Common Issues
+1. Container Startup Failures:
+```bash
+docker logs nginx    # Check NGINX logs
+docker logs wordpress # Check WordPress logs
+docker logs mariadb  # Check MariaDB logs
+```
+
+2. Network Issues:
+```bash
+docker network inspect inception_network
+```
+
+3. Volume Problems:
+```bash
+docker volume inspect wordpress_data
+docker volume inspect mariadb_data
+```
+
+### Quick Fixes
+1. Service not starting:
+   - Check logs
+   - Verify configurations
+   - Ensure dependencies are up
+
+2. WordPress issues:
+   - Verify database connection
+   - Check PHP-FPM status
+   - Review error logs
+
+3. Database problems:
+   - Check credentials
+   - Verify volume permissions
+   - Review MariaDB logs 
+
+# Inception Project Evaluation Checklist
+
+## 1. Initial Setup Verification
+- [ ] Check that all required files are in the correct directories:
+  ```bash
+  ls -la srcs/
+  ls -la srcs/requirements/
+  ls -la srcs/requirements/nginx/
+  ls -la srcs/requirements/wordpress/
+  ls -la srcs/requirements/mariadb/
+  ```
+
+## 2. Docker Configuration Check
+- [ ] Verify docker-compose.yml exists and is valid:
+  ```bash
+  docker compose -f srcs/docker-compose.yml config
+  ```
+- [ ] Check that all images are built from Debian Buster or Alpine:
+  ```bash
+  docker image inspect srcs-nginx | grep -i "org.opencontainers.image.base.name"
+  docker image inspect srcs-wordpress | grep -i "org.opencontainers.image.base.name"
+  docker image inspect srcs-mariadb | grep -i "org.opencontainers.image.base.name"
+  ```
+
+## 3. Volume Check
+- [ ] Verify volume creation and mounting:
+  ```bash
+  docker volume ls | grep -E "wordpress|mariadb"
+  ls -la /home/mafurnic/data/wordpress/
+  ls -la /home/mafurnic/data/mariadb/
+  ```
+
+## 4. Network Check
+- [ ] Verify custom network creation:
+  ```bash
+  docker network ls | grep inception
+  ```
+- [ ] Check network connectivity between containers:
+  ```bash
+  docker exec wordpress ping -c 2 mariadb
+  docker exec wordpress ping -c 2 nginx
+  ```
+
+## 5. Container Status Check
+- [ ] Verify all containers are running:
+  ```bash
+  docker ps | grep -E "nginx|wordpress|mariadb"
+  ```
+- [ ] Check container logs for errors:
+  ```bash
+  docker logs nginx
+  docker logs wordpress
+  docker logs mariadb
+  ```
+
+## 6. SSL/TLS Check
+- [ ] Verify SSL certificate:
+  ```bash
+  curl -k -vI https://mafurnic.42.fr
+  ```
+- [ ] Check TLS version (should be 1.2 or 1.3):
+  ```bash
+  openssl s_client -connect mafurnic.42.fr:443 | grep "Protocol"
+  ```
+
+## 7. WordPress Check
+- [ ] Test WordPress installation:
+  ```bash
+  curl -k https://mafurnic.42.fr | grep -i wordpress
+  ```
+- [ ] Verify WordPress users:
+  ```bash
+  docker exec wordpress wp user list
+  ```
+- [ ] Check WordPress configuration:
+  ```bash
+  docker exec wordpress wp config list
+  ```
+
+## 8. Database Check
+- [ ] Verify MariaDB is running:
+  ```bash
+  docker exec mariadb mysqladmin ping -h localhost
+  ```
+- [ ] Check WordPress database:
+  ```bash
+  docker exec mariadb mysql -e "SHOW DATABASES;" | grep wordpress
+  ```
+
+## 9. NGINX Check
+- [ ] Verify NGINX configuration:
+  ```bash
+  docker exec nginx nginx -t
+  ```
+- [ ] Check PHP-FPM connection:
+  ```bash
+  docker exec nginx curl -I wordpress:9000
+  ```
+
+## 10. Security Check
+- [ ] Verify no root processes in containers:
+  ```bash
+  docker exec nginx ps aux | grep root
+  docker exec wordpress ps aux | grep root
+  docker exec mariadb ps aux | grep root
+  ```
+- [ ] Check SSL/TLS security:
+  ```bash
+  curl -k -v https://mafurnic.42.fr 2>&1 | grep "SSL connection"
+  ```
+
+## 11. Performance Test
+- [ ] Basic load test:
+  ```bash
+  ab -n 100 -c 10 https://mafurnic.42.fr/
+  ```
+
+## Expected Results
+
+### Container Status
+- All containers should be running with "Up" status
+- No error messages in container logs
+- All services accessible on their respective ports
+
+### Volume Check
+- Both WordPress and MariaDB volumes should exist
+- Data should persist after container restart
+
+### Network Check
+- Custom network should exist
+- All containers should be able to communicate
+
+### SSL/TLS
+- Valid SSL certificate (self-signed is acceptable)
+- TLS 1.2 or 1.3 only
+
+### WordPress
+- Site accessible via HTTPS
+- Admin login working
+- Posts and pages can be created
+
+### Database
+- MariaDB running and accessible
+- WordPress database exists and is populated
+
+### NGINX
+- Valid configuration
+- Proper connection to PHP-FPM
+- Static files being served correctly
+
+### Security
+- No unnecessary root processes
+- Proper SSL/TLS configuration
+- No direct database access from outside
+
+## Troubleshooting Common Issues
+
+1. **Container Won't Start**
+   - Check logs with `docker logs [container_name]`
+   - Verify port availability
+   - Check volume permissions
+
+2. **WordPress Not Accessible**
+   - Verify NGINX configuration
+   - Check PHP-FPM connection
+   - Verify database connection
+
+3. **Database Connection Issues**
+   - Check environment variables
+   - Verify network connectivity
+   - Check database user permissions
+
+4. **SSL Certificate Issues**
+   - Verify certificate path in NGINX config
+   - Check certificate validity
+   - Ensure proper TLS version
+
+5. **Volume Permission Issues**
+   - Check directory ownership
+   - Verify mount points
+   - Check SELinux context if applicable
+
+## Quick Commands for Evaluation
+
+```bash
+# Start all services
+make
+
+# Check all containers
 docker ps
-```
-Expected: All containers should be "Up" and "healthy"
 
-2. Check HTTPS access:
-```bash
-curl -k https://localhost:443
-```
-Expected: WordPress page should load
+# View logs
+docker logs nginx
+docker logs wordpress
+docker logs mariadb
 
-### Service Tests
-1. **NGINX**:
-   - Only accessible via HTTPS
-   - SSL certificate working
-   - Proper reverse proxy to WordPress
-
-2. **WordPress**:
-   - Admin panel accessible
-   - Can create posts/pages
-   - PHP-FPM working correctly
-
-3. **MariaDB**:
-   - WordPress can connect
-   - Data persists after restart
-   - Secure access configuration
-
-### Volume Tests
-1. Check volumes are mounted:
-```bash
+# Check volumes
 docker volume ls
+
+# Verify network
+docker network ls
+
+# Test WordPress
+curl -k https://mafurnic.42.fr
+
+# Restart all services
+make re
+
+# Clean everything
+make fclean
 ```
-Expected: wordpress_data and mariadb_data volumes present
 
-2. Data persistence:
-   - Create a WordPress post
-   - Restart containers
-   - Post should still exist
-
-## 8. Common Issues & Solutions
-
-### Container Issues
-- **Container not starting**: Check logs with `docker logs [container_name]`
-- **Health check failing**: Verify service configurations
-- **Network issues**: Ensure service names resolve correctly
-
-### WordPress Issues
-- **Database connection error**: Check MariaDB credentials
-- **PHP-FPM issues**: Verify www.conf configuration 
+Remember to run these commands from the project root directory. 

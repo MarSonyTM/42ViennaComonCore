@@ -14,8 +14,7 @@ RUN apk add --no-cache \
     php81-mbstring \
     php81-openssl \
     php81-xml \
-    php81-zip \
-    php81-redis \
+    php81-tokenizer \
     php81-phar \
     curl \
     mariadb-client \

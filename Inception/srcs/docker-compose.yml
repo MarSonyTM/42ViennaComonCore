@@ -61,7 +61,7 @@ services:
       mariadb:
         condition: service_healthy  # Ensures DB is ready before WP starts
     healthcheck:  # Ensures PHP-FPM is responsive
-      test: ["CMD", "php-fpm", "-t"]
+      test: ["CMD", "php-fpm81", "-t"]
       interval: 10s
       timeout: 5s
       retries: 3

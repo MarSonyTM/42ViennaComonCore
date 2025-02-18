@@ -14,7 +14,7 @@ RUN apk add --no-cache \
     php81-mbstring \
     php81-openssl \
     php81-xml \
-    php81-tokenizer \
+    php81-zip \
     php81-phar \
     curl \
     mariadb-client \
@@ -25,6 +25,11 @@ RUN apk add --no-cache \
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
+
+# Configure PHP
+RUN echo "memory_limit = 256M" >> /etc/php81/php.ini && \
+    echo "upload_max_filesize = 64M" >> /etc/php81/php.ini && \
+    echo "post_max_size = 64M" >> /etc/php81/php.ini
 
 # Copy configuration and setup script
 COPY conf/www.conf /etc/php81/php-fpm.d/www.conf

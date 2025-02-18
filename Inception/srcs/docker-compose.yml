@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Service Definitions
 services:
   # NGINX Service - SSL Termination & Reverse Proxy

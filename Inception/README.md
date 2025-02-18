@@ -78,7 +78,15 @@ sudo usermod -aG docker $USER
    cd inception
    ```
 
-2. Configure environment:
+2. Start Docker service:
+   ```bash
+   # Ensure Docker service is running
+   sudo systemctl start docker
+   # Verify Docker is running
+   docker info
+   ```
+
+3. Configure environment:
    ```bash
    # Create data directories
    make setup
@@ -87,20 +95,20 @@ sudo usermod -aG docker $USER
    # Update domain name and credentials if needed
    ```
 
-3. Configure local domain:
+4. Configure local domain:
    ```bash
    # Add domain to hosts file
    echo "127.0.0.1 mafurnic.42.fr" | sudo tee -a /etc/hosts
    ```
 
-4. Start services:
+5. Start services:
    ```bash
    make up
    # Wait for all containers to be healthy
    make status
    ```
 
-5. Verify installation:
+6. Verify installation:
    ```bash
    # Check all services
    make status

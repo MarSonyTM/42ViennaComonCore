@@ -9,6 +9,9 @@ NAME = inception
 # Docker Compose file
 COMPOSE_FILE = srcs/docker-compose.yml
 
+# Domain name (from .env)
+DOMAIN = mafurnic.42.fr
+
 # Detect OS and set paths accordingly
 ifeq ($(shell uname),Darwin)
     DATA_PATH = /Users/$(USER)/data
@@ -24,7 +27,7 @@ DIRS = $(DATA_PATH)/wordpress \
 all: setup up
 
 # Create necessary directories and setup environment
-setup: $(DIRS)
+setup: $(DIRS) hosts
 	@printf "$(GREEN)Setting up directories...$(RESET)\n"
 ifeq ($(shell uname),Darwin)
 	@chown -R $(USER):staff $(DATA_PATH)
@@ -35,6 +38,16 @@ endif
 $(DIRS):
 	@mkdir -p $@
 	@printf "$(GREEN)Created $@$(RESET)\n"
+
+# Configure hosts file
+hosts:
+	@printf "$(GREEN)Configuring hosts file...$(RESET)\n"
+	@if ! grep -q "$(DOMAIN)" /etc/hosts; then \
+		sudo sh -c 'echo "127.0.0.1 $(DOMAIN)" >> /etc/hosts'; \
+		printf "$(GREEN)Added $(DOMAIN) to hosts file$(RESET)\n"; \
+	else \
+		printf "$(GREEN)$(DOMAIN) already in hosts file$(RESET)\n"; \
+	fi
 
 # Start containers
 up:

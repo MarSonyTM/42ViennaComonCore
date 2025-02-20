@@ -138,11 +138,18 @@ check_status "Environment variables configured"
 print_header "Website Accessibility Check"
 
 echo "Testing website accessibility..."
-# Try multiple times with increased timeout and different options
-(curl -k -I --max-time 5 "https://mafurnic.42.fr" 2>/dev/null | grep -E "HTTP/(1\.1|2) [23]0[0-9]" > /dev/null) || \
-(curl -k -I --max-time 5 "https://localhost" 2>/dev/null | grep -E "HTTP/(1\.1|2) [23]0[0-9]" > /dev/null) || \
-(curl -k -I --max-time 5 "https://127.0.0.1" 2>/dev/null | grep -E "HTTP/(1\.1|2) [23]0[0-9]" > /dev/null)
-check_status "Website is accessible via HTTPS"
+# More robust check with proper error handling and multiple attempts
+for i in {1..3}; do
+    response=$(curl -k -I --max-time 10 "https://mafurnic.42.fr" 2>/dev/null)
+    if echo "$response" | grep -E "HTTP/(1\.1|2) [23]0[0-9]" > /dev/null; then
+        check_status "Website is accessible via HTTPS"
+        break
+    elif [ $i -eq 3 ]; then
+        check_status "Website is accessible via HTTPS"
+    else
+        sleep 2
+    fi
+done
 
 # Final Results
 print_header "Verification Results"

@@ -79,10 +79,17 @@ check_status "NGINX exposed on port 443"
 # 4. Volume Verification
 print_header "Volume Verification"
 
-# Check volume directories
+# Check volume directories based on OS
 echo "Checking volume directories..."
-[ -d "/home/$USER/data/wordpress" ] && check_status "WordPress volume exists"
-[ -d "/home/$USER/data/mariadb" ] && check_status "MariaDB volume exists"
+if [ "$(uname)" = "Darwin" ]; then
+    # macOS paths
+    [ -d "/Users/$USER/data/wordpress" ] && check_status "WordPress volume exists"
+    [ -d "/Users/$USER/data/mariadb" ] && check_status "MariaDB volume exists"
+else
+    # Linux paths
+    [ -d "/home/$USER/data/wordpress" ] && check_status "WordPress volume exists"
+    [ -d "/home/$USER/data/mariadb" ] && check_status "MariaDB volume exists"
+fi
 
 # 5. SSL/TLS Verification
 print_header "SSL/TLS Verification"

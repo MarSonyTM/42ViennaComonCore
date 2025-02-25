@@ -19,12 +19,12 @@ if [ ! -f wp-config.php ]; then
         --dbhost=mariadb \
         --allow-root
 
-    # Install WordPress
+    # Install WordPress with admin user from environment
     wp core install \
         --url="https://${DOMAIN_NAME}" \
         --title="${WP_TITLE}" \
         --admin_user="${WP_ADMIN_USER}" \
-        --admin_password="$(head -n 1 /run/secrets/credentials)" \
+        --admin_password="$(cat /run/secrets/wp_admin_password)" \
         --admin_email="${WP_ADMIN_EMAIL}" \
         --allow-root
 
@@ -32,7 +32,7 @@ if [ ! -f wp-config.php ]; then
     wp user create \
         "${WP_USER}" "${WP_USER_EMAIL}" \
         --role=author \
-        --user_pass="$(tail -n 1 /run/secrets/credentials)" \
+        --user_pass="$(cat /run/secrets/wp_user_password)" \
         --allow-root
 fi
 

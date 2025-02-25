@@ -9,31 +9,53 @@ NAME = inception
 # Docker Compose file
 COMPOSE_FILE = srcs/docker-compose.yml
 
-# Domain name (from .env)
-DOMAIN = mafurnic.42.fr
+# Environment file
+ENV_FILE = srcs/.env
+ENV_EXAMPLE = srcs/.env.example
+ENV_SETUP = srcs/setup_env.sh
 
-# Detect OS and set paths accordingly
+# Get username and set paths
+USER_NAME = $(shell whoami)
 ifeq ($(shell uname),Darwin)
-    DATA_PATH = /Users/$(USER)/data
+    DATA_PATH = /Users/$(USER_NAME)/data
 else
-    DATA_PATH = /home/$(USER)/data
+    DATA_PATH = /home/$(USER_NAME)/data
 endif
+
+# Export variables for docker-compose
+export DATA_PATH
+export PWD = $(shell pwd)
+
+# Domain name
+DOMAIN = $(USER_NAME).42.fr
 
 # All required directories
 DIRS = $(DATA_PATH)/wordpress \
-       $(DATA_PATH)/mariadb
+       $(DATA_PATH)/mariadb \
+       srcs/secrets
 
 # Basic commands
-all: setup up
+all: env setup up
+
+# Check and setup environment file
+env:
+	@if [ ! -f $(ENV_FILE) ] || [ ! -f srcs/secrets/db_root_password.txt ]; then \
+		printf "$(GREEN)Setting up environment file...$(RESET)\n"; \
+		chmod +x $(ENV_SETUP); \
+		cd srcs && ./setup_env.sh; \
+	fi
 
 # Create necessary directories and setup environment
 setup: $(DIRS) hosts
 	@printf "$(GREEN)Setting up directories...$(RESET)\n"
 ifeq ($(shell uname),Darwin)
-	@chown -R $(USER):staff $(DATA_PATH)
+	@chown -R $(USER_NAME):staff $(DATA_PATH)
+	@chmod -R 755 $(DATA_PATH)
 else
-	@chown -R $(USER):$(USER) $(DATA_PATH)
+	@sudo chown -R $(USER_NAME):$(USER_NAME) $(DATA_PATH)
+	@sudo chmod -R 755 $(DATA_PATH)
 endif
+	@chmod 700 srcs/secrets
 
 $(DIRS):
 	@mkdir -p $@
@@ -68,7 +90,18 @@ clean: down
 # Remove all data directories
 fclean: clean
 	@printf "$(RED)Full cleanup...$(RESET)\n"
-	@rm -rf $(DATA_PATH)
+	@if [ -d "$(DATA_PATH)" ]; then \
+		sudo rm -rf $(DATA_PATH); \
+		printf "$(GREEN)Removed $(DATA_PATH)$(RESET)\n"; \
+	fi
+	@if [ -d "srcs/secrets" ]; then \
+		sudo rm -rf srcs/secrets; \
+		printf "$(GREEN)Removed secrets directory$(RESET)\n"; \
+	fi
+	@if [ -f "$(ENV_FILE)" ]; then \
+		rm -f $(ENV_FILE); \
+		printf "$(GREEN)Removed environment file$(RESET)\n"; \
+	fi
 
 # Restart all services
 re: fclean all
@@ -89,4 +122,4 @@ logs:
 shell:
 	@docker compose -f $(COMPOSE_FILE) exec $(service) sh
 
-.PHONY: all setup up down clean fclean re status logs shell
+.PHONY: all env setup up down clean fclean re status logs shell

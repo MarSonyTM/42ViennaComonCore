@@ -63,6 +63,22 @@ echo -e "\nChecking for passwords in Dockerfiles..."
 ! grep -r "PASSWORD" srcs/requirements/*/Dockerfile > /dev/null
 check_status "No passwords in Dockerfiles"
 
+# Check for prohibited network directives
+echo -e "\nChecking for prohibited network directives..."
+! grep -r "network:[[:space:]]*host" srcs/docker-compose.yml > /dev/null
+check_status "No 'network: host' directive found"
+
+! grep -r "^[[:space:]]*links:" srcs/docker-compose.yml > /dev/null
+check_status "No 'links:' directive found"
+
+grep -r "^networks:" srcs/docker-compose.yml > /dev/null
+check_status "Networks section properly defined"
+
+# Check for prohibited --link flag
+echo -e "\nChecking for prohibited --link flag..."
+! grep -r "[[:space:]]--link[[:space:]]" Makefile srcs/*.sh > /dev/null
+check_status "No '--link' flag found"
+
 # 3. Network Verification
 print_header "Network Verification"
 
@@ -96,7 +112,7 @@ print_header "SSL/TLS Verification"
 
 # Check SSL configuration
 echo "Checking SSL configuration..."
-grep -r "ssl_protocols" srcs/requirements/nginx/conf/ | grep -E "TLSv1.2|TLSv1.3" > /dev/null
+grep -r "ssl_protocols" srcs/requirements/nginx/ | grep -E "TLSv1.2|TLSv1.3" > /dev/null
 check_status "TLS version configuration correct"
 
 # 6. Container Health Check
@@ -113,7 +129,35 @@ check_status "WordPress container is running"
 docker ps | grep "mariadb" | grep "Up" > /dev/null
 check_status "MariaDB container is running"
 
-# 7. WordPress Configuration
+# 7. Base Image Verification
+print_header "Base Image Verification"
+
+# Check base images
+echo "Checking base images..."
+grep -E "^FROM alpine" srcs/requirements/nginx/Dockerfile > /dev/null || grep -E "^FROM debian:buster" srcs/requirements/nginx/Dockerfile > /dev/null
+check_status "NGINX uses allowed base image (Alpine or Debian Buster)"
+
+grep -E "^FROM alpine" srcs/requirements/wordpress/Dockerfile > /dev/null || grep -E "^FROM debian:buster" srcs/requirements/wordpress/Dockerfile > /dev/null
+check_status "WordPress uses allowed base image (Alpine or Debian Buster)"
+
+grep -E "^FROM alpine" srcs/requirements/mariadb/Dockerfile > /dev/null || grep -E "^FROM debian:buster" srcs/requirements/mariadb/Dockerfile > /dev/null
+check_status "MariaDB uses allowed base image (Alpine or Debian Buster)"
+
+# 8. Dockerfile Command Verification
+print_header "Dockerfile Command Verification"
+
+# Check for prohibited commands
+echo "Checking for prohibited commands in Dockerfiles..."
+! grep -E "tail -f|nginx &|^ENTRYPOINT \[\"(bash|sh)\"\][[:space:]]*$" srcs/requirements/nginx/Dockerfile > /dev/null
+check_status "No prohibited commands in NGINX Dockerfile"
+
+! grep -E "tail -f|php-fpm &|^ENTRYPOINT \[\"(bash|sh)\"\][[:space:]]*$" srcs/requirements/wordpress/Dockerfile > /dev/null
+check_status "No prohibited commands in WordPress Dockerfile"
+
+! grep -E "tail -f|mysqld &|^ENTRYPOINT \[\"(bash|sh)\"\][[:space:]]*$" srcs/requirements/mariadb/Dockerfile > /dev/null
+check_status "No prohibited commands in MariaDB Dockerfile"
+
+# 9. WordPress Configuration
 print_header "WordPress Configuration"
 
 # Check WordPress admin user
@@ -126,7 +170,7 @@ else
     echo -e "${GREEN}✓ WordPress admin username is compliant${NC}"
 fi
 
-# 8. Environment Variables
+# 10. Environment Variables
 print_header "Environment Variables Check"
 
 # Check .env file
@@ -179,6 +223,112 @@ echo "   d) Verify your test post and image still exist"
 echo
 echo "Note: All data should persist after container restart"
 echo "If data is lost, check volume configurations"
+
+# Display WordPress Credentials
+print_header "WordPress Credentials"
+
+if [ -f "srcs/.env" ]; then
+    echo -e "${GREEN}WordPress Admin Credentials:${NC}"
+    # Try different common variable name patterns for admin user
+    ADMIN_LOGIN=$(grep -E "WORDPRESS_ADMIN_USER|WP_ADMIN_USER|ADMIN_USER" srcs/.env | cut -d '=' -f2 | tr -d ' "')
+    if [ -z "$ADMIN_LOGIN" ]; then
+        echo "Username: [Could not extract - check .env file]"
+    else
+        echo "Username: $ADMIN_LOGIN"
+    fi
+    
+    # Try different common variable name patterns for admin password
+    ADMIN_PASSWORD=$(grep -E "WORDPRESS_ADMIN_PASSWORD|WP_ADMIN_PASSWORD|ADMIN_PASSWORD" srcs/.env | cut -d '=' -f2 | tr -d ' "')
+    if [ -z "$ADMIN_PASSWORD" ]; then
+        # Fallback to checking secrets file
+        if [ -f "srcs/secrets/wp_admin_password.txt" ]; then
+            ADMIN_PASSWORD=$(cat srcs/secrets/wp_admin_password.txt)
+        elif [ -f "secrets/wp_admin_password.txt" ]; then
+            ADMIN_PASSWORD=$(cat secrets/wp_admin_password.txt)
+        fi
+    fi
+    
+    if [ -z "$ADMIN_PASSWORD" ]; then
+        echo "Password: [Could not extract - check .env file]"
+    else
+        echo "Password: $ADMIN_PASSWORD"
+    fi
+    
+    echo -e "\n${GREEN}WordPress Regular User Credentials:${NC}"
+    # Try different common variable name patterns for regular user
+    USER_LOGIN=$(grep -E "WORDPRESS_USER|WP_USER" srcs/.env | grep -v "PASSWORD" | cut -d '=' -f2 | tr -d ' "')
+    if [ -z "$USER_LOGIN" ]; then
+        echo "Username: [Could not extract - check .env file]"
+    else
+        echo "Username: $USER_LOGIN"
+    fi
+    
+    # Try different common variable name patterns for user password
+    USER_PASSWORD=$(grep -E "WORDPRESS_USER_PASSWORD|WP_USER_PASSWORD|USER_PASSWORD" srcs/.env | cut -d '=' -f2 | tr -d ' "')
+    if [ -z "$USER_PASSWORD" ]; then
+        # Fallback to checking secrets file
+        if [ -f "srcs/secrets/wp_user_password.txt" ]; then
+            USER_PASSWORD=$(cat srcs/secrets/wp_user_password.txt)
+        elif [ -f "secrets/wp_user_password.txt" ]; then
+            USER_PASSWORD=$(cat secrets/wp_user_password.txt)
+        fi
+    fi
+    
+    if [ -z "$USER_PASSWORD" ]; then
+        echo "Password: [Could not extract - check .env file]"
+    else
+        echo "Password: $USER_PASSWORD"
+    fi
+
+    # Also display the database credentials as these are often needed
+    echo -e "\n${GREEN}Database Credentials:${NC}"
+    DB_ROOT_PASSWORD=$(grep -E "MYSQL_ROOT_PASSWORD|DB_ROOT_PASSWORD|MARIADB_ROOT_PASSWORD" srcs/.env | cut -d '=' -f2 | tr -d ' "')
+    if [ -z "$DB_ROOT_PASSWORD" ]; then
+        # Fallback to checking secrets file
+        if [ -f "srcs/secrets/db_root_password.txt" ]; then
+            DB_ROOT_PASSWORD=$(cat srcs/secrets/db_root_password.txt)
+        elif [ -f "secrets/db_root_password.txt" ]; then
+            DB_ROOT_PASSWORD=$(cat secrets/db_root_password.txt)
+        fi
+    fi
+    
+    if [ -z "$DB_ROOT_PASSWORD" ]; then
+        echo "Database Root Password: [Could not extract - check .env file]"
+    else
+        echo "Database Root Password: $DB_ROOT_PASSWORD"
+    fi
+else
+    echo -e "${RED}Could not find .env file to display credentials${NC}"
+    echo "Checking for credentials in secrets directory..."
+    
+    # Try to get credentials from secrets files if they exist
+    if [ -d "srcs/secrets" ]; then
+        SECRETS_DIR="srcs/secrets"
+    elif [ -d "secrets" ]; then
+        SECRETS_DIR="secrets"
+    else
+        echo -e "${RED}No secrets directory found${NC}"
+        echo "Please check srcs/.env file manually for login information"
+        exit $ERRORS
+    fi
+    
+    echo -e "${GREEN}Credentials from secrets files:${NC}"
+    if [ -f "$SECRETS_DIR/wp_admin_password.txt" ]; then
+        echo "Admin Password: $(cat $SECRETS_DIR/wp_admin_password.txt)"
+    fi
+    
+    if [ -f "$SECRETS_DIR/wp_user_password.txt" ]; then
+        echo "User Password: $(cat $SECRETS_DIR/wp_user_password.txt)"
+    fi
+    
+    if [ -f "$SECRETS_DIR/db_root_password.txt" ]; then
+        echo "DB Root Password: $(cat $SECRETS_DIR/db_root_password.txt)"
+    fi
+    
+    if [ -f "$SECRETS_DIR/db_password.txt" ]; then
+        echo "DB Password: $(cat $SECRETS_DIR/db_password.txt)"
+    fi
+fi
 
 exit $ERRORS
 

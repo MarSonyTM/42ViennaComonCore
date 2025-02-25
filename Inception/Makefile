@@ -32,14 +32,14 @@ DOMAIN = $(USER_NAME).42.fr
 # All required directories
 DIRS = $(DATA_PATH)/wordpress \
        $(DATA_PATH)/mariadb \
-       srcs/secrets
+       secrets
 
 # Basic commands
 all: env setup up
 
 # Check and setup environment file
 env:
-	@if [ ! -f $(ENV_FILE) ] || [ ! -f srcs/secrets/db_root_password.txt ]; then \
+	@if [ ! -f $(ENV_FILE) ] || [ ! -f secrets/db_root_password.txt ]; then \
 		printf "$(GREEN)Setting up environment file...$(RESET)\n"; \
 		chmod +x $(ENV_SETUP); \
 		cd srcs && ./setup_env.sh; \
@@ -55,7 +55,7 @@ else
 	@sudo chown -R $(USER_NAME):$(USER_NAME) $(DATA_PATH)
 	@sudo chmod -R 755 $(DATA_PATH)
 endif
-	@chmod 700 srcs/secrets
+	@chmod 700 secrets
 
 $(DIRS):
 	@mkdir -p $@
@@ -94,8 +94,8 @@ fclean: clean
 		sudo rm -rf $(DATA_PATH); \
 		printf "$(GREEN)Removed $(DATA_PATH)$(RESET)\n"; \
 	fi
-	@if [ -d "srcs/secrets" ]; then \
-		sudo rm -rf srcs/secrets; \
+	@if [ -d "secrets" ]; then \
+		sudo rm -rf secrets; \
 		printf "$(GREEN)Removed secrets directory$(RESET)\n"; \
 	fi
 	@if [ -f "$(ENV_FILE)" ]; then \

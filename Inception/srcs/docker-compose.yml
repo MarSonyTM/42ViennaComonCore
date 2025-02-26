@@ -10,7 +10,7 @@ services:
     ports:
       - "443:443"  # HTTPS only - TLSv1.2/1.3
     volumes:
-      - ${DATA_PATH}/wordpress:/var/www/html  # WordPress files
+      - wordpress_data:/var/www/html  # WordPress files
     networks:
       - inception_network
     depends_on:
@@ -28,7 +28,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
-      - ${DATA_PATH}/mariadb:/var/lib/mysql  # Persistent database storage
+      - mariadb_data:/var/lib/mysql  # Persistent database storage
     networks:
       - inception_network
     secrets:  # Secure credentials management
@@ -54,7 +54,7 @@ services:
       WP_USER: ${WP_USER}
       WP_USER_EMAIL: ${WP_USER_EMAIL}
     volumes:
-      - ${DATA_PATH}/wordpress:/var/www/html  # WordPress files
+      - wordpress_data:/var/www/html  # WordPress files
     networks:
       - inception_network
     secrets:  # Secure credentials management
@@ -84,5 +84,17 @@ secrets:
   wp_user_password:
     file: ../secrets/wp_user_password.txt
 
-# Volume Configuration - Using bind mounts instead of named volumes
-volumes: {}
+# Volume Configuration - Using named volumes
+volumes:
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/wordpress
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/mariadb

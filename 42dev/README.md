@@ -1,18 +1,68 @@
-# 42 Development Environment
+# 42 School Development Environment
 
-This setup creates a development environment that mimics the 42 school environment for testing your Inception project. It includes:
+This setup creates a development environment that mimics the 42 school environment with full sudo access and Docker integration.
 
-- Rootless Docker (no sudo access)
-- Port restrictions (can't use privileged ports < 1024)
-- Similar user permissions and limitations
+## Quick Setup (Docker Image)
 
-## Setup on MacBook
+1. Build the Docker image:
+   ```bash
+   cd 42dev
+   ./build_image.sh
+   ```
+
+2. Once the image is built, you can use the 42school command from anywhere:
+   ```bash
+   42school
+   ```
+
+   This will:
+   - Start a container with the 42school image
+   - Mount your current directory to `/app` in the container
+   - Provide a bash shell with sudo privileges
+
+## Features
+
+- Full sudo access (no password required)
+- Docker with all necessary permissions
+- Shared volumes with the host for easy file editing
+- Access your project files at `/app` inside the container
+
+## Using the Environment
+
+Inside the container:
+
+1. You have sudo access (no password required)
+   ```bash
+   sudo apt-get update
+   ```
+
+2. Your host files are available in the container
+   ```bash
+   ls /app
+   ```
+
+3. Any changes you make to files in `/app` from either the host or the container will be reflected in both places.
+
+## Key Benefits
+
+1. Full sudo access for installing any required packages
+2. Works from any directory - just run `42school` and your current directory is available
+3. Docker-in-Docker for running containerized applications
+4. Seamless file editing between host and container
+
+## Notes
+
+- The 42school command is actually a Docker container that is aliased to simplify usage
+- The container is ephemeral (data outside of mounted volumes will be lost)
+- You can install additional software inside the container as needed
+
+## Manual Setup (without installing the command)
 
 1. Make sure you have Docker Desktop installed on your MacBook
 
-2. Clone your Inception project and navigate to the 42dev directory:
+2. Navigate to the 42dev directory:
    ```bash
-   cd Inception/42dev
+   cd 42dev
    ```
 
 3. Build and start the development environment:
@@ -25,43 +75,15 @@ This setup creates a development environment that mimics the 42 school environme
    docker exec -it 42dev bash
    ```
 
-5. Inside the container, your Inception project is mounted at `/home/dev42/inception`
-
-## Testing Your Project
-
-Inside the container:
-1. Navigate to your project:
-   ```bash
-   cd inception
-   ```
-
-2. Run your project as normal:
-   ```bash
-   make
-   ```
-
-3. Access your WordPress site at:
-   ```
-   https://mafurnic.42.fr:8443
-   ```
-
-## Key Differences from MacBook Environment
-
-1. No sudo access
-2. Can't use port 443 (using 8443 instead)
-3. Rootless Docker operation
-4. Limited user permissions
-
 ## Stopping the Environment
 
-From your MacBook:
+From your host:
 ```bash
-cd Inception/42dev
-docker compose down
+42school stop
 ```
 
-## Notes
-
-- The environment uses Docker-in-Docker to provide a similar experience to 42 school
-- Your project files are mounted from your host machine, so you can edit them with your preferred editor on your MacBook
-- Changes made to the project files will be immediately reflected in the container 
+Or manually:
+```bash
+cd 42dev
+docker compose down
+``` 

@@ -1,0 +1,50 @@
+FROM ubuntu:22.04
+
+# Install required packages
+RUN apt-get update && apt-get install -y \
+    docker.io \
+    docker-compose \
+    curl \
+    make \
+    git \
+    nano \
+    vim \
+    sudo \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a non-root user with sudo privileges
+ARG USERNAME=dev42
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Create the user with sudo privileges
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && mkdir -p /home/$USERNAME/app \
+    && chown -R $USERNAME:$USERNAME /home/$USERNAME \
+    && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME
+
+# Configure Docker for our user
+RUN mkdir -p /etc/docker
+RUN echo '{ "userns-remap": "default" }' > /etc/docker/daemon.json
+
+# Configure unprivileged ports
+RUN echo "net.ipv4.ip_unprivileged_port_start=1024" >> /etc/sysctl.conf
+
+WORKDIR /app
+VOLUME ["/app"]
+
+# Create an entrypoint script
+RUN echo '#!/bin/bash' > /entrypoint.sh && \
+    echo 'if [ "$1" = "bash" ] || [ -z "$1" ]; then' >> /entrypoint.sh && \
+    echo '  echo "Welcome to 42 School environment!"' >> /entrypoint.sh && \
+    echo '  echo "Your project is mounted at /app"' >> /entrypoint.sh && \
+    echo '  echo "You have sudo privileges (no password required)"' >> /entrypoint.sh && \
+    echo '  exec bash' >> /entrypoint.sh && \
+    echo 'else' >> /entrypoint.sh && \
+    echo '  exec "$@"' >> /entrypoint.sh && \
+    echo 'fi' >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"] 

@@ -21,16 +21,6 @@ print_header() {
     echo -e "\n${YELLOW}=== $1 ===${NC}"
 }
 
-# Function to safely check if files exist and have content without displaying the content
-check_secret_file() {
-    if [ -f "$1" ] && [ -s "$1" ]; then
-        echo -e "${GREEN}✓ $2 exists and has content${NC}"
-    else
-        echo -e "${RED}✗ $2 does not exist or is empty${NC}"
-        ERRORS=$((ERRORS + 1))
-    fi
-}
-
 # Initialize error counter
 ERRORS=0
 
@@ -48,18 +38,6 @@ echo -e "\nChecking secrets directory..."
 [ -f "secrets/credentials.txt" ] && check_status "credentials.txt exists"
 [ -f "secrets/db_password.txt" ] && check_status "db_password.txt exists"
 [ -f "secrets/db_root_password.txt" ] && check_status "db_root_password.txt exists"
-
-# Display contents of secret files for debugging
-echo -e "\nCredentials content:"
-if [ -f "secrets/credentials.txt" ]; then
-    echo "credentials.txt: $(cat secrets/credentials.txt)"
-fi
-if [ -f "secrets/db_password.txt" ]; then
-    echo "db_password.txt: $(cat secrets/db_password.txt)"
-fi
-if [ -f "secrets/db_root_password.txt" ]; then
-    echo "db_root_password.txt: $(cat secrets/db_root_password.txt)"
-fi
 
 # Check srcs directory
 echo -e "\nChecking srcs directory..."
@@ -246,41 +224,70 @@ echo
 echo "Note: All data should persist after container restart"
 echo "If data is lost, check volume configurations"
 
-# Display WordPress Credentials
-print_header "WordPress Credentials"
-
-echo -e "${GREEN}WordPress Admin Credentials:${NC}"
-if [ -f "secrets/credentials.txt" ]; then
-    # Extract just the admin password from the credentials file
-    ADMIN_PASSWORD=$(grep -E "WP_ADMIN_PASSWORD" secrets/credentials.txt | grep -oE "[a-zA-Z0-9]{10,}" | head -1)
-    echo "Username: $(grep -E "WP_ADMIN_USER" srcs/.env | cut -d '=' -f2 | tr -d ' "')"
-    echo "Password: $ADMIN_PASSWORD"
+# Display WordPress credentials
+echo -e "\n${GREEN}WordPress Credentials:${NC}"
+ADMIN_USER=$(grep -E "^WP_ADMIN_USER=" srcs/.env | cut -d '=' -f2 | tr -d ' "')
+if [ -z "$ADMIN_USER" ]; then
+    echo "Admin Username: [Could not extract - check .env file]"
 else
-    echo "Admin credentials not found in secrets/credentials.txt"
+    echo "Admin Username: $ADMIN_USER"
 fi
 
-echo -e "\n${GREEN}WordPress Regular User Credentials:${NC}"
-if [ -f "secrets/credentials.txt" ]; then
-    # Extract just the user password from the credentials file
-    USER_PASSWORD=$(grep -E "WP_USER_PASSWORD" secrets/credentials.txt | grep -oE "[a-zA-Z0-9]{10,}" | head -1)
-    echo "Username: $(grep -E "WP_USER" srcs/.env | grep -v "PASSWORD\|EMAIL" | cut -d '=' -f2 | tr -d ' "')"
-    echo "Password: $USER_PASSWORD"
-else
-    echo "User credentials not found in secrets/credentials.txt"
+ADMIN_PASSWORD=$(grep -E "^WP_ADMIN_PASSWORD=" srcs/.env | cut -d '=' -f2 | tr -d ' "')
+if [ -z "$ADMIN_PASSWORD" ] || [ "$ADMIN_PASSWORD" = "your_admin_password_here" ]; then
+    # Fallback to checking secrets file
+    if [ -f "srcs/secrets/wp_admin_password.txt" ]; then
+        ADMIN_PASSWORD=$(cat srcs/secrets/wp_admin_password.txt)
+    elif [ -f "secrets/wp_admin_password.txt" ]; then
+        ADMIN_PASSWORD=$(cat secrets/wp_admin_password.txt)
+    fi
 fi
 
+if [ -z "$ADMIN_PASSWORD" ]; then
+    echo "Admin Password: [Could not extract - check .env file]"
+else
+    echo "Admin Password: $ADMIN_PASSWORD"
+fi
+
+WP_USER=$(grep -E "^WP_USER=" srcs/.env | cut -d '=' -f2 | tr -d ' "')
+if [ -z "$WP_USER" ]; then
+    echo "User Username: [Could not extract - check .env file]"
+else
+    echo "User Username: $WP_USER"
+fi
+
+WP_USER_PASSWORD=$(grep -E "^WP_USER_PASSWORD=" srcs/.env | cut -d '=' -f2 | tr -d ' "')
+if [ -z "$WP_USER_PASSWORD" ] || [ "$WP_USER_PASSWORD" = "your_wp_user_password" ]; then
+    # Fallback to checking secrets file
+    if [ -f "srcs/secrets/wp_user_password.txt" ]; then
+        WP_USER_PASSWORD=$(cat srcs/secrets/wp_user_password.txt)
+    elif [ -f "secrets/wp_user_password.txt" ]; then
+        WP_USER_PASSWORD=$(cat secrets/wp_user_password.txt)
+    fi
+fi
+
+if [ -z "$WP_USER_PASSWORD" ]; then
+    echo "User Password: [Could not extract - check .env file]"
+else
+    echo "User Password: $USER_PASSWORD"
+fi
+
+# Also display the database credentials
 echo -e "\n${GREEN}Database Credentials:${NC}"
-if [ -f "secrets/db_root_password.txt" ]; then
-    echo "Database Root Password: $(cat secrets/db_root_password.txt | tr -d '\n')"
-else
-    echo "Database root password not found in secrets/db_root_password.txt"
+DB_ROOT_PASSWORD=$(grep -E "^MYSQL_ROOT_PASSWORD=|^DB_ROOT_PASSWORD=|^MARIADB_ROOT_PASSWORD=" srcs/.env | cut -d '=' -f2 | tr -d ' "')
+if [ -z "$DB_ROOT_PASSWORD" ] || [ "$DB_ROOT_PASSWORD" = "your_root_password_here" ]; then
+    # Fallback to checking secrets file
+    if [ -f "srcs/secrets/db_root_password.txt" ]; then
+        DB_ROOT_PASSWORD=$(cat srcs/secrets/db_root_password.txt)
+    elif [ -f "secrets/db_root_password.txt" ]; then
+        DB_ROOT_PASSWORD=$(cat secrets/db_root_password.txt)
+    fi
 fi
 
-if [ -f "secrets/db_password.txt" ]; then
-    echo "Database User Password: $(cat secrets/db_password.txt | tr -d '\n')"
+if [ -z "$DB_ROOT_PASSWORD" ]; then
+    echo "Database Root Password: [Could not extract - check .env file]"
 else
-    echo "Database user password not found in secrets/db_password.txt"
+    echo "Database Root Password: $DB_ROOT_PASSWORD"
 fi
 
-exit $ERRORS
-
+exit $ERRORS 

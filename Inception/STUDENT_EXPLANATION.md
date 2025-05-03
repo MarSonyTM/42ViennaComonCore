@@ -2,6 +2,12 @@
 
 This document contains the key topics you need to be able to explain during your Inception project evaluation, along with detailed explanations to help you prepare.
 
+Inception Project Overview
+Inception is a Docker-based infrastructure project that sets up a complete web application stack with three main services:
+1.NGINX - Web server with SSL termination
+2.WordPress - PHP-based content management system
+3.MariaDB - MySQL-compatible database server
+
 ## Project Overview
 
 ### 1. How Docker and docker-compose work
@@ -84,24 +90,21 @@ This document contains the key topics you need to be able to explain during your
 **Explanation:**
 The directory structure for the Inception project follows a logical organization that enhances maintainability, security, and clarity:
 
-```
+ 
 Inception/
-├── Makefile                  # Build automation
-├── srcs/
-│   ├── docker-compose.yml    # Service orchestration
-│   ├── .env                  # Environment variables
-│   └── requirements/         # Service configs
-│       ├── nginx/           
-│       │   ├── Dockerfile
-│       │   └── conf/
-│       ├── wordpress/
-│       │   ├── Dockerfile
-│       │   └── conf/
-│       └── mariadb/
-│           ├── Dockerfile
-│           └── conf/
-└── secrets/                  # Sensitive data
-```
+├── srcs/                       # Source files directory
+│   ├── docker-compose.yml      # Main Docker Compose configuration      service orchestration 
+│   ├── docker-compose.override.yml  # OS-specific volume configuration
+│   ├── setup_env.sh            # Script to create .env file
+│   └── requirements/           # Service-specific configurations
+│       ├── nginx/              # NGINX configuration files
+│       ├── wordpress/          # WordPress configuration files
+│       └── mariadb/            # MariaDB configuration files
+├── secrets/                    # Stores secure passwords
+├── Makefile                    # Project automation
+├── setup.sh                    # Initial project setup script
+├── cleanup_docker.sh           # Docker cleanup utilities
+└── Documentation files (README.md, LEARN.md, etc.)
 
 This structure is pertinent because:
 
@@ -180,3 +183,39 @@ To login to the MariaDB database:
    - Passwords are required for all users
    - Database is only accessible from within the Docker network
    - Credentials are managed through Docker secrets
+
+## Evaluation Notes
+
+### Important: OS Detection Removal
+- For the evaluation, the OS detection feature in setup scripts should be removed since evaluation will be on Linux only
+- This affects:
+  - `setup.sh`: Remove the OS detection logic and keep only the Linux-specific implementation
+  - `Makefile`: Simplify the DATA_PATH assignment to use Linux path only
+  - Any other scripts with OS-specific conditionals
+- With these changes, volume binding will use the Linux approach with bind mounts rather than named volumes for macOS
+
+### Docker Compose Files
+- For a Linux-only environment (like during evaluation), the project can be simplified to use a single docker-compose.yml file
+- This single file would include all service definitions and the Linux-specific volume configurations
+- Benefits of combining into one file:
+  - Eliminates the need for docker-compose.override.yml
+  - Simplifies setup scripts by removing code that generates the override file
+  - Reduces overall project complexity
+  - Makes the setup more straightforward for evaluation
+- If using this approach, update the Makefile to reference only the single docker-compose.yml file
+
+### Secret Folder Management
+- The subject explicitly mentions a "secret" directory in the expected structure:
+  ```
+  $> ls -alR
+  total XX
+  drwxrwxr-x 3 wil wil 4096 avril 42 20:42 .
+  drwxrwxrwt 17 wil wil 4096 avril 42 20:42 ..
+  -rw-rw-r-- 1 wil wil XXXX avril 42 20:42 Makefile
+  drwxrwxr-x 3 wil wil 4096 avril 42 20:42 secret
+  ```
+- Best approach: 
+  - Keep the "secret" folder structure in the project
+  - For `make clean` and `make fclean` commands, only remove the password files within the folder, not the folder itself
+  - When setting up, generate passwords and store them in the secret folder
+  - This maintains the required directory structure while ensuring security

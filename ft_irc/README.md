@@ -41,7 +41,7 @@ This is an implementation of an IRC (Internet Relay Chat) server in C++98. The p
    - ✅ KICK command (completed)
    - ✅ Channel key protection (completed)
    - ✅ TOPIC command (completed)
-   - INVITE command (pending)
+   - ✅ INVITE command (completed)
    - MODE command with various flags (pending)
 
 2. **Additional Channel Features**
@@ -198,7 +198,7 @@ ft_irc/
 ## Next Steps
 
 1. Complete Channel Operator Commands
-   - Implement INVITE command
+   - ✅ Implement INVITE command
    - Add MODE command functionality
    - Implement MODE command with various flags
 

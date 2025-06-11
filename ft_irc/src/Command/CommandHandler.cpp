@@ -217,6 +217,7 @@ void CommandHandler::handleJoin(Client* client, const std::vector<std::string>& 
     }
 
     std::string channel_name = params[0];
+    std::string provided_key = params.size() > 1 ? params[1] : "";
     
     if (!isValidChannelName(channel_name)) {
         sendReply(client, ERR_NOSUCHCHANNEL, channel_name + " :No such channel");
@@ -231,6 +232,12 @@ void CommandHandler::handleJoin(Client* client, const std::vector<std::string>& 
         channel = _server.createChannel(channel_name);
         // First user to join becomes operator
         channel->addOperator(client);
+        if (!provided_key.empty()) {
+            channel->setKey(provided_key);
+        }
+    } else if (channel->hasKey() && (provided_key != channel->getKey())) {
+        sendReply(client, ERR_BADCHANNELKEY, channel_name + " :Cannot join channel (+k) - wrong channel key");
+        return;
     }
 
     if (channel->hasClient(client)) {
@@ -246,10 +253,8 @@ void CommandHandler::handleJoin(Client* client, const std::vector<std::string>& 
     channel->addClient(client);
     
     Logger::debug("Broadcasting JOIN message: " + join_msg);
-    // Send JOIN message directly to the joining client first
-    send(client->getFd(), join_msg.c_str(), join_msg.length(), 0);
-    // Then broadcast to others in the channel
-    channel->broadcast(join_msg, client);
+    // Broadcast to all clients in the channel (including the joining client)
+    channel->broadcast(join_msg);
 
     // Send NAMES list to the joining client
     handleNames(client, params);
@@ -382,9 +387,13 @@ void CommandHandler::handleNames(Client* client, const std::vector<std::string>&
         names_list += (is_operator ? "@" : "") + (*it)->getNickname();
     }
 
-    // Send names reply
-    std::string reply = ":" + std::string(SERVER_NAME) + " " + 
-                       static_cast<char>('0' + RPL_NAMREPLY) + " " +
+    // Send names reply using proper numeric code
+    std::ostringstream code_str;
+    code_str.width(3);
+    code_str.fill('0');
+    code_str << RPL_NAMREPLY;
+    
+    std::string reply = ":" + std::string(SERVER_NAME) + " " + code_str.str() + " " +
                        client->getNickname() + " = " + channel_name + " :" + names_list + "\r\n";
     send(client->getFd(), reply.c_str(), reply.length(), 0);
 

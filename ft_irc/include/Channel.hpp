@@ -33,6 +33,8 @@ public:
     bool                        isInviteOnly() const;
     bool                        isTopicRestricted() const;
     size_t                      getUserLimit() const;
+    bool                        hasKey() const;
+    const std::string&          getKey() const;
 
     // Setters
     void setTopic(const std::string& topic);
@@ -40,6 +42,7 @@ public:
     void setInviteOnly(bool status);
     void setTopicRestricted(bool status);
     void setUserLimit(size_t limit);
+    void setKey(const std::string& key);
 
     // Client operations
     void addClient(Client* client);

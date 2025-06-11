@@ -27,6 +27,7 @@ This is an implementation of an IRC (Internet Relay Chat) server in C++98. The p
 
 4. **Channel Operations**
    - JOIN command with operator status for channel creator
+   - Channel key (password) protection
    - PART command for leaving channels
    - Channel message broadcasting (PRIVMSG)
    - NAMES command showing channel members and operators
@@ -36,12 +37,13 @@ This is an implementation of an IRC (Internet Relay Chat) server in C++98. The p
 
 1. **Channel Operator Commands**
    - ✅ KICK command (completed)
+   - ✅ Channel key protection (completed)
    - INVITE command (pending)
    - TOPIC command (pending)
    - MODE command with various flags (pending)
 
 2. **Additional Channel Features**
-   - Channel password protection
+   - ✅ Channel password protection
    - User limit enforcement
    - Invite-only mode
    - Topic restriction mode
@@ -116,6 +118,14 @@ USER testuser 0 * :Real Name
 JOIN #testchannel
 # Expected: Join confirmation and NAMES list with @ symbol
 
+# Create a channel with a key
+JOIN #secretchannel secretkey
+# Expected: Join confirmation and NAMES list with @ symbol
+
+# Try to join with wrong key
+JOIN #secretchannel wrongkey
+# Expected: Error 475 - Cannot join channel (+k) - bad key
+
 # Try to kick someone without operator status (should fail)
 KICK #testchannel operator :trying to kick you
 # Expected: Error 482 - Not channel operator
@@ -141,6 +151,7 @@ KICK #testchannel target :you are kicked
 - 461: Not enough parameters
 - 462: Already registered
 - 464: Password incorrect
+- 475: Cannot join channel (+k) - bad key
 - 482: Not channel operator
 
 ## Project Structure

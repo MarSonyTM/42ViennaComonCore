@@ -45,6 +45,14 @@ size_t Channel::getUserLimit() const {
     return _user_limit;
 }
 
+bool Channel::hasKey() const {
+    return !_password.empty();
+}
+
+const std::string& Channel::getKey() const {
+    return _password;
+}
+
 // Setters
 void Channel::setTopic(const std::string& topic) {
     _topic = topic;
@@ -64,6 +72,10 @@ void Channel::setTopicRestricted(bool status) {
 
 void Channel::setUserLimit(size_t limit) {
     _user_limit = limit;
+}
+
+void Channel::setKey(const std::string& key) {
+    _password = key;
 }
 
 // Client operations

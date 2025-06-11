@@ -504,6 +504,64 @@ void CommandHandler::handleTopic(Client* client, const std::vector<std::string>&
     channel->broadcast(topicMsg);
 }
 
+void CommandHandler::handleInvite(Client* client, const std::vector<std::string>& params) {
+    if (!client->isRegistered()) {
+        sendReply(client, ERR_NOTREGISTERED, ":You have not registered");
+        return;
+    }
+
+    if (params.size() < 2) {
+        sendReply(client, ERR_NEEDMOREPARAMS, "INVITE :Not enough parameters");
+        return;
+    }
+
+    std::string nickname = params[0];
+    std::string channelName = params[1];
+
+    // Check if target user exists
+    Client* target = _server.getClientByNickname(nickname);
+    if (!target) {
+        sendReply(client, ERR_NOSUCHNICK, nickname + " :No such nick");
+        return;
+    }
+
+    // Check if channel exists
+    Channel* channel = _server.getChannel(channelName);
+    if (!channel) {
+        sendReply(client, ERR_NOSUCHCHANNEL, channelName + " :No such channel");
+        return;
+    }
+
+    // Check if inviter is on the channel
+    if (!channel->hasClient(client)) {
+        sendReply(client, ERR_NOTONCHANNEL, channelName + " :You're not on that channel");
+        return;
+    }
+
+    // Check if inviter is an operator
+    if (!channel->isOperator(client)) {
+        sendReply(client, ERR_CHANOPRIVSNEEDED, channelName + " :You're not channel operator");
+        return;
+    }
+
+    // Check if target is already on the channel
+    if (channel->hasClient(target)) {
+        sendReply(client, ERR_USERONCHANNEL, nickname + " " + channelName + " :is already on channel");
+        return;
+    }
+
+    // Add target to invited users list
+    channel->inviteClient(target);
+
+    // Send success replies
+    sendReply(client, RPL_INVITING, nickname + " " + channelName);
+
+    // Send invite message to target
+    std::string inviteMsg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
+                           " INVITE " + nickname + " :" + channelName + "\r\n";
+    send(target->getFd(), inviteMsg.c_str(), inviteMsg.length(), 0);
+}
+
 void CommandHandler::handleCommand(Client* client, const std::string& message) {
     std::vector<std::string> tokens = splitMessage(message);
     if (tokens.empty())
@@ -540,6 +598,8 @@ void CommandHandler::handleCommand(Client* client, const std::string& message) {
         handleKick(client, params);
     else if (command == "TOPIC")
         handleTopic(client, params);
+    else if (command == "INVITE")
+        handleInvite(client, params);
     else
         Logger::debug("Unknown command received: " + command);
 } 

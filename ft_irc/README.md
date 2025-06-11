@@ -33,6 +33,7 @@ This is an implementation of an IRC (Internet Relay Chat) server in C++98. The p
    - NAMES command showing channel members and operators
    - KICK command with proper operator permission checks
    - TOPIC command for viewing and setting channel topics
+   - INVITE command for inviting users to channels
 
 ### 🚧 In Progress
 

@@ -1,5 +1,6 @@
 #include "../../include/CommandHandler.hpp"
 #include "../../include/Logger.hpp"
+#include "../../include/Channel.hpp"
 #include <sstream>
 
 CommandHandler::CommandHandler(Server& server) : _server(server) {}
@@ -46,6 +47,23 @@ bool CommandHandler::isValidNickname(const std::string& nickname) {
             return false;
     }
 
+    return true;
+}
+
+bool CommandHandler::isValidChannelName(const std::string& channel) {
+    if (channel.empty() || channel.length() > 50)
+        return false;
+    
+    // Channel names must start with # or &
+    if (channel[0] != '#' && channel[0] != '&')
+        return false;
+    
+    // Check for invalid characters
+    for (std::string::const_iterator it = channel.begin() + 1; it != channel.end(); ++it) {
+        if (*it == ' ' || *it == ',' || *it == ':' || *it == 7)
+            return false;
+    }
+    
     return true;
 }
 
@@ -158,6 +176,182 @@ void CommandHandler::handleQuit(Client* client, const std::vector<std::string>& 
     // The actual client removal will be handled by the Server class
 }
 
+void CommandHandler::handleJoin(Client* client, const std::vector<std::string>& params) {
+    if (!client->isRegistered()) {
+        sendReply(client, ERR_NOTREGISTERED, ":You have not registered");
+        return;
+    }
+
+    if (params.empty()) {
+        sendReply(client, ERR_NEEDMOREPARAMS, "JOIN :Not enough parameters");
+        return;
+    }
+
+    std::string channel_name = params[0];
+    
+    if (!isValidChannelName(channel_name)) {
+        sendReply(client, ERR_NOSUCHCHANNEL, channel_name + " :No such channel");
+        return;
+    }
+
+    Channel* channel = _server.getChannel(channel_name);
+    if (!channel) {
+        channel = _server.createChannel(channel_name);
+        // First user to join becomes operator
+        channel->addOperator(client);
+    }
+
+    if (channel->hasClient(client))
+        return; // Already in channel
+
+    channel->addClient(client);
+
+    // Send JOIN message to all users in the channel
+    std::string join_msg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
+                          " JOIN " + channel_name + "\r\n";
+    channel->broadcast(join_msg);
+
+    // Send NAMES list
+    handleNames(client, params);
+}
+
+void CommandHandler::handlePart(Client* client, const std::vector<std::string>& params) {
+    if (!client->isRegistered()) {
+        sendReply(client, ERR_NOTREGISTERED, ":You have not registered");
+        return;
+    }
+
+    if (params.empty()) {
+        sendReply(client, ERR_NEEDMOREPARAMS, "PART :Not enough parameters");
+        return;
+    }
+
+    std::string channel_name = params[0];
+    Channel* channel = _server.getChannel(channel_name);
+    
+    if (!channel) {
+        sendReply(client, ERR_NOSUCHCHANNEL, channel_name + " :No such channel");
+        return;
+    }
+
+    if (!channel->hasClient(client)) {
+        sendReply(client, ERR_NOTONCHANNEL, channel_name + " :You're not on that channel");
+        return;
+    }
+
+    std::string part_msg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
+                          " PART " + channel_name;
+    if (params.size() > 1)
+        part_msg += " :" + params[1];
+    part_msg += "\r\n";
+    
+    channel->broadcast(part_msg);
+    channel->removeClient(client);
+
+    // If channel is empty, remove it
+    if (channel->getClients().empty())
+        _server.removeChannel(channel_name);
+}
+
+void CommandHandler::handlePrivmsg(Client* client, const std::vector<std::string>& params) {
+    if (!client->isRegistered()) {
+        sendReply(client, ERR_NOTREGISTERED, ":You have not registered");
+        return;
+    }
+
+    if (params.empty()) {
+        sendReply(client, ERR_NEEDMOREPARAMS, "PRIVMSG :Not enough parameters");
+        return;
+    }
+
+    if (params.size() < 2) {
+        // No message provided
+        return;
+    }
+
+    std::string target = params[0];
+    std::string message = params[1];
+
+    if (target[0] == '#' || target[0] == '&') {
+        // Channel message
+        Channel* channel = _server.getChannel(target);
+        if (!channel) {
+            sendReply(client, ERR_NOSUCHCHANNEL, target + " :No such channel");
+            return;
+        }
+
+        if (!channel->hasClient(client)) {
+            sendReply(client, ERR_CANNOTSENDTOCHAN, target + " :Cannot send to channel");
+            return;
+        }
+
+        std::string msg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
+                         " PRIVMSG " + target + " :" + message + "\r\n";
+        channel->broadcast(msg, client); // Don't send to sender
+    } else {
+        // Private message to user
+        Client* target_client = _server.getClientByNickname(target);
+        if (!target_client) {
+            sendReply(client, ERR_NOSUCHNICK, target + " :No such nick/channel");
+            return;
+        }
+
+        std::string msg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
+                         " PRIVMSG " + target + " :" + message + "\r\n";
+        send(target_client->getFd(), msg.c_str(), msg.length(), 0);
+    }
+}
+
+void CommandHandler::handleNames(Client* client, const std::vector<std::string>& params) {
+    if (!client->isRegistered()) {
+        sendReply(client, ERR_NOTREGISTERED, ":You have not registered");
+        return;
+    }
+
+    if (params.empty()) {
+        sendReply(client, ERR_NEEDMOREPARAMS, "NAMES :Not enough parameters");
+        return;
+    }
+
+    std::string channel_name = params[0];
+    Channel* channel = _server.getChannel(channel_name);
+    
+    if (!channel) {
+        sendReply(client, ERR_NOSUCHCHANNEL, channel_name + " :No such channel");
+        return;
+    }
+
+    // Build names list
+    std::string names_list;
+    const std::vector<Client*>& clients = channel->getClients();
+    const std::vector<Client*>& operators = channel->getOperators();
+
+    for (std::vector<Client*>::const_iterator it = clients.begin(); it != clients.end(); ++it) {
+        if (it != clients.begin())
+            names_list += " ";
+        
+        // Add @ prefix for operators
+        bool is_operator = false;
+        for (std::vector<Client*>::const_iterator op_it = operators.begin(); op_it != operators.end(); ++op_it) {
+            if (*op_it == *it) {
+                is_operator = true;
+                break;
+            }
+        }
+        
+        names_list += (is_operator ? "@" : "") + (*it)->getNickname();
+    }
+
+    // Send names reply
+    std::string reply = ":" + std::string(SERVER_NAME) + " " + 
+                       static_cast<char>('0' + RPL_NAMREPLY) + " " +
+                       client->getNickname() + " = " + channel_name + " :" + names_list + "\r\n";
+    send(client->getFd(), reply.c_str(), reply.length(), 0);
+
+    // Send end of names
+    sendReply(client, RPL_ENDOFNAMES, channel_name + " :End of NAMES list");
+}
+
 void CommandHandler::handleCommand(Client* client, const std::string& message) {
     std::vector<std::string> tokens = splitMessage(message);
     if (tokens.empty())
@@ -178,6 +372,14 @@ void CommandHandler::handleCommand(Client* client, const std::string& message) {
         handleUser(client, params);
     else if (command == "QUIT")
         handleQuit(client, params);
+    else if (command == "JOIN")
+        handleJoin(client, params);
+    else if (command == "PART")
+        handlePart(client, params);
+    else if (command == "PRIVMSG")
+        handlePrivmsg(client, params);
+    else if (command == "NAMES")
+        handleNames(client, params);
     else
         Logger::debug("Unknown command received: " + command);
 } 

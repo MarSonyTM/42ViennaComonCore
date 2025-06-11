@@ -2,8 +2,7 @@
 # define CHANNEL_HPP
 
 # include "common.hpp"
-
-class Client;
+# include "Client.hpp"
 
 class Channel {
 private:
@@ -15,6 +14,7 @@ private:
     bool                    _invite_only;
     bool                    _topic_restricted;
     size_t                  _user_limit;
+    std::vector<Client*>    _invited_clients;
 
     // Private copy constructor and assignment operator to prevent copying
     Channel(const Channel& other);
@@ -44,10 +44,15 @@ public:
     // Client operations
     void addClient(Client* client);
     void removeClient(Client* client);
-    bool hasClient(const Client* client) const;
+    bool hasClient(Client* client) const;
     void addOperator(Client* client);
     void removeOperator(Client* client);
-    bool isOperator(const Client* client) const;
+    bool isOperator(Client* client) const;
+
+    // Invite operations
+    void inviteClient(Client* client);
+    void removeInvite(Client* client);
+    bool isInvited(Client* client) const;
 
     // Message broadcasting
     void broadcast(const std::string& message, Client* exclude = NULL);

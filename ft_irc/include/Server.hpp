@@ -36,6 +36,12 @@ public:
     void    run();
     void    stop();
 
+    // Channel operations
+    Channel* createChannel(const std::string& name);
+    Channel* getChannel(const std::string& name);
+    void    removeChannel(const std::string& name);
+    void    broadcastToChannel(const std::string& channel_name, const std::string& message, Client* exclude = NULL);
+
     // Getters
     const std::string&  getPassword() const;
     const std::map<std::string, Channel*>& getChannels() const;

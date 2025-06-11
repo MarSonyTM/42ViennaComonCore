@@ -216,4 +216,35 @@ Client* Server::getClientByNickname(const std::string& nickname) const {
             return it->second;
     }
     return NULL;
+}
+
+Channel* Server::createChannel(const std::string& name) {
+    std::map<std::string, Channel*>::iterator it = _channels.find(name);
+    if (it != _channels.end())
+        return it->second;
+    
+    Channel* channel = new Channel(name);
+    _channels[name] = channel;
+    Logger::debug("Created new channel: " + name);
+    return channel;
+}
+
+Channel* Server::getChannel(const std::string& name) {
+    std::map<std::string, Channel*>::iterator it = _channels.find(name);
+    return (it != _channels.end()) ? it->second : NULL;
+}
+
+void Server::removeChannel(const std::string& name) {
+    std::map<std::string, Channel*>::iterator it = _channels.find(name);
+    if (it != _channels.end()) {
+        delete it->second;
+        _channels.erase(it);
+        Logger::debug("Removed channel: " + name);
+    }
+}
+
+void Server::broadcastToChannel(const std::string& channel_name, const std::string& message, Client* exclude) {
+    Channel* channel = getChannel(channel_name);
+    if (channel)
+        channel->broadcast(message, exclude);
 } 

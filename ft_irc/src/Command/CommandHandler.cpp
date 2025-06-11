@@ -454,6 +454,56 @@ void CommandHandler::handleKick(Client* client, const std::vector<std::string>& 
     channel->removeClient(target);
 }
 
+void CommandHandler::handleTopic(Client* client, const std::vector<std::string>& params) {
+    if (!client->isRegistered()) {
+        sendReply(client, ERR_NOTREGISTERED, ":You have not registered");
+        return;
+    }
+
+    if (params.empty()) {
+        sendReply(client, ERR_NEEDMOREPARAMS, "TOPIC :Not enough parameters");
+        return;
+    }
+
+    std::string channelName = params[0];
+    Channel* channel = _server.getChannel(channelName);
+
+    if (!channel) {
+        sendReply(client, ERR_NOSUCHCHANNEL, channelName + " :No such channel");
+        return;
+    }
+
+    if (!channel->hasClient(client)) {
+        sendReply(client, ERR_NOTONCHANNEL, channelName + " :You're not on that channel");
+        return;
+    }
+
+    // If no topic is provided, display the current topic
+    if (params.size() == 1) {
+        if (channel->getTopic().empty()) {
+            sendReply(client, RPL_NOTOPIC, channelName + " :No topic is set");
+        } else {
+            sendReply(client, RPL_TOPIC, channelName + " :" + channel->getTopic());
+        }
+        return;
+    }
+
+    // If a topic is provided, check if the user has permission to set it
+    // Only channel operators can set the topic
+    if (!channel->isOperator(client)) {
+        sendReply(client, ERR_CHANOPRIVSNEEDED, channelName + " :You're not channel operator");
+        return;
+    }
+
+    // Set the new topic
+    channel->setTopic(params[1]);
+    
+    // Broadcast the topic change to all channel members
+    std::string topicMsg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
+                          " TOPIC " + channelName + " :" + params[1] + "\r\n";
+    channel->broadcast(topicMsg);
+}
+
 void CommandHandler::handleCommand(Client* client, const std::string& message) {
     std::vector<std::string> tokens = splitMessage(message);
     if (tokens.empty())
@@ -488,6 +538,8 @@ void CommandHandler::handleCommand(Client* client, const std::string& message) {
         handleNames(client, params);
     else if (command == "KICK")
         handleKick(client, params);
+    else if (command == "TOPIC")
+        handleTopic(client, params);
     else
         Logger::debug("Unknown command received: " + command);
 } 

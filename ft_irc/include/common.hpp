@@ -25,6 +25,8 @@
 
 // IRC Reply Codes
 # define RPL_WELCOME 001
+# define RPL_TOPIC 332
+# define RPL_NOTOPIC 331
 # define RPL_NAMREPLY 353
 # define RPL_ENDOFNAMES 366
 
@@ -42,5 +44,6 @@
 # define ERR_PASSWDMISMATCH 464
 # define ERR_BADCHANNELKEY 475
 # define ERR_CHANOPRIVSNEEDED 482
+# define ERR_NOCHANMODES 477
 
 #endif 

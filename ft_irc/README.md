@@ -32,14 +32,15 @@ This is an implementation of an IRC (Internet Relay Chat) server in C++98. The p
    - Channel message broadcasting (PRIVMSG)
    - NAMES command showing channel members and operators
    - KICK command with proper operator permission checks
+   - TOPIC command for viewing and setting channel topics
 
 ### 🚧 In Progress
 
 1. **Channel Operator Commands**
    - ✅ KICK command (completed)
    - ✅ Channel key protection (completed)
+   - ✅ TOPIC command (completed)
    - INVITE command (pending)
-   - TOPIC command (pending)
    - MODE command with various flags (pending)
 
 2. **Additional Channel Features**
@@ -126,9 +127,21 @@ JOIN #secretchannel secretkey
 JOIN #secretchannel wrongkey
 # Expected: Error 475 - Cannot join channel (+k) - bad key
 
-# Try to kick someone without operator status (should fail)
-KICK #testchannel operator :trying to kick you
+# Set a channel topic (as operator)
+TOPIC #testchannel :Welcome to the test channel!
+# Expected: Topic change broadcast to channel
+
+# View channel topic
+TOPIC #testchannel
+# Expected: RPL_TOPIC (332) with the current topic
+
+# Try to set topic without operator status
+TOPIC #testchannel :This should fail
 # Expected: Error 482 - Not channel operator
+
+# Try to view topic without joining
+TOPIC #testchannel
+# Expected: Error 442 - You're not on that channel
 
 # Kick someone as operator
 KICK #testchannel target :you are kicked
@@ -138,6 +151,8 @@ KICK #testchannel target :you are kicked
 ## Error Codes
 
 - 001: Welcome message
+- 331: No topic is set
+- 332: Channel topic
 - 353: NAMES reply
 - 366: End of NAMES list
 - 401: No such nick/channel
@@ -183,7 +198,7 @@ ft_irc/
 
 1. Complete Channel Operator Commands
    - Implement INVITE command
-   - Add TOPIC command functionality
+   - Add MODE command functionality
    - Implement MODE command with various flags
 
 2. Add Channel Modes

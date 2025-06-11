@@ -147,9 +147,14 @@ bool Channel::isInvited(Client* client) const {
 
 // Message broadcasting
 void Channel::broadcast(const std::string& message, Client* exclude) {
+    // Send to all clients in the channel, including the sender unless excluded
     for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
         if (*it != exclude) {
             send((*it)->getFd(), message.c_str(), message.length(), 0);
         }
+    }
+    // If the sender is excluded, send to them too (for their own messages)
+    if (exclude && hasClient(exclude)) {
+        send(exclude->getFd(), message.c_str(), message.length(), 0);
     }
 }

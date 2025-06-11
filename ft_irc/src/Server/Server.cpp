@@ -3,6 +3,14 @@
 #include "../../include/Channel.hpp"
 #include "../../include/Logger.hpp"
 #include "../../include/CommandHandler.hpp"
+#include <sstream>
+
+// Helper function for number to string conversion
+std::string numberToString(size_t number) {
+    std::ostringstream ss;
+    ss << number;
+    return ss.str();
+}
 
 Server::Server(int port, const std::string& password)
     : _socket_fd(-1), _port(port), _password(password), _command_handler(NULL) {
@@ -104,38 +112,56 @@ void Server::handleNewConnection() {
 }
 
 void Server::handleClientMessage(int client_fd) {
-    Client* client = _clients[client_fd];
-    char buffer[BUFFER_SIZE + 1];
-    ssize_t bytes_read = recv(client_fd, buffer, BUFFER_SIZE, 0);
-
+    char buffer[1024];
+    ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
+    
     if (bytes_read <= 0) {
-        if (bytes_read == 0)
-            Logger::info("Client disconnected");
-        else
-            Logger::error("Error reading from client: " + std::string(strerror(errno)));
-        
+        if (bytes_read == 0) {
+            Logger::debug("Client disconnected gracefully");
+        } else {
+            Logger::debug("Error reading from client: " + std::string(strerror(errno)));
+        }
         removeClient(client_fd);
         return;
     }
 
     buffer[bytes_read] = '\0';
-    std::string message = buffer;
+    std::string message(buffer);
     
-    // Split received data into lines
-    size_t pos = 0;
-    std::string line;
-    while ((pos = message.find("\r\n")) != std::string::npos || (pos = message.find("\n")) != std::string::npos) {
-        line = message.substr(0, pos);
-        if (!line.empty()) {
-            Logger::debug("Received: " + line);
-            _command_handler->handleCommand(client, line);
+    // Debug: Print raw message with visible special characters
+    std::string debug_message;
+    for (size_t i = 0; i < message.length(); ++i) {
+        if (message[i] == '\r') debug_message += "\\r";
+        else if (message[i] == '\n') debug_message += "\\n";
+        else debug_message += message[i];
+    }
+    Logger::debug("Received raw message (" + numberToString(bytes_read) + " bytes): '" + debug_message + "'");
+
+    // Split the message by \r\n or \n
+    size_t start = 0;
+    size_t end;
+    
+    while ((end = message.find_first_of("\r\n", start)) != std::string::npos) {
+        if (end > start) {
+            std::string cmd = message.substr(start, end - start);
+            if (!cmd.empty()) {
+                Logger::debug("Processing command: '" + cmd + "'");
+                _command_handler->handleCommand(_clients[client_fd], cmd);
+            }
         }
-        message.erase(0, pos + (message[pos] == '\r' ? 2 : 1));
+        // Skip \r\n or \n
+        start = message.find_first_not_of("\r\n", end);
+        if (start == std::string::npos)
+            break;
     }
 
-    // Store any remaining partial message in client's buffer
-    if (!message.empty()) {
-        client->appendToBuffer(message);
+    // Handle any remaining message
+    if (start != std::string::npos && start < message.length()) {
+        std::string cmd = message.substr(start);
+        if (!cmd.empty()) {
+            Logger::debug("Processing remaining command: '" + cmd + "'");
+            _command_handler->handleCommand(_clients[client_fd], cmd);
+        }
     }
 }
 

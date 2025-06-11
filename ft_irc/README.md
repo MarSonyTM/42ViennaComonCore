@@ -25,21 +25,39 @@ This is an implementation of an IRC (Internet Relay Chat) server in C++98. The p
    - Proper registration sequence enforcement
    - Clean client disconnection handling
 
-### 🚧 Planned Features
+4. **Channel Operations**
+   - JOIN command with operator status for channel creator
+   - PART command for leaving channels
+   - Channel message broadcasting (PRIVMSG)
+   - NAMES command showing channel members and operators
+   - KICK command with proper operator permission checks
 
-1. Channel Operations
-   - JOIN command
-   - PART command
-   - Channel message broadcasting
+### 🚧 In Progress
 
-2. Private Messaging
-   - PRIVMSG command for both users and channels
+1. **Channel Operator Commands**
+   - ✅ KICK command (completed)
+   - INVITE command (pending)
+   - TOPIC command (pending)
+   - MODE command with various flags (pending)
 
-3. Channel Operator Commands
-   - KICK command
-   - INVITE command
-   - TOPIC command
-   - MODE command with various flags
+2. **Additional Channel Features**
+   - Channel password protection
+   - User limit enforcement
+   - Invite-only mode
+   - Topic restriction mode
+
+### 🔜 Planned Features
+
+1. **Advanced Channel Operations**
+   - Channel modes and flags
+   - Ban lists
+   - Exception lists
+   - Invite lists
+
+2. **Server Administration**
+   - Server operator commands
+   - Server configuration
+   - Server statistics
 
 ## Building the Project
 
@@ -92,36 +110,38 @@ USER testuser 0 * :Real Name
 # Expected: Welcome message (001)
 ```
 
-### 3. Nickname Validation Test
+### 3. Channel Operations Test
 ```bash
-# Try invalid nicknames
-NICK 123test     # Starts with number (should fail)
-NICK test@user   # Contains special character (should fail)
-NICK t_est-user  # Valid nickname with allowed special characters
-```
+# Create and join a channel (becomes operator)
+JOIN #testchannel
+# Expected: Join confirmation and NAMES list with @ symbol
 
-### 4. Multiple Client Test
-1. Open two terminal windows
-2. Connect to the server from both terminals
-3. Try to use the same nickname in both connections
-4. Verify that nickname collision is properly handled
+# Try to kick someone without operator status (should fail)
+KICK #testchannel operator :trying to kick you
+# Expected: Error 482 - Not channel operator
 
-### 5. Quit Test
-```bash
-QUIT :Goodbye!
-# Expected: Connection closes
+# Kick someone as operator
+KICK #testchannel target :you are kicked
+# Expected: Kick message broadcast to channel
 ```
 
 ## Error Codes
 
 - 001: Welcome message
+- 353: NAMES reply
+- 366: End of NAMES list
+- 401: No such nick/channel
+- 403: No such channel
+- 404: Cannot send to channel
 - 431: No nickname given
 - 432: Erroneous nickname
 - 433: Nickname already in use
+- 442: Not on channel
 - 451: Not registered
 - 461: Not enough parameters
 - 462: Already registered
 - 464: Password incorrect
+- 482: Not channel operator
 
 ## Project Structure
 
@@ -150,19 +170,21 @@ ft_irc/
 
 ## Next Steps
 
-1. Implement Channel Operations
-   - Create channel creation/joining functionality
-   - Implement channel message broadcasting
-   - Add channel user list management
+1. Complete Channel Operator Commands
+   - Implement INVITE command
+   - Add TOPIC command functionality
+   - Implement MODE command with various flags
 
-2. Add Private Messaging
-   - Implement direct messages between users
-   - Add channel message support
+2. Add Channel Modes
+   - Password protection (+k)
+   - User limit (+l)
+   - Invite-only mode (+i)
+   - Topic restriction (+t)
 
-3. Implement Channel Operator Commands
-   - Add operator privileges
-   - Implement channel modes
-   - Add channel management commands
+3. Implement Server Administration
+   - Add server operator commands
+   - Implement server configuration
+   - Add server statistics
 
 ## Contributing
 

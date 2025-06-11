@@ -9,27 +9,56 @@ CommandHandler::~CommandHandler() {}
 
 std::vector<std::string> CommandHandler::splitMessage(const std::string& message) {
     std::vector<std::string> tokens;
-    std::string token;
-    bool in_trailing = false;
-    
+    std::string cleaned_message;
+
+    // Remove \r and \n manually
     for (std::string::const_iterator it = message.begin(); it != message.end(); ++it) {
-        if (*it == ':' && tokens.empty()) {
-            in_trailing = true;
-            continue;
-        }
-        if (*it == ' ' && !in_trailing) {
-            if (!token.empty()) {
-                tokens.push_back(token);
-                token.clear();
-            }
-        } else {
-            token += *it;
+        if (*it != '\r' && *it != '\n') {
+            cleaned_message += *it;
         }
     }
-    if (!token.empty()) {
-        tokens.push_back(token);
+
+    Logger::debug("Splitting message: '" + cleaned_message + "'");
+
+    if (cleaned_message.empty()) {
+        return tokens;
     }
-    
+
+    // Handle trailing parameter (after :)
+    size_t colon_pos = cleaned_message.find(" :");
+    if (colon_pos != std::string::npos) {
+        // Get the part before the colon
+        std::string before_colon = cleaned_message.substr(0, colon_pos);
+        // Get the trailing part (including the colon)
+        std::string trailing = cleaned_message.substr(colon_pos + 2);
+
+        // Split the part before the colon
+        std::istringstream before_iss(before_colon);
+        std::string token;
+        while (before_iss >> token) {
+            tokens.push_back(token);
+        }
+
+        // Add the trailing part as a single parameter
+        if (!trailing.empty()) {
+            tokens.push_back(trailing);
+        }
+    } else {
+        // No trailing parameter, just split by spaces
+        std::istringstream iss(cleaned_message);
+        std::string token;
+        while (iss >> token) {
+            tokens.push_back(token);
+        }
+    }
+
+    std::string debug_tokens;
+    for (size_t i = 0; i < tokens.size(); ++i) {
+        if (i > 0) debug_tokens += ", ";
+        debug_tokens += "'" + tokens[i] + "'";
+    }
+    Logger::debug("Split into tokens: [" + debug_tokens + "]");
+
     return tokens;
 }
 
@@ -194,24 +223,35 @@ void CommandHandler::handleJoin(Client* client, const std::vector<std::string>& 
         return;
     }
 
+    Logger::debug("Processing JOIN for " + client->getNickname() + " to channel " + channel_name);
+
     Channel* channel = _server.getChannel(channel_name);
     if (!channel) {
+        Logger::debug("Creating new channel " + channel_name);
         channel = _server.createChannel(channel_name);
         // First user to join becomes operator
         channel->addOperator(client);
     }
 
-    if (channel->hasClient(client))
+    if (channel->hasClient(client)) {
+        Logger::debug("Client " + client->getNickname() + " already in channel " + channel_name);
         return; // Already in channel
+    }
 
-    channel->addClient(client);
-
-    // Send JOIN message to all users in the channel
+    // Format: :nick!user@host JOIN #channel
     std::string join_msg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
                           " JOIN " + channel_name + "\r\n";
-    channel->broadcast(join_msg);
+    
+    Logger::debug("Adding client " + client->getNickname() + " to channel " + channel_name);
+    channel->addClient(client);
+    
+    Logger::debug("Broadcasting JOIN message: " + join_msg);
+    // Send JOIN message directly to the joining client first
+    send(client->getFd(), join_msg.c_str(), join_msg.length(), 0);
+    // Then broadcast to others in the channel
+    channel->broadcast(join_msg, client);
 
-    // Send NAMES list
+    // Send NAMES list to the joining client
     handleNames(client, params);
 }
 
@@ -352,6 +392,59 @@ void CommandHandler::handleNames(Client* client, const std::vector<std::string>&
     sendReply(client, RPL_ENDOFNAMES, channel_name + " :End of NAMES list");
 }
 
+void CommandHandler::handleKick(Client* client, const std::vector<std::string>& params) {
+    if (!client->isRegistered()) {
+        sendReply(client, ERR_NOTREGISTERED, ":You have not registered");
+        return;
+    }
+
+    if (params.size() < 2) {
+        sendReply(client, ERR_NEEDMOREPARAMS, "KICK :Not enough parameters");
+        return;
+    }
+
+    std::string channel_name = params[0];
+    std::string target_nick = params[1];
+    std::string kick_message = params.size() > 2 ? params[2] : client->getNickname();
+
+    Channel* channel = _server.getChannel(channel_name);
+    if (!channel) {
+        sendReply(client, ERR_NOSUCHCHANNEL, channel_name + " :No such channel");
+        return;
+    }
+
+    if (!channel->hasClient(client)) {
+        sendReply(client, ERR_NOTONCHANNEL, channel_name + " :You're not on that channel");
+        return;
+    }
+
+    if (!channel->isOperator(client)) {
+        sendReply(client, ERR_CHANOPRIVSNEEDED, channel_name + " :You're not channel operator");
+        return;
+    }
+
+    Client* target = _server.getClientByNickname(target_nick);
+    if (!target) {
+        sendReply(client, ERR_NOSUCHNICK, target_nick + " :No such nick/channel");
+        return;
+    }
+
+    if (!channel->hasClient(target)) {
+        sendReply(client, ERR_NOTONCHANNEL, channel_name + " :They aren't on that channel");
+        return;
+    }
+
+    // Format: :nick!user@host KICK #channel target :reason
+    std::string kick_msg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
+                          " KICK " + channel_name + " " + target_nick + " :" + kick_message + "\r\n";
+    
+    // Send kick message to all clients in the channel (including the kicked user)
+    channel->broadcast(kick_msg);
+    
+    // Remove the kicked user from the channel
+    channel->removeClient(target);
+}
+
 void CommandHandler::handleCommand(Client* client, const std::string& message) {
     std::vector<std::string> tokens = splitMessage(message);
     if (tokens.empty())
@@ -364,6 +457,8 @@ void CommandHandler::handleCommand(Client* client, const std::string& message) {
     for (std::string::iterator it = command.begin(); it != command.end(); ++it)
         *it = toupper(*it);
 
+    Logger::debug("Processing command: " + command + " from " + client->getNickname());
+
     if (command == "PASS")
         handlePass(client, params);
     else if (command == "NICK")
@@ -372,14 +467,18 @@ void CommandHandler::handleCommand(Client* client, const std::string& message) {
         handleUser(client, params);
     else if (command == "QUIT")
         handleQuit(client, params);
-    else if (command == "JOIN")
+    else if (command == "JOIN") {
+        Logger::debug("Handling JOIN command with params: " + (params.empty() ? "none" : params[0]));
         handleJoin(client, params);
+    }
     else if (command == "PART")
         handlePart(client, params);
     else if (command == "PRIVMSG")
         handlePrivmsg(client, params);
     else if (command == "NAMES")
         handleNames(client, params);
+    else if (command == "KICK")
+        handleKick(client, params);
     else
         Logger::debug("Unknown command received: " + command);
 } 

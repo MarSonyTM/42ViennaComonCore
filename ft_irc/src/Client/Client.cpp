@@ -46,6 +46,10 @@ const std::vector<Channel*>& Client::getChannels() const {
     return _channels;
 }
 
+const std::string& Client::getHostname() const {
+    return _hostname;
+}
+
 // Setters
 void Client::setNickname(const std::string& nickname) {
     _nickname = nickname;
@@ -65,6 +69,10 @@ void Client::setAuthenticated(bool status) {
 
 void Client::setRegistered(bool status) {
     _registered = status;
+}
+
+void Client::setHostname(const std::string& hostname) {
+    _hostname = hostname;
 }
 
 // Channel operations
@@ -102,6 +110,6 @@ void Client::appendToBuffer(const std::string& data) {
     _buffer += data;
 }
 
-void Client::clearBuffer() {
-    _buffer.clear();
+void Client::sendMessage(const std::string& message) {
+    send(_fd, message.c_str(), message.length(), 0);
 } 

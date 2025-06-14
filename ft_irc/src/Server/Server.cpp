@@ -5,6 +5,9 @@
 #include "../../include/CommandHandler.hpp"
 #include <sstream>
 
+// Define static member
+const std::string Server::_hostname = "ft_irc";
+
 // Helper function for number to string conversion
 std::string numberToString(size_t number) {
     std::ostringstream ss;
@@ -82,33 +85,40 @@ bool Server::start() {
 }
 
 void Server::handleNewConnection() {
-    struct sockaddr_in client_addr;
-    socklen_t client_len = sizeof(client_addr);
+    struct sockaddr_in clientAddr;
+    socklen_t clientLen = sizeof(clientAddr);
     
-    int client_fd = accept(_socket_fd, (struct sockaddr*)&client_addr, &client_len);
-    if (client_fd < 0) {
+    int clientFd = accept(_socket_fd, (struct sockaddr*)&clientAddr, &clientLen);
+    if (clientFd < 0) {
         if (errno != EWOULDBLOCK)
             Logger::error("Failed to accept connection: " + std::string(strerror(errno)));
         return;
     }
 
-    // Set client socket to non-blocking
-    if (fcntl(client_fd, F_SETFL, O_NONBLOCK) < 0) {
-        Logger::error("Failed to set client socket to non-blocking: " + std::string(strerror(errno)));
-        close(client_fd);
-        return;
+    // Set socket to non-blocking mode
+    int flags = fcntl(clientFd, F_GETFL, 0);
+    fcntl(clientFd, F_SETFL, flags | O_NONBLOCK);
+
+    // Create new client
+    Client* newClient = new Client(clientFd);
+    
+    // Set hostname
+    char hostname[NI_MAXHOST];
+    if (getnameinfo((struct sockaddr*)&clientAddr, sizeof(clientAddr),
+                    hostname, NI_MAXHOST, NULL, 0, NI_NUMERICHOST) == 0) {
+        newClient->setHostname(hostname);
+    } else {
+        newClient->setHostname("unknown");
     }
 
     // Add to poll fds
     struct pollfd pfd;
-    pfd.fd = client_fd;
+    pfd.fd = clientFd;
     pfd.events = POLLIN;
     _poll_fds.push_back(pfd);
 
-    // Create client object
-    _clients[client_fd] = new Client(client_fd);
-
-    Logger::info("New client connected from " + std::string(inet_ntoa(client_addr.sin_addr)));
+    _clients[clientFd] = newClient;
+    Logger::info("New client connected from " + std::string(hostname));
 }
 
 void Server::handleClientMessage(int client_fd) {
@@ -273,4 +283,8 @@ void Server::broadcastToChannel(const std::string& channel_name, const std::stri
     Channel* channel = getChannel(channel_name);
     if (channel)
         channel->broadcast(message, exclude);
+}
+
+const std::string& Server::getHostname() const {
+    return _hostname;
 } 

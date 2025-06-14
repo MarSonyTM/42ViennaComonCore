@@ -23,6 +23,7 @@ private:
     void handleKick(Client* client, const std::vector<std::string>& params);
     void handleTopic(Client* client, const std::vector<std::string>& params);
     void handleInvite(Client* client, const std::vector<std::string>& params);
+    void handleMode(Client* client, const std::vector<std::string>& params);
 
     // Helper functions
     std::vector<std::string> splitMessage(const std::string& message);

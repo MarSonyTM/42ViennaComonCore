@@ -1,9 +1,10 @@
 #include "../../include/Channel.hpp"
 #include "../../include/Client.hpp"
 #include "../../include/Logger.hpp"
+#include "../../include/Server.hpp"
 
 Channel::Channel(const std::string& name)
-    : _name(name), _topic(""), _invite_only(false), _topic_restricted(false), _user_limit(0) {
+    : _name(name), _topic(""), _invite_only(false), _topic_restricted(false), _user_limit(0), _server(NULL) {
 }
 
 Channel::~Channel() {
@@ -19,6 +20,14 @@ const std::string& Channel::getName() const {
 
 const std::string& Channel::getTopic() const {
     return _topic;
+}
+
+const std::string& Channel::getTopicSetter() const {
+    return _topicSetter;
+}
+
+time_t Channel::getTopicTime() const {
+    return _topicTime;
 }
 
 const std::string& Channel::getPassword() const {
@@ -54,8 +63,36 @@ const std::string& Channel::getKey() const {
 }
 
 // Setters
-void Channel::setTopic(const std::string& topic) {
+void Channel::setTopic(const std::string& topic, Client* client) {
+    if (_topic_restricted && !isOperator(client)) {
+        // Send error message to client
+        std::string error = ":";
+        error += _server->getHostname();
+        error += " 482 ";
+        error += client->getNickname();
+        error += " ";
+        error += _name;
+        error += " :You're not channel operator\r\n";
+        client->sendMessage(error);
+        return;
+    }
     _topic = topic;
+    _topicSetter = client->getNickname();
+    _topicTime = time(NULL);
+    
+    // Broadcast topic change to channel
+    std::string topicMsg = ":";
+    topicMsg += client->getNickname();
+    topicMsg += "!~";
+    topicMsg += client->getUsername();
+    topicMsg += "@";
+    topicMsg += client->getHostname();
+    topicMsg += " TOPIC ";
+    topicMsg += _name;
+    topicMsg += " :";
+    topicMsg += topic;
+    topicMsg += "\r\n";
+    broadcast(topicMsg);
 }
 
 void Channel::setPassword(const std::string& password) {
@@ -169,4 +206,8 @@ void Channel::broadcast(const std::string& message, Client* exclude) {
     if (exclude && hasClient(exclude)) {
         send(exclude->getFd(), message.c_str(), message.length(), 0);
     }
+}
+
+void Channel::setServer(Server* server) {
+    _server = server;
 }

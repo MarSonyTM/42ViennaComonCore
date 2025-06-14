@@ -3,11 +3,19 @@
 
 # include "common.hpp"
 # include "Client.hpp"
+# include <string>
+# include <vector>
+# include <map>
+# include <ctime>
+
+class Server;  // Forward declaration
 
 class Channel {
 private:
     std::string             _name;
     std::string             _topic;
+    std::string             _topicSetter;
+    time_t                  _topicTime;
     std::string             _password;
     std::vector<Client*>    _clients;
     std::vector<Client*>    _operators;
@@ -15,6 +23,7 @@ private:
     bool                    _topic_restricted;
     size_t                  _user_limit;
     std::vector<Client*>    _invited_clients;
+    Server*                 _server;
 
     // Private copy constructor and assignment operator to prevent copying
     Channel(const Channel& other);
@@ -27,6 +36,8 @@ public:
     // Getters
     const std::string&          getName() const;
     const std::string&          getTopic() const;
+    const std::string&          getTopicSetter() const;
+    time_t                      getTopicTime() const;
     const std::string&          getPassword() const;
     const std::vector<Client*>& getClients() const;
     const std::vector<Client*>& getOperators() const;
@@ -37,7 +48,7 @@ public:
     const std::string&          getKey() const;
 
     // Setters
-    void setTopic(const std::string& topic);
+    void setTopic(const std::string& topic, Client* client);
     void setPassword(const std::string& password);
     void setInviteOnly(bool status);
     void setTopicRestricted(bool status);
@@ -59,6 +70,8 @@ public:
 
     // Message broadcasting
     void broadcast(const std::string& message, Client* exclude = NULL);
+
+    void setServer(Server* server);
 };
 
 #endif 

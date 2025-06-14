@@ -11,6 +11,7 @@ private:
     std::string _nickname;
     std::string _username;
     std::string _realname;
+    std::string _hostname;
     bool        _authenticated;
     bool        _registered;
     std::string _buffer;
@@ -29,6 +30,7 @@ public:
     const std::string& getNickname() const;
     const std::string& getUsername() const;
     const std::string& getRealname() const;
+    const std::string& getHostname() const;
     bool        isAuthenticated() const;
     bool        isRegistered() const;
     std::string& getBuffer();
@@ -38,6 +40,7 @@ public:
     void        setNickname(const std::string& nickname);
     void        setUsername(const std::string& username);
     void        setRealname(const std::string& realname);
+    void        setHostname(const std::string& hostname);
     void        setAuthenticated(bool status);
     void        setRegistered(bool status);
 
@@ -48,7 +51,7 @@ public:
 
     // Message handling
     void        appendToBuffer(const std::string& data);
-    void        clearBuffer();
+    void        sendMessage(const std::string& message);
 };
 
 #endif 

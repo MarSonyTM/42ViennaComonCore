@@ -16,6 +16,7 @@ private:
     std::map<int, Client*>     _clients;
     std::map<std::string, Channel*> _channels;
     CommandHandler*            _command_handler;
+    static const std::string   _hostname;
 
     // Private member functions
     bool    setupSocket();
@@ -46,6 +47,7 @@ public:
     const std::string&  getPassword() const;
     const std::map<std::string, Channel*>& getChannels() const;
     Client* getClientByNickname(const std::string& nickname) const;
+    const std::string& getHostname() const;
 };
 
 #endif 

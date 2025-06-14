@@ -247,6 +247,12 @@ void CommandHandler::handleJoin(Client* client, const std::vector<std::string>& 
             sendReply(client, ERR_BADCHANNELKEY, channel_name + " :Cannot join channel (+k) - wrong channel key");
             return;
         }
+
+        // Check user limit
+        if (channel->getUserLimit() > 0 && channel->getClients().size() >= channel->getUserLimit()) {
+            sendReply(client, ERR_CHANNELISFULL, channel_name + " :Cannot join channel (+l) - channel is full");
+            return;
+        }
     }
 
     if (channel->hasClient(client)) {

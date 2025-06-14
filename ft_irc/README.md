@@ -168,6 +168,18 @@ JOIN #secretchannel wrongkey
 TOPIC #testchannel :Welcome to the test channel!
 # Expected: Topic change broadcast to channel
 
+# Set user limit mode (as operator)
+MODE #testchannel +l 5
+# Expected: Mode change broadcast to channel
+
+# Try to join when channel is full
+JOIN #testchannel
+# Expected: Error 471 - Cannot join channel (+l) - channel is full
+
+# Remove user limit mode
+MODE #testchannel -l
+# Expected: Mode change broadcast to channel
+
 # View channel topic
 TOPIC #testchannel
 # Expected: RPL_TOPIC (332) with the current topic

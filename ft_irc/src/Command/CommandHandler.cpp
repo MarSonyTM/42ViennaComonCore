@@ -236,6 +236,12 @@ void CommandHandler::handleJoin(Client* client, const std::vector<std::string>& 
             channel->setKey(provided_key);
         }
     } else {
+        // Check if user is banned
+        if (channel->isBanned(client)) {
+            sendReply(client, ERR_BANNEDFROMCHAN, channel_name + " :Cannot join channel (+b) - you are banned");
+            return;
+        }
+
         // Check invite-only mode
         if (channel->isInviteOnly() && !channel->isInvited(client)) {
             sendReply(client, ERR_INVITEONLYCHAN, channel_name + " :Cannot join channel (+i) - invite only");
@@ -602,22 +608,25 @@ void CommandHandler::handleInvite(Client* client, const std::vector<std::string>
         return;
     }
 
-    // Check if target is already on the channel
-    if (channel->hasClient(target)) {
-        sendReply(client, ERR_USERONCHANNEL, nickname + " " + channelName + " :is already on channel");
-        return;
-    }
+    // Add invite
+    channel->addInvite(target);
 
-    // Add target to invited users list
-    channel->inviteClient(target);
+    // Send invite notification to target
+    std::string invite_msg = ":";
+    invite_msg += client->getNickname();
+    invite_msg += "!";
+    invite_msg += client->getUsername();
+    invite_msg += "@";
+    invite_msg += SERVER_NAME;
+    invite_msg += " INVITE ";
+    invite_msg += nickname;
+    invite_msg += " ";
+    invite_msg += channelName;
+    invite_msg += "\r\n";
+    send(target->getFd(), invite_msg.c_str(), invite_msg.length(), 0);
 
-    // Send success replies
+    // Send RPL_INVITING to inviter
     sendReply(client, RPL_INVITING, nickname + " " + channelName);
-
-    // Send invite message to target
-    std::string inviteMsg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
-                           " INVITE " + nickname + " :" + channelName + "\r\n";
-    send(target->getFd(), inviteMsg.c_str(), inviteMsg.length(), 0);
 }
 
 void CommandHandler::handleMode(Client* client, const std::vector<std::string>& params) {
@@ -626,158 +635,113 @@ void CommandHandler::handleMode(Client* client, const std::vector<std::string>& 
         return;
     }
 
-    if (params.empty()) {
+    if (params.size() < 2) {
         sendReply(client, ERR_NEEDMOREPARAMS, "MODE :Not enough parameters");
         return;
     }
 
-    std::string target = params[0];
-    Channel* channel = _server.getChannel(target);
+    std::string channel_name = params[0];
+    Channel* channel = _server.getChannel(channel_name);
     
     if (!channel) {
-        sendReply(client, ERR_NOSUCHCHANNEL, target + " :No such channel");
+        sendReply(client, ERR_NOSUCHCHANNEL, channel_name + " :No such channel");
         return;
     }
 
     if (!channel->hasClient(client)) {
-        sendReply(client, ERR_NOTONCHANNEL, target + " :You're not on that channel");
+        sendReply(client, ERR_NOTONCHANNEL, channel_name + " :You're not on that channel");
         return;
     }
 
     if (!channel->isOperator(client)) {
-        sendReply(client, ERR_CHANOPRIVSNEEDED, target + " :You're not channel operator");
+        sendReply(client, ERR_CHANOPRIVSNEEDED, channel_name + " :You're not channel operator");
         return;
     }
 
-    if (params.size() < 2) {
-        // Display current modes
-        std::string modes = "+";
-        if (channel->isInviteOnly())
-            modes += "i";
-        if (channel->isTopicRestricted())
-            modes += "t";
-        if (channel->hasKey())
-            modes += "k";
-        if (channel->getUserLimit() > 0)
-            modes += "l";
+    std::string modes = params[1];
+    size_t param_index = 2;
+    bool adding = true;  // Default to adding modes
+
+    for (size_t i = 0; i < modes.length(); ++i) {
+        char mode = modes[i];
         
-        sendReply(client, RPL_CHANNELMODEIS, target + " " + modes);
-        return;
-    }
-
-    std::string mode = params[1];
-    if (mode.length() != 2 || (mode[0] != '+' && mode[0] != '-')) {
-        sendReply(client, ERR_UNKNOWNMODE, mode + " :is unknown mode char to me");
-        return;
-    }
-
-    bool adding = (mode[0] == '+');
-    char modeChar = mode[1];
-
-    switch (modeChar) {
-        case 'i': {
-            channel->setInviteOnly(adding);
-            std::string mode_msg = ":";
-            mode_msg += client->getNickname();
-            mode_msg += "!";
-            mode_msg += client->getUsername();
-            mode_msg += "@";
-            mode_msg += SERVER_NAME;
-            mode_msg += " MODE ";
-            mode_msg += target;
-            mode_msg += " ";
-            mode_msg += mode;
-            mode_msg += "\r\n";
-            channel->broadcast(mode_msg);
-            break;
+        // Handle mode flag
+        if (mode == '+') {
+            adding = true;
+            continue;
+        } else if (mode == '-') {
+            adding = false;
+            continue;
         }
-        case 't': {
-            channel->setTopicRestricted(adding);
-            std::string mode_msg = ":";
-            mode_msg += client->getNickname();
-            mode_msg += "!";
-            mode_msg += client->getUsername();
-            mode_msg += "@";
-            mode_msg += SERVER_NAME;
-            mode_msg += " MODE ";
-            mode_msg += target;
-            mode_msg += " ";
-            mode_msg += mode;
-            mode_msg += "\r\n";
-            channel->broadcast(mode_msg);
-            break;
-        }
-        case 'k': {
-            if (adding) {
-                if (params.size() < 3) {
+        
+        switch (mode) {
+            case 't':  // Topic restriction
+                channel->setTopicRestricted(adding);
+                break;
+            case 'i':  // Invite only
+                channel->setInviteOnly(adding);
+                break;
+            case 'k':  // Channel key
+                if (adding) {
+                    if (param_index < params.size()) {
+                        channel->setKey(params[param_index++]);
+                    } else {
+                        sendReply(client, ERR_NEEDMOREPARAMS, "MODE :Not enough parameters");
+                        return;
+                    }
+                } else {
+                    channel->setKey("");
+                }
+                break;
+            case 'l':  // User limit
+                if (adding) {
+                    if (param_index < params.size()) {
+                        size_t limit = std::atoi(params[param_index++].c_str());
+                        channel->setUserLimit(limit);
+                    } else {
+                        sendReply(client, ERR_NEEDMOREPARAMS, "MODE :Not enough parameters");
+                        return;
+                    }
+                } else {
+                    channel->setUserLimit(0);
+                }
+                break;
+            case 'b':  // Ban
+                if (param_index < params.size()) {
+                    std::string mask = params[param_index++];
+                    if (adding) {
+                        channel->addBan(mask);
+                    } else {
+                        channel->removeBan(mask);
+                    }
+                } else {
                     sendReply(client, ERR_NEEDMOREPARAMS, "MODE :Not enough parameters");
                     return;
                 }
-                std::string key = params[2];
-                if (key.empty() || key.length() > 23) {
-                    sendReply(client, ERR_INVALIDKEY, target + " :Invalid channel key");
-                    return;
-                }
-                channel->setKey(key);
-            } else {
-                channel->setKey("");
-            }
-            std::string mode_msg = ":";
-            mode_msg += client->getNickname();
-            mode_msg += "!";
-            mode_msg += client->getUsername();
-            mode_msg += "@";
-            mode_msg += SERVER_NAME;
-            mode_msg += " MODE ";
-            mode_msg += target;
-            mode_msg += " ";
-            mode_msg += mode;
-            if (adding) {
-                mode_msg += " ";
-                mode_msg += params[2];
-            }
-            mode_msg += "\r\n";
-            channel->broadcast(mode_msg);
-            break;
+                break;
+            default:
+                sendReply(client, ERR_UNKNOWNMODE, std::string(1, mode) + " :is unknown mode char to me");
+                continue;
         }
-        case 'l': {
-            if (adding) {
-                if (params.size() < 3) {
-                    sendReply(client, ERR_NEEDMOREPARAMS, "MODE :Not enough parameters");
-                    return;
-                }
-                std::string limit_str = params[2];
-                char* end;
-                long limit = std::strtol(limit_str.c_str(), &end, 10);
-                if (*end != '\0' || limit <= 0) {
-                    sendReply(client, ERR_INVALIDMODEPARAM, target + " :Invalid limit parameter");
-                    return;
-                }
-                channel->setUserLimit(static_cast<size_t>(limit));
-            } else {
-                channel->setUserLimit(0);
-            }
-            std::string mode_msg = ":";
-            mode_msg += client->getNickname();
-            mode_msg += "!";
-            mode_msg += client->getUsername();
-            mode_msg += "@";
-            mode_msg += SERVER_NAME;
-            mode_msg += " MODE ";
-            mode_msg += target;
+
+        // Broadcast mode change
+        std::string mode_msg = ":";
+        mode_msg += client->getNickname();
+        mode_msg += "!";
+        mode_msg += client->getUsername();
+        mode_msg += "@";
+        mode_msg += SERVER_NAME;
+        mode_msg += " MODE ";
+        mode_msg += channel_name;
+        mode_msg += " ";
+        mode_msg += (adding ? "+" : "-");
+        mode_msg += mode;
+        if (mode == 'k' || mode == 'l' || mode == 'b') {
             mode_msg += " ";
-            mode_msg += mode;
-            if (adding) {
-                mode_msg += " ";
-                mode_msg += params[2];
-            }
-            mode_msg += "\r\n";
-            channel->broadcast(mode_msg);
-            break;
+            mode_msg += params[param_index - 1];
         }
-        default:
-            sendReply(client, ERR_UNKNOWNMODE, std::string(1, modeChar) + " :is unknown mode char to me");
-            return;
+        mode_msg += "\r\n";
+        channel->broadcast(mode_msg);
     }
 }
 

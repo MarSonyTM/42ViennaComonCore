@@ -281,34 +281,19 @@ When contributing to this project:
 - [x] Topic restriction mode (+t)
 - [x] Channel key mode (+k)
 - [x] User limit mode (+l)
-- [ ] Ban mode (+b)
+- [x] Ban mode (+b)
 - [ ] Voice mode (+v)
 - [ ] Operator mode (+o)
 
 ### Recent Updates
-- Implemented user limit mode (+l) with proper validation and error handling
-- Added user limit checks in channel join operations
-- Implemented proper error messages for full channels
-- Added broadcasting of user limit changes
+- Implemented ban mode (+b) with proper validation and error handling
+- Added ban list management in Channel class
+- Implemented ban checking on join
+- Added ban/unban commands with proper broadcasting
+- Added support for different ban mask formats
 
 ### Next Steps
-1. Implement Ban Mode (+b)
-   - Add ban list management
-   - Implement ban checking on join
-   - Add ban/unban commands
-   - Test Cases:
-     ```
-     # Set ban
-     MODE #testchannel +b user1!*@*
-     # Try to join with banned user
-     JOIN #testchannel
-     # Remove ban
-     MODE #testchannel -b user1!*@*
-     # Verify user can join again
-     JOIN #testchannel
-     ```
-
-2. Implement Voice Mode (+v)
+1. Implement Voice Mode (+v)
    - Add voice privilege management
    - Implement voice status checks
    - Add voice/devoice commands
@@ -321,7 +306,7 @@ When contributing to this project:
      # Verify voice status changes
      ```
 
-3. Implement Operator Mode (+o)
+2. Implement Operator Mode (+o)
    - Add operator privilege management
    - Implement operator status checks
    - Add op/deop commands
@@ -363,7 +348,7 @@ When contributing to this project:
    MODE #testchannel -l
    ```
 
-#### Ban Mode (+b) - Coming Soon
+#### Ban Mode (+b)
 1. Start the server: `./ircserv 6667 password`
 2. Connect as operator:
    ```
@@ -374,16 +359,34 @@ When contributing to this project:
    JOIN #testchannel
    MODE #testchannel +b user1!*@*
    ```
-3. Verify banned user cannot join:
+3. Connect as user1 and verify ban:
    ```
    nc localhost 6667
    PASS password
    NICK user1
    USER user1 0 * :User One
    JOIN #testchannel
-   # Should receive error
+   # Should receive error: Cannot join channel (+b) - you are banned
    ```
 4. Remove ban and verify user can join:
    ```
    MODE #testchannel -b user1!*@*
+   # User1 should now be able to join
+   ```
+
+#### Voice Mode (+v) - Coming Soon
+1. Start the server: `./ircserv 6667 password`
+2. Connect as operator:
+   ```
+   nc localhost 6667
+   PASS password
+   NICK operator
+   USER operator 0 * :Operator User
+   JOIN #testchannel
+   MODE #testchannel +v user1
+   ```
+3. Verify voice status:
+   ```
+   NAMES #testchannel
+   # Should see + prefix for voiced users
    ``` 

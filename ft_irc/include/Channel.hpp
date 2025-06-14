@@ -23,6 +23,7 @@ private:
     bool                    _topic_restricted;
     size_t                  _user_limit;
     std::vector<Client*>    _invited_clients;
+    std::vector<std::string> _ban_list;  // List of banned masks
     Server*                 _server;
 
     // Private copy constructor and assignment operator to prevent copying
@@ -46,6 +47,8 @@ public:
     size_t                      getUserLimit() const;
     bool                        hasKey() const;
     const std::string&          getKey() const;
+    const std::vector<std::string>& getBanList() const;
+    bool                        isBanned(const std::string& mask) const;
 
     // Setters
     void setTopic(const std::string& topic, Client* client);
@@ -63,8 +66,13 @@ public:
     void removeOperator(Client* client);
     bool isOperator(Client* client) const;
 
+    // Ban operations
+    void addBan(const std::string& mask);
+    void removeBan(const std::string& mask);
+    bool isBanned(Client* client) const;
+
     // Invite operations
-    void inviteClient(Client* client);
+    void addInvite(Client* client);
     void removeInvite(Client* client);
     bool isInvited(Client* client) const;
 

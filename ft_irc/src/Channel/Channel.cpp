@@ -168,11 +168,11 @@ bool Channel::isOperator(Client* client) const {
     return false;
 }
 
-// Invite management
-void Channel::inviteClient(Client* client) {
+// Invite operations
+void Channel::addInvite(Client* client) {
     if (!isInvited(client)) {
         _invited_clients.push_back(client);
-        Logger::debug("Invited client " + client->getNickname() + " to channel " + _name);
+        Logger::debug("Added invite for " + client->getNickname() + " to channel " + _name);
     }
 }
 
@@ -180,7 +180,7 @@ void Channel::removeInvite(Client* client) {
     for (std::vector<Client*>::iterator it = _invited_clients.begin(); it != _invited_clients.end(); ++it) {
         if (*it == client) {
             _invited_clients.erase(it);
-            Logger::debug("Removed invite for client " + client->getNickname() + " from channel " + _name);
+            Logger::debug("Removed invite for " + client->getNickname() + " from channel " + _name);
             break;
         }
     }
@@ -210,4 +210,51 @@ void Channel::broadcast(const std::string& message, Client* exclude) {
 
 void Channel::setServer(Server* server) {
     _server = server;
+}
+
+// Ban operations
+void Channel::addBan(const std::string& mask) {
+    if (!isBanned(mask)) {
+        _ban_list.push_back(mask);
+        Logger::debug("Added ban mask " + mask + " to channel " + _name);
+    }
+}
+
+void Channel::removeBan(const std::string& mask) {
+    for (std::vector<std::string>::iterator it = _ban_list.begin(); it != _ban_list.end(); ++it) {
+        if (*it == mask) {
+            _ban_list.erase(it);
+            Logger::debug("Removed ban mask " + mask + " from channel " + _name);
+            break;
+        }
+    }
+}
+
+bool Channel::isBanned(const std::string& mask) const {
+    for (std::vector<std::string>::const_iterator it = _ban_list.begin(); it != _ban_list.end(); ++it) {
+        if (*it == mask)
+            return true;
+    }
+    return false;
+}
+
+bool Channel::isBanned(Client* client) const {
+    if (!client)
+        return false;
+
+    std::string client_mask = client->getNickname() + "!*@" + client->getHostname();
+    std::string client_nick = client->getNickname() + "!*@*";
+    std::string client_host = "*!*@" + client->getHostname();
+
+    for (std::vector<std::string>::const_iterator it = _ban_list.begin(); it != _ban_list.end(); ++it) {
+        const std::string& ban_mask = *it;
+        if (ban_mask == client_mask || ban_mask == client_nick || ban_mask == client_host) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const std::vector<std::string>& Channel::getBanList() const {
+    return _ban_list;
 }

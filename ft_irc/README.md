@@ -276,3 +276,114 @@ When contributing to this project:
 - All I/O operations are non-blocking
 - The server uses poll() for handling multiple clients
 - No external libraries are used except standard C++98 libraries 
+
+### Mode Flags
+- [x] Topic restriction mode (+t)
+- [x] Channel key mode (+k)
+- [x] User limit mode (+l)
+- [ ] Ban mode (+b)
+- [ ] Voice mode (+v)
+- [ ] Operator mode (+o)
+
+### Recent Updates
+- Implemented user limit mode (+l) with proper validation and error handling
+- Added user limit checks in channel join operations
+- Implemented proper error messages for full channels
+- Added broadcasting of user limit changes
+
+### Next Steps
+1. Implement Ban Mode (+b)
+   - Add ban list management
+   - Implement ban checking on join
+   - Add ban/unban commands
+   - Test Cases:
+     ```
+     # Set ban
+     MODE #testchannel +b user1!*@*
+     # Try to join with banned user
+     JOIN #testchannel
+     # Remove ban
+     MODE #testchannel -b user1!*@*
+     # Verify user can join again
+     JOIN #testchannel
+     ```
+
+2. Implement Voice Mode (+v)
+   - Add voice privilege management
+   - Implement voice status checks
+   - Add voice/devoice commands
+   - Test Cases:
+     ```
+     # Give voice to user
+     MODE #testchannel +v user1
+     # Remove voice from user
+     MODE #testchannel -v user1
+     # Verify voice status changes
+     ```
+
+3. Implement Operator Mode (+o)
+   - Add operator privilege management
+   - Implement operator status checks
+   - Add op/deop commands
+   - Test Cases:
+     ```
+     # Make user operator
+     MODE #testchannel +o user1
+     # Remove operator status
+     MODE #testchannel -o user1
+     # Verify operator status changes
+     ```
+
+### Testing Instructions
+#### User Limit Mode (+l)
+1. Start the server: `./ircserv 6667 password`
+2. Connect as operator:
+   ```
+   nc localhost 6667
+   PASS password
+   NICK operator
+   USER operator 0 * :Operator User
+   JOIN #testchannel
+   MODE #testchannel +l 3
+   ```
+3. Connect as users and verify limit:
+   ```
+   nc localhost 6667
+   PASS password
+   NICK user1
+   USER user1 0 * :User One
+   JOIN #testchannel
+   ```
+4. Verify error when channel is full:
+   ```
+   :ft_irc 471 user3 #testchannel :Cannot join channel (+l) - channel is full
+   ```
+5. Remove limit and verify users can join:
+   ```
+   MODE #testchannel -l
+   ```
+
+#### Ban Mode (+b) - Coming Soon
+1. Start the server: `./ircserv 6667 password`
+2. Connect as operator:
+   ```
+   nc localhost 6667
+   PASS password
+   NICK operator
+   USER operator 0 * :Operator User
+   JOIN #testchannel
+   MODE #testchannel +b user1!*@*
+   ```
+3. Verify banned user cannot join:
+   ```
+   nc localhost 6667
+   PASS password
+   NICK user1
+   USER user1 0 * :User One
+   JOIN #testchannel
+   # Should receive error
+   ```
+4. Remove ban and verify user can join:
+   ```
+   MODE #testchannel -b user1!*@*
+   ``` 

@@ -250,8 +250,8 @@ void CommandHandler::handleJoin(Client* client, const std::vector<std::string>& 
         
         // Check channel key
         if (channel->hasKey() && (provided_key != channel->getKey())) {
-            sendReply(client, ERR_BADCHANNELKEY, channel_name + " :Cannot join channel (+k) - wrong channel key");
-            return;
+        sendReply(client, ERR_BADCHANNELKEY, channel_name + " :Cannot join channel (+k) - wrong channel key");
+        return;
         }
 
         // Check user limit
@@ -731,6 +731,33 @@ void CommandHandler::handleMode(Client* client, const std::vector<std::string>& 
                     if (channel->isVoiced(targetClient)) {
                         channel->removeVoice(targetClient);
                         modeChanges += "-v " + params[i + 1] + " ";
+                    }
+                }
+                i++; // Skip the nickname parameter
+                break;
+            case 'o':
+                if (i + 1 >= params.size()) {
+                    sendReply(client, ERR_NEEDMOREPARAMS, "MODE :Not enough parameters");
+                    return;
+                }
+                targetClient = _server.getClientByNickname(params[i + 1]);
+                if (!targetClient) {
+                    sendReply(client, ERR_NOSUCHNICK, params[i + 1] + " :No such nick");
+                    return;
+                }
+                if (!channel->hasClient(targetClient)) {
+                    sendReply(client, ERR_NOTONCHANNEL, channel_name + " :They aren't on that channel");
+                    return;
+                }
+                if (adding) {
+                    if (!channel->isOperator(targetClient)) {
+                        channel->addOperator(targetClient);
+                        modeChanges += "+o " + params[i + 1] + " ";
+                    }
+                } else {
+                    if (channel->isOperator(targetClient)) {
+                        channel->removeOperator(targetClient);
+                        modeChanges += "-o " + params[i + 1] + " ";
                     }
                 }
                 i++; // Skip the nickname parameter

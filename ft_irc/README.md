@@ -283,7 +283,7 @@ When contributing to this project:
 - [x] User limit mode (+l)
 - [x] Ban mode (+b)
 - [x] Voice mode (+v)
-- [ ] Operator mode (+o)
+- [x] Operator mode (+o)
 
 ### Recent Updates
 - Implemented ban mode (+b) with proper validation and error handling
@@ -407,3 +407,43 @@ Expected: Error 401 - No such nick
 MODE #testchannel +v user2
 ```
 Expected: Error 441 - They aren't on that channel 
+
+### Operator Mode (+o)
+The operator mode allows channel operators to give operator privileges to other users. Channel operators have special privileges like setting modes, kicking users, and managing the channel.
+
+#### Implementation Details
+- Added operator mode handling in CommandHandler
+- Implemented proper permission checks
+- Added mode change broadcasting
+- Integrated with existing operator management in Channel class
+
+#### Test Cases
+1. Setting operator mode:
+```
+MODE #testchannel +o user1
+```
+Expected: User1 receives operator privileges
+
+2. Removing operator mode:
+```
+MODE #testchannel -o user1
+```
+Expected: User1 loses operator privileges
+
+3. Invalid operator mode operations:
+```
+MODE #testchannel +o nonexistent_user
+```
+Expected: Error 401 - No such nick
+
+4. Operator mode for non-channel member:
+```
+MODE #testchannel +o user2
+```
+Expected: Error 441 - They aren't on that channel
+
+5. Non-operator trying to set operator mode:
+```
+MODE #testchannel +o user1
+```
+Expected: Error 482 - You're not channel operator 

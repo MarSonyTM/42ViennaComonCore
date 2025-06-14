@@ -35,6 +35,15 @@ This is an implementation of an IRC (Internet Relay Chat) server in C++98. The p
    - TOPIC command for viewing and setting channel topics
    - INVITE command for inviting users to channels
 
+5. **Channel Modes**
+   - Invite-only mode (+i)
+   - Topic restriction mode (+t)
+   - Channel key mode (+k)
+     - Setting and removing channel keys
+     - Key validation and persistence
+     - Special character support
+     - Proper error handling
+
 ### 🚧 In Progress
 
 1. **Channel Operator Commands**
@@ -42,7 +51,8 @@ This is an implementation of an IRC (Internet Relay Chat) server in C++98. The p
    - ✅ Channel key protection (completed)
    - ✅ TOPIC command (completed)
    - ✅ INVITE command (completed)
-   - MODE command with various flags (pending)
+   - ✅ MODE command with key flag (completed)
+   - MODE command with other flags (pending)
 
 2. **Additional Channel Features**
    - ✅ Channel password protection
@@ -62,6 +72,32 @@ This is an implementation of an IRC (Internet Relay Chat) server in C++98. The p
    - Server operator commands
    - Server configuration
    - Server statistics
+
+### Future Test Cases
+
+1. **Channel Key Mode (+k)**
+   - Key changes with different special characters
+   - Key changes with spaces or other whitespace
+   - Key changes with non-ASCII characters
+   - Key changes with maximum length keys
+   - Key persistence after server restart
+   - Key changes during high server load
+   - Key changes with multiple operators
+
+2. **Channel Modes**
+   - User limit mode (+l)
+   - Ban mode (+b)
+   - Voice mode (+v)
+   - Operator mode (+o)
+   - Multiple mode changes in one command
+   - Mode persistence after server restart
+
+3. **Error Handling**
+   - Invalid mode syntax
+   - Invalid mode parameters
+   - Mode changes on non-existent channels
+   - Mode changes by non-operators
+   - Mode changes with invalid permissions
 
 ## Building the Project
 

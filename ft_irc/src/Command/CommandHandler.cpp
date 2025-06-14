@@ -615,127 +615,163 @@ void CommandHandler::handleInvite(Client* client, const std::vector<std::string>
 }
 
 void CommandHandler::handleMode(Client* client, const std::vector<std::string>& params) {
-    // Check if client is registered
     if (!client->isRegistered()) {
-        sendReply(client, 451, ":You have not registered");
+        sendReply(client, ERR_NOTREGISTERED, ":You have not registered");
         return;
     }
 
-    // Check if enough parameters are provided
-    if (params.size() < 1) {
-        sendReply(client, 461, "MODE :Not enough parameters");
+    if (params.empty()) {
+        sendReply(client, ERR_NEEDMOREPARAMS, "MODE :Not enough parameters");
         return;
     }
 
-    const std::string& target = params[0];
+    std::string target = params[0];
+    Channel* channel = _server.getChannel(target);
     
-    // If no mode is specified, show current modes
-    if (params.size() == 1) {
-        if (target[0] == '#') {
-            // Channel mode query
-            Channel* channel = _server.getChannel(target);
-            if (!channel) {
-                sendReply(client, 403, target + " :No such channel");
-                return;
-            }
-            if (!channel->hasClient(client)) {
-                sendReply(client, 442, target + " :You're not on that channel");
-                return;
-            }
-            
-            // Build mode string
-            std::string modeStr = "+";
-            if (channel->isInviteOnly()) modeStr += "i";
-            if (channel->isTopicRestricted()) modeStr += "t";
-            if (channel->hasKey()) modeStr += "k";
-            if (channel->getUserLimit() > 0) modeStr += "l";
-            
-            // Send mode reply
-            sendReply(client, 324, target + " " + modeStr);
-        } else {
-            // User mode query (not implemented as per subject)
-            sendReply(client, 501, ":Unknown MODE flag");
-        }
+    if (!channel) {
+        sendReply(client, ERR_NOSUCHCHANNEL, target + " :No such channel");
         return;
     }
 
-    // Mode change command
-    if (target[0] == '#') {
-        Channel* channel = _server.getChannel(target);
-        if (!channel) {
-            sendReply(client, 403, target + " :No such channel");
-            return;
-        }
-        if (!channel->hasClient(client)) {
-            sendReply(client, 442, target + " :You're not on that channel");
-            return;
-        }
-        if (!channel->isOperator(client)) {
-            sendReply(client, 482, target + " :You're not channel operator");
-            return;
-        }
+    if (!channel->hasClient(client)) {
+        sendReply(client, ERR_NOTONCHANNEL, target + " :You're not on that channel");
+        return;
+    }
 
-        // Parse mode string
-        const std::string& modeStr = params[1];
-        if (modeStr.empty() || (modeStr[0] != '+' && modeStr[0] != '-')) {
-            sendReply(client, 501, ":Unknown MODE flag");
-            return;
+    if (!channel->isOperator(client)) {
+        sendReply(client, ERR_CHANOPRIVSNEEDED, target + " :You're not channel operator");
+        return;
+    }
+
+    if (params.size() < 2) {
+        // Display current modes
+        std::string modes = "+";
+        if (channel->isInviteOnly())
+            modes += "i";
+        if (channel->isTopicRestricted())
+            modes += "t";
+        if (channel->hasKey())
+            modes += "k";
+        if (channel->getUserLimit() > 0)
+            modes += "l";
+        
+        sendReply(client, RPL_CHANNELMODEIS, target + " " + modes);
+        return;
+    }
+
+    std::string mode = params[1];
+    if (mode.length() != 2 || (mode[0] != '+' && mode[0] != '-')) {
+        sendReply(client, ERR_UNKNOWNMODE, mode + " :is unknown mode char to me");
+        return;
+    }
+
+    bool adding = (mode[0] == '+');
+    char modeChar = mode[1];
+
+    switch (modeChar) {
+        case 'i': {
+            channel->setInviteOnly(adding);
+            std::string mode_msg = ":";
+            mode_msg += client->getNickname();
+            mode_msg += "!";
+            mode_msg += client->getUsername();
+            mode_msg += "@";
+            mode_msg += SERVER_NAME;
+            mode_msg += " MODE ";
+            mode_msg += target;
+            mode_msg += " ";
+            mode_msg += mode;
+            mode_msg += "\r\n";
+            channel->broadcast(mode_msg);
+            break;
         }
-
-        // Validate mode syntax
-        if (modeStr.length() != 2) {
-            sendReply(client, 501, ":Invalid mode syntax");
-            return;
+        case 't': {
+            channel->setTopicRestricted(adding);
+            std::string mode_msg = ":";
+            mode_msg += client->getNickname();
+            mode_msg += "!";
+            mode_msg += client->getUsername();
+            mode_msg += "@";
+            mode_msg += SERVER_NAME;
+            mode_msg += " MODE ";
+            mode_msg += target;
+            mode_msg += " ";
+            mode_msg += mode;
+            mode_msg += "\r\n";
+            channel->broadcast(mode_msg);
+            break;
         }
-
-        bool adding = (modeStr[0] == '+');
-        char mode = modeStr[1];
-
-        // Handle different modes
-        switch (mode) {
-            case 'i': {
-                // Toggle invite-only mode
-                channel->setInviteOnly(adding);
-                // Broadcast mode change to channel
-                std::string modeChange = ":";
-                modeChange += client->getNickname();
-                modeChange += "!~";
-                modeChange += client->getUsername();
-                modeChange += "@";
-                modeChange += client->getHostname();
-                modeChange += " MODE ";
-                modeChange += target;
-                modeChange += " ";
-                modeChange += (adding ? "+i" : "-i");
-                modeChange += "\r\n";
-                channel->broadcast(modeChange);
-                break;
+        case 'k': {
+            if (adding) {
+                if (params.size() < 3) {
+                    sendReply(client, ERR_NEEDMOREPARAMS, "MODE :Not enough parameters");
+                    return;
+                }
+                std::string key = params[2];
+                if (key.empty() || key.length() > 23) {
+                    sendReply(client, ERR_INVALIDKEY, target + " :Invalid channel key");
+                    return;
+                }
+                channel->setKey(key);
+            } else {
+                channel->setKey("");
             }
-            case 't': {
-                // Toggle topic restriction mode
-                channel->setTopicRestricted(adding);
-                // Broadcast mode change to channel
-                std::string modeChange = ":";
-                modeChange += client->getNickname();
-                modeChange += "!~";
-                modeChange += client->getUsername();
-                modeChange += "@";
-                modeChange += client->getHostname();
-                modeChange += " MODE ";
-                modeChange += target;
-                modeChange += " ";
-                modeChange += (adding ? "+t" : "-t");
-                modeChange += "\r\n";
-                channel->broadcast(modeChange);
-                break;
+            std::string mode_msg = ":";
+            mode_msg += client->getNickname();
+            mode_msg += "!";
+            mode_msg += client->getUsername();
+            mode_msg += "@";
+            mode_msg += SERVER_NAME;
+            mode_msg += " MODE ";
+            mode_msg += target;
+            mode_msg += " ";
+            mode_msg += mode;
+            if (adding) {
+                mode_msg += " ";
+                mode_msg += params[2];
             }
-            default:
-                sendReply(client, 501, ":Unknown MODE flag");
-                return;
+            mode_msg += "\r\n";
+            channel->broadcast(mode_msg);
+            break;
         }
-    } else {
-        // User mode changes (not implemented as per subject)
-        sendReply(client, 501, ":Unknown MODE flag");
+        case 'l': {
+            if (adding) {
+                if (params.size() < 3) {
+                    sendReply(client, ERR_NEEDMOREPARAMS, "MODE :Not enough parameters");
+                    return;
+                }
+                std::string limit_str = params[2];
+                char* end;
+                long limit = std::strtol(limit_str.c_str(), &end, 10);
+                if (*end != '\0' || limit <= 0) {
+                    sendReply(client, ERR_INVALIDMODEPARAM, target + " :Invalid limit parameter");
+                    return;
+                }
+                channel->setUserLimit(static_cast<size_t>(limit));
+            } else {
+                channel->setUserLimit(0);
+            }
+            std::string mode_msg = ":";
+            mode_msg += client->getNickname();
+            mode_msg += "!";
+            mode_msg += client->getUsername();
+            mode_msg += "@";
+            mode_msg += SERVER_NAME;
+            mode_msg += " MODE ";
+            mode_msg += target;
+            mode_msg += " ";
+            mode_msg += mode;
+            if (adding) {
+                mode_msg += " ";
+                mode_msg += params[2];
+            }
+            mode_msg += "\r\n";
+            channel->broadcast(mode_msg);
+            break;
+        }
+        default:
+            sendReply(client, ERR_UNKNOWNMODE, std::string(1, modeChar) + " :is unknown mode char to me");
+            return;
     }
 }
 

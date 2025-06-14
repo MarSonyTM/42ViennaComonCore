@@ -1,30 +1,59 @@
-# ft_irc - Internet Relay Chat Server
+# 🚀 ft_irc - Internet Relay Chat Server
 
-## Project Overview
+<div align="center">
+
+![C++](https://img.shields.io/badge/C%2B%2B-98-blue)
+![License](https://img.shields.io/badge/License-42-orange)
+![Status](https://img.shields.io/badge/Status-Completed-green)
+
+</div>
+
+## 📋 Table of Contents
+- [Project Overview](#-project-overview)
+- [Features](#-features)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Channel Modes](#-channel-modes)
+- [Error Codes](#-error-codes)
+- [Project Structure](#-project-structure)
+- [Testing](#-testing)
+- [Contributing](#-contributing)
+
+## 🌟 Project Overview
 ft_irc is an IRC server implementation in C++98 that allows multiple clients to connect and communicate in real-time. The server supports various channel modes, operator privileges, and follows the IRC protocol specifications.
 
-## Features
-- Multi-client support with non-blocking I/O
-- Channel management with various modes
-- Operator privileges and commands
-- Private messaging
-- Topic management
-- Invite system
-- User limit control
-- Channel key protection
-- Voice privileges
+## ✨ Features
+- 🚀 Multi-client support with non-blocking I/O
+- 🎮 Channel management with various modes
+- 👑 Operator privileges and commands
+- 💬 Private messaging
+- 📝 Topic management
+- 📨 Invite system
+- 👥 User limit control
+- 🔑 Channel key protection
+- 🎤 Voice privileges
 
-## Prerequisites
+## 📦 Prerequisites
 - C++98 compatible compiler
 - Make
 - Netcat (for testing)
 
-## Building the Project
+## 🛠️ Installation
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/ft_irc.git
+
+# Navigate to project directory
+cd ft_irc
+
+# Build the project
 make
 ```
 
-## Running the Server
+## 🚀 Usage
+
+### Starting the Server
 ```bash
 ./ircserv <port> <password>
 ```
@@ -33,13 +62,13 @@ Example:
 ./ircserv 6667 password
 ```
 
-## Connecting to the Server
-Using netcat:
+### Connecting to the Server
+Using netcat: in a second terminal 
 ```bash
 nc localhost 6667
 ```
 
-## Basic Commands
+### Basic Commands
 1. Authentication:
 ```
 PASS <password>
@@ -55,9 +84,9 @@ PRIVMSG #<channel> :<message>
 PRIVMSG <nickname> :<message>
 ```
 
-## Channel Modes
+## 🎮 Channel Modes
 
-### Invite-only Mode (+i)
+### 🔒 Invite-only Mode (+i)
 Restricts channel access to invited users only.
 
 #### Usage
@@ -89,7 +118,7 @@ JOIN #testchannel
 ```
 Expected: Successful join
 
-### Topic Restriction Mode (+t)
+### 📝 Topic Restriction Mode (+t)
 Restricts topic changes to channel operators only.
 
 #### Usage
@@ -116,7 +145,7 @@ TOPIC #testchannel :New topic
 ```
 Expected: Topic change broadcast to channel
 
-### Channel Key Mode (+k)
+### 🔑 Channel Key Mode (+k)
 Protects channel with a password.
 
 #### Usage
@@ -143,7 +172,7 @@ JOIN #testchannel secretkey
 ```
 Expected: Successful join
 
-### User Limit Mode (+l)
+### 👥 User Limit Mode (+l)
 Restricts the number of users in a channel.
 
 #### Usage
@@ -169,7 +198,7 @@ Expected: Error 471 - Cannot join channel (+l) - channel is full
 MODE #testchannel -l
 ```
 
-### Ban Mode (+b)
+### 🚫 Ban Mode (+b)
 Bans users from joining the channel.
 
 #### Usage
@@ -195,7 +224,7 @@ Expected: Error 474 - Cannot join channel (+b) - you are banned
 MODE #testchannel -b user1
 ```
 
-### Voice Mode (+v)
+### 🎤 Voice Mode (+v)
 Gives voice privileges to users in moderated channels.
 
 #### Usage
@@ -215,7 +244,7 @@ MODE #testchannel +v user1
 MODE #testchannel -v user1
 ```
 
-### Operator Mode (+o)
+### 👑 Operator Mode (+o)
 Gives channel operator privileges.
 
 #### Usage
@@ -240,30 +269,32 @@ MODE #testchannel +v user2
 MODE #testchannel -o user1
 ```
 
-## Error Codes
-- 001: Welcome message
-- 331: No topic is set
-- 332: Channel topic
-- 353: NAMES reply
-- 366: End of NAMES list
-- 401: No such nick/channel
-- 403: No such channel
-- 404: Cannot send to channel
-- 431: No nickname given
-- 432: Erroneous nickname
-- 433: Nickname already in use
-- 442: Not on channel
-- 451: Not registered
-- 461: Not enough parameters
-- 462: Already registered
-- 464: Password incorrect
-- 471: Cannot join channel (+l) - channel is full
-- 473: Cannot join channel (+i) - invite only
-- 474: Cannot join channel (+b) - you are banned
-- 475: Cannot join channel (+k) - bad key
-- 482: Not channel operator
+## ⚠️ Error Codes
+| Code | Description |
+|------|-------------|
+| 001 | Welcome message |
+| 331 | No topic is set |
+| 332 | Channel topic |
+| 353 | NAMES reply |
+| 366 | End of NAMES list |
+| 401 | No such nick/channel |
+| 403 | No such channel |
+| 404 | Cannot send to channel |
+| 431 | No nickname given |
+| 432 | Erroneous nickname |
+| 433 | Nickname already in use |
+| 442 | Not on channel |
+| 451 | Not registered |
+| 461 | Not enough parameters |
+| 462 | Already registered |
+| 464 | Password incorrect |
+| 471 | Cannot join channel (+l) - channel is full |
+| 473 | Cannot join channel (+i) - invite only |
+| 474 | Cannot join channel (+b) - you are banned |
+| 475 | Cannot join channel (+k) - bad key |
+| 482 | Not channel operator |
 
-## Project Structure
+## 📁 Project Structure
 ```
 ft_irc/
 ├── src/
@@ -285,7 +316,9 @@ ft_irc/
 └── Makefile
 ```
 
-## Testing Guidelines
+## 🧪 Testing
+
+### Basic Testing
 1. Start the server:
 ```bash
 ./ircserv 6667 password
@@ -296,7 +329,8 @@ ft_irc/
 nc localhost 6667
 ```
 
-3. Test each mode systematically:
+### Systematic Testing
+1. Test each mode:
    - Enable/disable modes
    - Verify error handling
    - Check message broadcasting
@@ -305,7 +339,7 @@ nc localhost 6667
    - Test ban functionality
    - Check invite system
 
-4. Test error cases:
+2. Test error cases:
    - Invalid commands
    - Missing parameters
    - Permission violations
@@ -313,12 +347,18 @@ nc localhost 6667
    - Full channels
    - Banned users
 
-## Contributing
+## 🤝 Contributing
 1. Fork the repository
 2. Create your feature branch
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
 
-## License
-This project is part of the 42 school curriculum. 
+## 📄 License
+This project is part of the 42 school curriculum.
+
+---
+
+<div align="center">
+Made with ❤️ by 42 Vienna Students
+</div> 

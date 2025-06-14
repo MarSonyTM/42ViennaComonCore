@@ -235,9 +235,18 @@ void CommandHandler::handleJoin(Client* client, const std::vector<std::string>& 
         if (!provided_key.empty()) {
             channel->setKey(provided_key);
         }
-    } else if (channel->hasKey() && (provided_key != channel->getKey())) {
-        sendReply(client, ERR_BADCHANNELKEY, channel_name + " :Cannot join channel (+k) - wrong channel key");
-        return;
+    } else {
+        // Check invite-only mode
+        if (channel->isInviteOnly() && !channel->isInvited(client)) {
+            sendReply(client, ERR_INVITEONLYCHAN, channel_name + " :Cannot join channel (+i) - invite only");
+            return;
+        }
+        
+        // Check channel key
+        if (channel->hasKey() && (provided_key != channel->getKey())) {
+            sendReply(client, ERR_BADCHANNELKEY, channel_name + " :Cannot join channel (+k) - wrong channel key");
+            return;
+        }
     }
 
     if (channel->hasClient(client)) {
@@ -246,18 +255,66 @@ void CommandHandler::handleJoin(Client* client, const std::vector<std::string>& 
     }
 
     // Format: :nick!user@host JOIN #channel
-    std::string join_msg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
-                          " JOIN " + channel_name + "\r\n";
+    std::string join_msg = ":";
+    join_msg += client->getNickname();
+    join_msg += "!";
+    join_msg += client->getUsername();
+    join_msg += "@";
+    join_msg += SERVER_NAME;
+    join_msg += " JOIN ";
+    join_msg += channel_name;
+    join_msg += "\r\n";
     
-    Logger::debug("Adding client " + client->getNickname() + " to channel " + channel_name);
-    channel->addClient(client);
-    
-    Logger::debug("Broadcasting JOIN message: " + join_msg);
-    // Broadcast to all clients in the channel (including the joining client)
+    // Send join message to all clients in the channel
     channel->broadcast(join_msg);
-
-    // Send NAMES list to the joining client
-    handleNames(client, params);
+    
+    // Add client to channel
+    channel->addClient(client);
+    client->joinChannel(channel);
+    
+    // Send NAMES list
+    std::string names_msg = ":";
+    names_msg += SERVER_NAME;
+    names_msg += " 353 ";
+    names_msg += client->getNickname();
+    names_msg += " = ";
+    names_msg += channel_name;
+    names_msg += " :";
+    
+    std::vector<Client*> clients = channel->getClients();
+    for (size_t i = 0; i < clients.size(); ++i) {
+        if (i > 0) names_msg += " ";
+        if (channel->isOperator(clients[i])) {
+            names_msg += "@";
+        }
+        names_msg += clients[i]->getNickname();
+    }
+    names_msg += "\r\n";
+    send(client->getFd(), names_msg.c_str(), names_msg.length(), 0);
+    
+    // Send end of NAMES list
+    std::string end_names_msg = ":";
+    end_names_msg += SERVER_NAME;
+    end_names_msg += " 366 ";
+    end_names_msg += client->getNickname();
+    end_names_msg += " ";
+    end_names_msg += channel_name;
+    end_names_msg += " :End of NAMES list\r\n";
+    send(client->getFd(), end_names_msg.c_str(), end_names_msg.length(), 0);
+    
+    // If channel has a topic, send it
+    if (!channel->getTopic().empty()) {
+        std::string topic_msg = ":";
+        topic_msg += SERVER_NAME;
+        topic_msg += " 332 ";
+        topic_msg += client->getNickname();
+        topic_msg += " ";
+        topic_msg += channel_name;
+        topic_msg += " :";
+        topic_msg += channel->getTopic();
+        topic_msg += "\r\n";
+        send(client->getFd(), topic_msg.c_str(), topic_msg.length(), 0);
+    }
 }
 
 void CommandHandler::handlePart(Client* client, const std::vector<std::string>& params) {
@@ -489,19 +546,14 @@ void CommandHandler::handleTopic(Client* client, const std::vector<std::string>&
     }
 
     // If a topic is provided, check if the user has permission to set it
-    // Only channel operators can set the topic
-    if (!channel->isOperator(client)) {
+    // Only channel operators can set the topic if topic restriction is active
+    if (channel->isTopicRestricted() && !channel->isOperator(client)) {
         sendReply(client, ERR_CHANOPRIVSNEEDED, channelName + " :You're not channel operator");
         return;
     }
 
     // Set the new topic
-    channel->setTopic(params[1]);
-    
-    // Broadcast the topic change to all channel members
-    std::string topicMsg = ":" + client->getNickname() + "!" + client->getUsername() + "@" + SERVER_NAME + 
-                          " TOPIC " + channelName + " :" + params[1] + "\r\n";
-    channel->broadcast(topicMsg);
+    channel->setTopic(params[1], client);
 }
 
 void CommandHandler::handleInvite(Client* client, const std::vector<std::string>& params) {
@@ -562,6 +614,131 @@ void CommandHandler::handleInvite(Client* client, const std::vector<std::string>
     send(target->getFd(), inviteMsg.c_str(), inviteMsg.length(), 0);
 }
 
+void CommandHandler::handleMode(Client* client, const std::vector<std::string>& params) {
+    // Check if client is registered
+    if (!client->isRegistered()) {
+        sendReply(client, 451, ":You have not registered");
+        return;
+    }
+
+    // Check if enough parameters are provided
+    if (params.size() < 1) {
+        sendReply(client, 461, "MODE :Not enough parameters");
+        return;
+    }
+
+    const std::string& target = params[0];
+    
+    // If no mode is specified, show current modes
+    if (params.size() == 1) {
+        if (target[0] == '#') {
+            // Channel mode query
+            Channel* channel = _server.getChannel(target);
+            if (!channel) {
+                sendReply(client, 403, target + " :No such channel");
+                return;
+            }
+            if (!channel->hasClient(client)) {
+                sendReply(client, 442, target + " :You're not on that channel");
+                return;
+            }
+            
+            // Build mode string
+            std::string modeStr = "+";
+            if (channel->isInviteOnly()) modeStr += "i";
+            if (channel->isTopicRestricted()) modeStr += "t";
+            if (channel->hasKey()) modeStr += "k";
+            if (channel->getUserLimit() > 0) modeStr += "l";
+            
+            // Send mode reply
+            sendReply(client, 324, target + " " + modeStr);
+        } else {
+            // User mode query (not implemented as per subject)
+            sendReply(client, 501, ":Unknown MODE flag");
+        }
+        return;
+    }
+
+    // Mode change command
+    if (target[0] == '#') {
+        Channel* channel = _server.getChannel(target);
+        if (!channel) {
+            sendReply(client, 403, target + " :No such channel");
+            return;
+        }
+        if (!channel->hasClient(client)) {
+            sendReply(client, 442, target + " :You're not on that channel");
+            return;
+        }
+        if (!channel->isOperator(client)) {
+            sendReply(client, 482, target + " :You're not channel operator");
+            return;
+        }
+
+        // Parse mode string
+        const std::string& modeStr = params[1];
+        if (modeStr.empty() || (modeStr[0] != '+' && modeStr[0] != '-')) {
+            sendReply(client, 501, ":Unknown MODE flag");
+            return;
+        }
+
+        // Validate mode syntax
+        if (modeStr.length() != 2) {
+            sendReply(client, 501, ":Invalid mode syntax");
+            return;
+        }
+
+        bool adding = (modeStr[0] == '+');
+        char mode = modeStr[1];
+
+        // Handle different modes
+        switch (mode) {
+            case 'i': {
+                // Toggle invite-only mode
+                channel->setInviteOnly(adding);
+                // Broadcast mode change to channel
+                std::string modeChange = ":";
+                modeChange += client->getNickname();
+                modeChange += "!~";
+                modeChange += client->getUsername();
+                modeChange += "@";
+                modeChange += client->getHostname();
+                modeChange += " MODE ";
+                modeChange += target;
+                modeChange += " ";
+                modeChange += (adding ? "+i" : "-i");
+                modeChange += "\r\n";
+                channel->broadcast(modeChange);
+                break;
+            }
+            case 't': {
+                // Toggle topic restriction mode
+                channel->setTopicRestricted(adding);
+                // Broadcast mode change to channel
+                std::string modeChange = ":";
+                modeChange += client->getNickname();
+                modeChange += "!~";
+                modeChange += client->getUsername();
+                modeChange += "@";
+                modeChange += client->getHostname();
+                modeChange += " MODE ";
+                modeChange += target;
+                modeChange += " ";
+                modeChange += (adding ? "+t" : "-t");
+                modeChange += "\r\n";
+                channel->broadcast(modeChange);
+                break;
+            }
+            default:
+                sendReply(client, 501, ":Unknown MODE flag");
+                return;
+        }
+    } else {
+        // User mode changes (not implemented as per subject)
+        sendReply(client, 501, ":Unknown MODE flag");
+    }
+}
+
 void CommandHandler::handleCommand(Client* client, const std::string& message) {
     std::vector<std::string> tokens = splitMessage(message);
     if (tokens.empty())
@@ -600,6 +777,8 @@ void CommandHandler::handleCommand(Client* client, const std::string& message) {
         handleTopic(client, params);
     else if (command == "INVITE")
         handleInvite(client, params);
+    else if (command == "MODE")
+        handleMode(client, params);
     else
         Logger::debug("Unknown command received: " + command);
 } 

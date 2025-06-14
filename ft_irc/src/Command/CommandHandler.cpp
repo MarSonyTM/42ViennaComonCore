@@ -661,6 +661,8 @@ void CommandHandler::handleMode(Client* client, const std::vector<std::string>& 
     std::string modes = params[1];
     size_t param_index = 2;
     bool adding = true;  // Default to adding modes
+    std::string modeChanges;
+    Client* targetClient = NULL;  // Moved outside switch
 
     for (size_t i = 0; i < modes.length(); ++i) {
         char mode = modes[i];
@@ -706,6 +708,33 @@ void CommandHandler::handleMode(Client* client, const std::vector<std::string>& 
                     channel->setUserLimit(0);
                 }
                 break;
+            case 'v':
+                if (i + 1 >= params.size()) {
+                    sendReply(client, ERR_NEEDMOREPARAMS, "MODE :Not enough parameters");
+                    return;
+                }
+                targetClient = _server.getClientByNickname(params[i + 1]);
+                if (!targetClient) {
+                    sendReply(client, ERR_NOSUCHNICK, params[i + 1] + " :No such nick");
+                    return;
+                }
+                if (!channel->hasClient(targetClient)) {
+                    sendReply(client, ERR_NOTONCHANNEL, channel_name + " :They aren't on that channel");
+                    return;
+                }
+                if (adding) {
+                    if (!channel->isVoiced(targetClient)) {
+                        channel->addVoice(targetClient);
+                        modeChanges += "+v " + params[i + 1] + " ";
+                    }
+                } else {
+                    if (channel->isVoiced(targetClient)) {
+                        channel->removeVoice(targetClient);
+                        modeChanges += "-v " + params[i + 1] + " ";
+                    }
+                }
+                i++; // Skip the nickname parameter
+                break;
             case 'b':  // Ban
                 if (param_index < params.size()) {
                     std::string mask = params[param_index++];
@@ -742,6 +771,20 @@ void CommandHandler::handleMode(Client* client, const std::vector<std::string>& 
         }
         mode_msg += "\r\n";
         channel->broadcast(mode_msg);
+    }
+
+    // Broadcast mode changes
+    if (!modeChanges.empty()) {
+        std::string mode_changes_msg = ":";
+        mode_changes_msg += client->getNickname();
+        mode_changes_msg += "!";
+        mode_changes_msg += client->getUsername();
+        mode_changes_msg += "@";
+        mode_changes_msg += SERVER_NAME;
+        mode_changes_msg += " MODE ";
+        mode_changes_msg += channel_name;
+        mode_changes_msg += " :" + modeChanges + "\r\n";
+        channel->broadcast(mode_changes_msg);
     }
 }
 

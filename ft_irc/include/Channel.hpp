@@ -19,6 +19,7 @@ private:
     std::string             _password;
     std::vector<Client*>    _clients;
     std::vector<Client*>    _operators;
+    std::vector<Client*>    _voiced_clients;  // List of voiced users
     bool                    _invite_only;
     bool                    _topic_restricted;
     size_t                  _user_limit;
@@ -42,6 +43,7 @@ public:
     const std::string&          getPassword() const;
     const std::vector<Client*>& getClients() const;
     const std::vector<Client*>& getOperators() const;
+    const std::vector<Client*>& getVoicedClients() const;
     bool                        isInviteOnly() const;
     bool                        isTopicRestricted() const;
     size_t                      getUserLimit() const;
@@ -49,6 +51,7 @@ public:
     const std::string&          getKey() const;
     const std::vector<std::string>& getBanList() const;
     bool                        isBanned(const std::string& mask) const;
+    bool                        isVoiced(Client* client) const;
 
     // Setters
     void setTopic(const std::string& topic, Client* client);
@@ -65,6 +68,10 @@ public:
     void addOperator(Client* client);
     void removeOperator(Client* client);
     bool isOperator(Client* client) const;
+
+    // Voice operations
+    void addVoice(Client* client);
+    void removeVoice(Client* client);
 
     // Ban operations
     void addBan(const std::string& mask);

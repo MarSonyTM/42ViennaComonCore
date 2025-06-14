@@ -2,6 +2,7 @@
 #include "../../include/Client.hpp"
 #include "../../include/Logger.hpp"
 #include "../../include/Server.hpp"
+#include <algorithm>  // for std::find
 
 Channel::Channel(const std::string& name)
     : _name(name), _topic(""), _invite_only(false), _topic_restricted(false), _user_limit(0), _server(NULL) {
@@ -60,6 +61,14 @@ bool Channel::hasKey() const {
 
 const std::string& Channel::getKey() const {
     return _password;
+}
+
+const std::vector<Client*>& Channel::getVoicedClients() const {
+    return _voiced_clients;
+}
+
+bool Channel::isVoiced(Client* client) const {
+    return std::find(_voiced_clients.begin(), _voiced_clients.end(), client) != _voiced_clients.end();
 }
 
 // Setters
@@ -257,4 +266,17 @@ bool Channel::isBanned(Client* client) const {
 
 const std::vector<std::string>& Channel::getBanList() const {
     return _ban_list;
+}
+
+void Channel::addVoice(Client* client) {
+    if (!isVoiced(client)) {
+        _voiced_clients.push_back(client);
+    }
+}
+
+void Channel::removeVoice(Client* client) {
+    std::vector<Client*>::iterator it = std::find(_voiced_clients.begin(), _voiced_clients.end(), client);
+    if (it != _voiced_clients.end()) {
+        _voiced_clients.erase(it);
+    }
 }

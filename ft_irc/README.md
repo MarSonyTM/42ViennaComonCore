@@ -282,7 +282,7 @@ When contributing to this project:
 - [x] Channel key mode (+k)
 - [x] User limit mode (+l)
 - [x] Ban mode (+b)
-- [ ] Voice mode (+v)
+- [x] Voice mode (+v)
 - [ ] Operator mode (+o)
 
 ### Recent Updates
@@ -374,19 +374,36 @@ When contributing to this project:
    # User1 should now be able to join
    ```
 
-#### Voice Mode (+v) - Coming Soon
-1. Start the server: `./ircserv 6667 password`
-2. Connect as operator:
-   ```
-   nc localhost 6667
-   PASS password
-   NICK operator
-   USER operator 0 * :Operator User
-   JOIN #testchannel
-   MODE #testchannel +v user1
-   ```
-3. Verify voice status:
-   ```
-   NAMES #testchannel
-   # Should see + prefix for voiced users
-   ``` 
+#### Voice Mode (+v)
+The voice mode allows channel operators to give voice privileges to users. Voiced users can speak in moderated channels.
+
+#### Implementation Details
+- Added voice privilege management to Channel class
+- Implemented voice mode handling in CommandHandler
+- Added proper error handling and validation
+- Implemented mode change broadcasting
+
+#### Test Cases
+1. Setting voice mode:
+```
+MODE #testchannel +v user1
+```
+Expected: User1 receives voice privileges
+
+2. Removing voice mode:
+```
+MODE #testchannel -v user1
+```
+Expected: User1 loses voice privileges
+
+3. Invalid voice mode operations:
+```
+MODE #testchannel +v nonexistent_user
+```
+Expected: Error 401 - No such nick
+
+4. Voice mode for non-channel member:
+```
+MODE #testchannel +v user2
+```
+Expected: Error 441 - They aren't on that channel 

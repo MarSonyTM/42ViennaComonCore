@@ -1,115 +1,30 @@
 # ft_irc - Internet Relay Chat Server
 
-This is an implementation of an IRC (Internet Relay Chat) server in C++98. The project aims to create a server that can handle multiple clients simultaneously and implements the IRC protocol.
+## Project Overview
+ft_irc is an IRC server implementation in C++98 that allows multiple clients to connect and communicate in real-time. The server supports various channel modes, operator privileges, and follows the IRC protocol specifications.
 
-## Current Implementation Status
+## Features
+- Multi-client support with non-blocking I/O
+- Channel management with various modes
+- Operator privileges and commands
+- Private messaging
+- Topic management
+- Invite system
+- User limit control
+- Channel key protection
+- Voice privileges
 
-### ✅ Completed Features
-
-1. **Basic Server Infrastructure**
-   - Non-blocking socket operations
-   - Multiple client handling using poll()
-   - Clean connection management
-
-2. **Authentication & Registration**
-   - PASS command for server password authentication
-   - NICK command with proper nickname validation
-   - USER command for user registration
-   - Complete registration sequence
-   - Welcome messages
-
-3. **Error Handling**
-   - Invalid password detection
-   - Nickname collision prevention
-   - Invalid nickname format rejection
-   - Proper registration sequence enforcement
-   - Clean client disconnection handling
-
-4. **Channel Operations**
-   - JOIN command with operator status for channel creator
-   - Channel key (password) protection
-   - PART command for leaving channels
-   - Channel message broadcasting (PRIVMSG)
-   - NAMES command showing channel members and operators
-   - KICK command with proper operator permission checks
-   - TOPIC command for viewing and setting channel topics
-   - INVITE command for inviting users to channels
-
-5. **Channel Modes**
-   - Invite-only mode (+i)
-   - Topic restriction mode (+t)
-   - Channel key mode (+k)
-     - Setting and removing channel keys
-     - Key validation and persistence
-     - Special character support
-     - Proper error handling
-
-### 🚧 In Progress
-
-1. **Channel Operator Commands**
-   - ✅ KICK command (completed)
-   - ✅ Channel key protection (completed)
-   - ✅ TOPIC command (completed)
-   - ✅ INVITE command (completed)
-   - ✅ MODE command with key flag (completed)
-   - MODE command with other flags (pending)
-
-2. **Additional Channel Features**
-   - ✅ Channel password protection
-   - User limit enforcement
-   - Invite-only mode
-   - Topic restriction mode
-
-### 🔜 Planned Features
-
-1. **Advanced Channel Operations**
-   - Channel modes and flags
-   - Ban lists
-   - Exception lists
-   - Invite lists
-
-2. **Server Administration**
-   - Server operator commands
-   - Server configuration
-   - Server statistics
-
-### Future Test Cases
-
-1. **Channel Key Mode (+k)**
-   - Key changes with different special characters
-   - Key changes with spaces or other whitespace
-   - Key changes with non-ASCII characters
-   - Key changes with maximum length keys
-   - Key persistence after server restart
-   - Key changes during high server load
-   - Key changes with multiple operators
-
-2. **Channel Modes**
-   - User limit mode (+l)
-   - Ban mode (+b)
-   - Voice mode (+v)
-   - Operator mode (+o)
-   - Multiple mode changes in one command
-   - Mode persistence after server restart
-
-3. **Error Handling**
-   - Invalid mode syntax
-   - Invalid mode parameters
-   - Mode changes on non-existent channels
-   - Mode changes by non-operators
-   - Mode changes with invalid permissions
+## Prerequisites
+- C++98 compatible compiler
+- Make
+- Netcat (for testing)
 
 ## Building the Project
-
 ```bash
-make        # Build the project
-make re     # Rebuild the project
-make clean  # Remove object files
-make fclean # Remove object files and executable
+make
 ```
 
 ## Running the Server
-
 ```bash
 ./ircserv <port> <password>
 ```
@@ -118,87 +33,214 @@ Example:
 ./ircserv 6667 password
 ```
 
-## Testing the Current Implementation
-
-You can test the server using netcat (nc). Here's a step-by-step testing guide:
-
-### 1. Basic Connection Test
+## Connecting to the Server
+Using netcat:
 ```bash
 nc localhost 6667
 ```
 
-### 2. Registration Sequence Test
-```bash
-# Connect and try to set nickname without authentication (should fail)
-NICK testuser
-# Expected: Error 451 - Not registered
-
-# Try wrong password (should fail)
-PASS wrongpassword
-# Expected: Error 464 - Password incorrect
-
-# Use correct password
-PASS password
-# Expected: No response (success)
-
-# Set nickname
-NICK testuser
-# Expected: No response if successful
-
-# Complete registration
-USER testuser 0 * :Real Name
-# Expected: Welcome message (001)
+## Basic Commands
+1. Authentication:
+```
+PASS <password>
+NICK <nickname>
+USER <username> 0 * :<realname>
 ```
 
-### 3. Channel Operations Test
-```bash
-# Create and join a channel (becomes operator)
+2. Channel Operations:
+```
+JOIN #<channel>
+PART #<channel>
+PRIVMSG #<channel> :<message>
+PRIVMSG <nickname> :<message>
+```
+
+## Channel Modes
+
+### Invite-only Mode (+i)
+Restricts channel access to invited users only.
+
+#### Usage
+```
+MODE #channel +i    # Enable invite-only mode
+MODE #channel -i    # Disable invite-only mode
+```
+
+#### Testing
+1. Enable invite-only mode:
+```
+MODE #testchannel +i
+```
+
+2. Try to join without invite:
+```
 JOIN #testchannel
-# Expected: Join confirmation and NAMES list with @ symbol
+```
+Expected: Error 473 - Cannot join channel (+i) - invite only
 
-# Create a channel with a key
-JOIN #secretchannel secretkey
-# Expected: Join confirmation and NAMES list with @ symbol
+3. Invite a user:
+```
+INVITE user1 #testchannel
+```
 
-# Try to join with wrong key
-JOIN #secretchannel wrongkey
-# Expected: Error 475 - Cannot join channel (+k) - bad key
+4. User joins after invite:
+```
+JOIN #testchannel
+```
+Expected: Successful join
 
-# Set a channel topic (as operator)
-TOPIC #testchannel :Welcome to the test channel!
-# Expected: Topic change broadcast to channel
+### Topic Restriction Mode (+t)
+Restricts topic changes to channel operators only.
 
-# Set user limit mode (as operator)
+#### Usage
+```
+MODE #channel +t    # Enable topic restriction
+MODE #channel -t    # Disable topic restriction
+```
+
+#### Testing
+1. Enable topic restriction:
+```
+MODE #testchannel +t
+```
+
+2. Non-operator tries to change topic:
+```
+TOPIC #testchannel :New topic
+```
+Expected: Error 482 - You're not channel operator
+
+3. Operator changes topic:
+```
+TOPIC #testchannel :New topic
+```
+Expected: Topic change broadcast to channel
+
+### Channel Key Mode (+k)
+Protects channel with a password.
+
+#### Usage
+```
+MODE #channel +k <key>    # Set channel key
+MODE #channel -k          # Remove channel key
+```
+
+#### Testing
+1. Set channel key:
+```
+MODE #testchannel +k secretkey
+```
+
+2. Try to join with wrong key:
+```
+JOIN #testchannel wrongkey
+```
+Expected: Error 475 - Cannot join channel (+k) - bad key
+
+3. Join with correct key:
+```
+JOIN #testchannel secretkey
+```
+Expected: Successful join
+
+### User Limit Mode (+l)
+Restricts the number of users in a channel.
+
+#### Usage
+```
+MODE #channel +l <limit>    # Set user limit
+MODE #channel -l            # Remove user limit
+```
+
+#### Testing
+1. Set user limit:
+```
 MODE #testchannel +l 5
-# Expected: Mode change broadcast to channel
+```
 
-# Try to join when channel is full
+2. Try to join when full:
+```
 JOIN #testchannel
-# Expected: Error 471 - Cannot join channel (+l) - channel is full
+```
+Expected: Error 471 - Cannot join channel (+l) - channel is full
 
-# Remove user limit mode
+3. Remove limit:
+```
 MODE #testchannel -l
-# Expected: Mode change broadcast to channel
+```
 
-# View channel topic
-TOPIC #testchannel
-# Expected: RPL_TOPIC (332) with the current topic
+### Ban Mode (+b)
+Bans users from joining the channel.
 
-# Try to set topic without operator status
-TOPIC #testchannel :This should fail
-# Expected: Error 482 - Not channel operator
+#### Usage
+```
+MODE #channel +b <mask>    # Add ban
+MODE #channel -b <mask>    # Remove ban
+```
 
-# Try to view topic without joining
-TOPIC #testchannel
-# Expected: Error 442 - You're not on that channel
+#### Testing
+1. Ban a user:
+```
+MODE #testchannel +b user1
+```
 
-# Kick someone as operator
-KICK #testchannel target :you are kicked
-# Expected: Kick message broadcast to channel
+2. Banned user tries to join:
+```
+JOIN #testchannel
+```
+Expected: Error 474 - Cannot join channel (+b) - you are banned
+
+3. Remove ban:
+```
+MODE #testchannel -b user1
+```
+
+### Voice Mode (+v)
+Gives voice privileges to users in moderated channels.
+
+#### Usage
+```
+MODE #channel +v <nickname>    # Give voice
+MODE #channel -v <nickname>    # Remove voice
+```
+
+#### Testing
+1. Give voice to user:
+```
+MODE #testchannel +v user1
+```
+
+2. Remove voice:
+```
+MODE #testchannel -v user1
+```
+
+### Operator Mode (+o)
+Gives channel operator privileges.
+
+#### Usage
+```
+MODE #channel +o <nickname>    # Make operator
+MODE #channel -o <nickname>    # Remove operator
+```
+
+#### Testing
+1. Make user operator:
+```
+MODE #testchannel +o user1
+```
+
+2. New operator uses privileges:
+```
+MODE #testchannel +v user2
+```
+
+3. Remove operator status:
+```
+MODE #testchannel -o user1
 ```
 
 ## Error Codes
-
 - 001: Welcome message
 - 331: No topic is set
 - 332: Channel topic
@@ -215,11 +257,13 @@ KICK #testchannel target :you are kicked
 - 461: Not enough parameters
 - 462: Already registered
 - 464: Password incorrect
+- 471: Cannot join channel (+l) - channel is full
+- 473: Cannot join channel (+i) - invite only
+- 474: Cannot join channel (+b) - you are banned
 - 475: Cannot join channel (+k) - bad key
 - 482: Not channel operator
 
 ## Project Structure
-
 ```
 ft_irc/
 ├── src/
@@ -230,220 +274,51 @@ ft_irc/
 │   │   └── Client.cpp
 │   ├── Channel/
 │   │   └── Channel.cpp
-│   ├── Command/
-│   │   └── CommandHandler.cpp
-│   └── Utils/
-│       └── Logger.cpp
+│   └── Command/
+│       └── CommandHandler.cpp
 ├── include/
 │   ├── Server.hpp
 │   ├── Client.hpp
 │   ├── Channel.hpp
 │   ├── CommandHandler.hpp
-│   └── Logger.hpp
+│   └── common.hpp
 └── Makefile
 ```
 
-## Next Steps
+## Testing Guidelines
+1. Start the server:
+```bash
+./ircserv 6667 password
+```
 
-1. Complete Channel Operator Commands
-   - ✅ Implement INVITE command
-   - Add MODE command functionality
-   - Implement MODE command with various flags
+2. Connect multiple clients using netcat:
+```bash
+nc localhost 6667
+```
 
-2. Add Channel Modes
-   - Password protection (+k)
-   - User limit (+l)
-   - Invite-only mode (+i)
-   - Topic restriction (+t)
+3. Test each mode systematically:
+   - Enable/disable modes
+   - Verify error handling
+   - Check message broadcasting
+   - Test operator privileges
+   - Verify user limits
+   - Test ban functionality
+   - Check invite system
 
-3. Implement Server Administration
-   - Add server operator commands
-   - Implement server configuration
-   - Add server statistics
+4. Test error cases:
+   - Invalid commands
+   - Missing parameters
+   - Permission violations
+   - Non-existent users/channels
+   - Full channels
+   - Banned users
 
 ## Contributing
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-When contributing to this project:
-1. Create feature branches for new functionality
-2. Test thoroughly using the provided test cases
-3. Update documentation for new features
-4. Follow C++98 standard
-5. Maintain non-blocking I/O design
-
-## Notes
-
-- The server implements C++98 standard
-- All I/O operations are non-blocking
-- The server uses poll() for handling multiple clients
-- No external libraries are used except standard C++98 libraries 
-
-### Mode Flags
-- [x] Topic restriction mode (+t)
-- [x] Channel key mode (+k)
-- [x] User limit mode (+l)
-- [x] Ban mode (+b)
-- [x] Voice mode (+v)
-- [x] Operator mode (+o)
-
-### Recent Updates
-- Implemented ban mode (+b) with proper validation and error handling
-- Added ban list management in Channel class
-- Implemented ban checking on join
-- Added ban/unban commands with proper broadcasting
-- Added support for different ban mask formats
-
-### Next Steps
-1. Implement Voice Mode (+v)
-   - Add voice privilege management
-   - Implement voice status checks
-   - Add voice/devoice commands
-   - Test Cases:
-     ```
-     # Give voice to user
-     MODE #testchannel +v user1
-     # Remove voice from user
-     MODE #testchannel -v user1
-     # Verify voice status changes
-     ```
-
-2. Implement Operator Mode (+o)
-   - Add operator privilege management
-   - Implement operator status checks
-   - Add op/deop commands
-   - Test Cases:
-     ```
-     # Make user operator
-     MODE #testchannel +o user1
-     # Remove operator status
-     MODE #testchannel -o user1
-     # Verify operator status changes
-     ```
-
-### Testing Instructions
-#### User Limit Mode (+l)
-1. Start the server: `./ircserv 6667 password`
-2. Connect as operator:
-   ```
-   nc localhost 6667
-   PASS password
-   NICK operator
-   USER operator 0 * :Operator User
-   JOIN #testchannel
-   MODE #testchannel +l 3
-   ```
-3. Connect as users and verify limit:
-   ```
-   nc localhost 6667
-   PASS password
-   NICK user1
-   USER user1 0 * :User One
-   JOIN #testchannel
-   ```
-4. Verify error when channel is full:
-   ```
-   :ft_irc 471 user3 #testchannel :Cannot join channel (+l) - channel is full
-   ```
-5. Remove limit and verify users can join:
-   ```
-   MODE #testchannel -l
-   ```
-
-#### Ban Mode (+b)
-1. Start the server: `./ircserv 6667 password`
-2. Connect as operator:
-   ```
-   nc localhost 6667
-   PASS password
-   NICK operator
-   USER operator 0 * :Operator User
-   JOIN #testchannel
-   MODE #testchannel +b user1!*@*
-   ```
-3. Connect as user1 and verify ban:
-   ```
-   nc localhost 6667
-   PASS password
-   NICK user1
-   USER user1 0 * :User One
-   JOIN #testchannel
-   # Should receive error: Cannot join channel (+b) - you are banned
-   ```
-4. Remove ban and verify user can join:
-   ```
-   MODE #testchannel -b user1!*@*
-   # User1 should now be able to join
-   ```
-
-#### Voice Mode (+v)
-The voice mode allows channel operators to give voice privileges to users. Voiced users can speak in moderated channels.
-
-#### Implementation Details
-- Added voice privilege management to Channel class
-- Implemented voice mode handling in CommandHandler
-- Added proper error handling and validation
-- Implemented mode change broadcasting
-
-#### Test Cases
-1. Setting voice mode:
-```
-MODE #testchannel +v user1
-```
-Expected: User1 receives voice privileges
-
-2. Removing voice mode:
-```
-MODE #testchannel -v user1
-```
-Expected: User1 loses voice privileges
-
-3. Invalid voice mode operations:
-```
-MODE #testchannel +v nonexistent_user
-```
-Expected: Error 401 - No such nick
-
-4. Voice mode for non-channel member:
-```
-MODE #testchannel +v user2
-```
-Expected: Error 441 - They aren't on that channel 
-
-### Operator Mode (+o)
-The operator mode allows channel operators to give operator privileges to other users. Channel operators have special privileges like setting modes, kicking users, and managing the channel.
-
-#### Implementation Details
-- Added operator mode handling in CommandHandler
-- Implemented proper permission checks
-- Added mode change broadcasting
-- Integrated with existing operator management in Channel class
-
-#### Test Cases
-1. Setting operator mode:
-```
-MODE #testchannel +o user1
-```
-Expected: User1 receives operator privileges
-
-2. Removing operator mode:
-```
-MODE #testchannel -o user1
-```
-Expected: User1 loses operator privileges
-
-3. Invalid operator mode operations:
-```
-MODE #testchannel +o nonexistent_user
-```
-Expected: Error 401 - No such nick
-
-4. Operator mode for non-channel member:
-```
-MODE #testchannel +o user2
-```
-Expected: Error 441 - They aren't on that channel
-
-5. Non-operator trying to set operator mode:
-```
-MODE #testchannel +o user1
-```
-Expected: Error 482 - You're not channel operator 
+## License
+This project is part of the 42 school curriculum. 

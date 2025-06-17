@@ -9,6 +9,7 @@ class CommandHandler;
 
 class Server {
 private:
+    static Server* _instance;  // Add static pointer to instance
     int                         _socket_fd;
     int                         _port;
     std::string                 _password;
@@ -24,6 +25,10 @@ private:
     void    handleClientMessage(int client_fd);
     void    removeClient(int client_fd);
 
+    void clearPollFds() {
+        std::vector<pollfd>().swap(_poll_fds);  // Force deallocation
+    }
+
     // Private copy constructor and assignment operator to prevent copying
     Server(const Server& other);
     Server& operator=(const Server& other);
@@ -31,6 +36,9 @@ private:
 public:
     Server(int port, const std::string& password);
     ~Server();
+
+    static void setInstance(Server* server) { _instance = server; }  // Add setter
+    static Server* getInstance() { return _instance; }  // Add getter
 
     // Public member functions
     bool    start();

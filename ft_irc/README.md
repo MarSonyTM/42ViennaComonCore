@@ -59,7 +59,7 @@ make
 ```
 Example:
 ```bash
-./ircserv 6667 password
+./ircserv 6667 serverpassword
 ```
 
 ### Connecting to the Server
@@ -71,17 +71,31 @@ nc localhost 6667
 ### Basic Commands
 1. Authentication:
 ```
-PASS <password>
-NICK <nickname>
-USER <username> 0 * :<realname>
+PASS serverpassword
+NICK yournickname
+USER username 0 * :Real Name
 ```
 
 2. Channel Operations:
 ```
-JOIN #<channel>
-PART #<channel>
-PRIVMSG #<channel> :<message>
-PRIVMSG <nickname> :<message>
+JOIN #channelname
+PRIVMSG #channelname :Your message
+PRIVMSG nickname :Private message
+```
+
+3. Operator Commands:
+```
+KICK #channel nickname
+INVITE nickname #channel
+TOPIC #channel :New topic
+```
+
+4. Channel Modes:
+```
+MODE #channel +i              # Set invite-only
+MODE #channel +t              # Restrict topic changes to operators
+MODE #channel +k password     # Set channel key (password)
+MODE #channel +l 5           # Set user limit
 ```
 
 ## 🎮 Channel Modes
@@ -321,44 +335,8 @@ ft_irc/
 ### Basic Testing
 1. Start the server:
 ```bash
-./ircserv 6667 password
+./ircserv 6667 serverpassword
 ```
 
 2. Connect multiple clients using netcat:
-```bash
-nc localhost 6667
 ```
-
-### Systematic Testing
-1. Test each mode:
-   - Enable/disable modes
-   - Verify error handling
-   - Check message broadcasting
-   - Test operator privileges
-   - Verify user limits
-   - Test ban functionality
-   - Check invite system
-
-2. Test error cases:
-   - Invalid commands
-   - Missing parameters
-   - Permission violations
-   - Non-existent users/channels
-   - Full channels
-   - Banned users
-
-## 🤝 Contributing
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## 📄 License
-This project is part of the 42 school curriculum.
-
----
-
-<div align="center">
-Made with ❤️ by 42 Vienna Students
-</div> 

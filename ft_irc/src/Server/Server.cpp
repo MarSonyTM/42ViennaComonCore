@@ -5,8 +5,9 @@
 #include "../../include/CommandHandler.hpp"
 #include <sstream>
 
-// Define static member
+// Define static members
 const std::string Server::_hostname = "ft_irc";
+Server* Server::_instance = NULL;
 
 // Helper function for number to string conversion
 std::string numberToString(size_t number) {
@@ -79,6 +80,7 @@ bool Server::start() {
     struct pollfd pfd;
     pfd.fd = _socket_fd;
     pfd.events = POLLIN;
+    pfd.revents = 0;  // Initialize revents
     _poll_fds.push_back(pfd);
 
     return true;
@@ -115,6 +117,7 @@ void Server::handleNewConnection() {
     struct pollfd pfd;
     pfd.fd = clientFd;
     pfd.events = POLLIN;
+    pfd.revents = 0;  // Initialize revents
     _poll_fds.push_back(pfd);
 
     _clients[clientFd] = newClient;
@@ -214,13 +217,15 @@ void Server::run() {
 }
 
 void Server::stop() {
+    // First clear the poll_fds vector to ensure proper deallocation
+    clearPollFds();
+
     // Clean up clients
     for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
         close(it->first);
         delete it->second;
     }
     _clients.clear();
-    _poll_fds.clear();
 
     // Clean up channels
     for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)

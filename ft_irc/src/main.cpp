@@ -5,6 +5,12 @@
 void signal_handler(int signum) {
     (void)signum;
     Logger::info("Shutting down server...");
+    
+    // Get server instance and stop it
+    if (Server::getInstance()) {
+        Server::getInstance()->stop();
+    }
+    
     exit(0);
 }
 
@@ -26,6 +32,7 @@ int main(int argc, char *argv[]) {
         }
 
         Server server(port, argv[2]);
+        Server::setInstance(&server);  // Set the static instance
         
         if (!server.start()) {
             Logger::error("Failed to start server");
@@ -34,9 +41,13 @@ int main(int argc, char *argv[]) {
 
         Logger::info("Server started on port " + std::string(argv[1]));
         server.run();
+        
+        // Clear the instance pointer before exiting
+        Server::setInstance(NULL);
     }
     catch (const std::exception& e) {
         Logger::error(std::string("Error: ") + e.what());
+        Server::setInstance(NULL);  // Clear instance pointer on error
         return 1;
     }
 

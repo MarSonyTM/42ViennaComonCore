@@ -339,4 +339,124 @@ ft_irc/
 ```
 
 2. Connect multiple clients using netcat:
+```bash
+# Terminal 2 - First client
+nc localhost 6667
+
+# Terminal 3 - Second client
+nc localhost 6667
+
+# Terminal 4 - Third client
+nc localhost 6667
 ```
+
+### Authentication Testing
+```bash
+# Connect and authenticate
+PASS serverpassword
+NICK john
+USER john 0 * :John Doe
+
+# Expected response:
+# :server 001 john :Welcome to the IRC server john!
+```
+
+### Channel Operations Testing
+```bash
+# Create and join a channel
+JOIN #testchannel
+
+# Send a message to the channel
+PRIVMSG #testchannel :Hello everyone!
+
+# Set channel topic
+TOPIC #testchannel :Welcome to our test channel
+
+# List channel members
+NAMES #testchannel
+
+# Leave channel
+PART #testchannel :Goodbye!
+```
+
+### Private Messaging Testing
+```bash
+# Send private message
+PRIVMSG alice :Hey, how are you?
+
+# Notice message
+NOTICE bob :Important message
+```
+
+### Channel Modes Testing
+```bash
+# Set channel as invite-only
+MODE #testchannel +i
+
+# Set channel password
+MODE #testchannel +k secretpass
+
+# Set user limit
+MODE #testchannel +l 10
+
+# Give operator status
+MODE #testchannel +o alice
+
+# Ban a user
+MODE #testchannel +b bob
+
+# View channel modes
+MODE #testchannel
+```
+
+### Error Handling Testing
+```bash
+# Wrong password
+PASS wrongpassword
+# Expected: Error 464 - Password incorrect
+
+# Join non-existent channel
+JOIN #nonexistent
+# Expected: Error 403 - No such channel
+
+# Message to non-existent user
+PRIVMSG ghost :Hello
+# Expected: Error 401 - No such nick/channel
+
+# Using commands before registration
+JOIN #channel
+# Expected: Error 451 - Not registered
+```
+
+### Full Session Example
+```bash
+# Terminal 1 (Server)
+./ircserv 6667 mypassword
+
+# Terminal 2 (Alice)
+nc localhost 6667
+PASS mypassword
+NICK alice
+USER alice 0 * :Alice Smith
+JOIN #general
+PRIVMSG #general :Hello everyone!
+
+# Terminal 3 (Bob)
+nc localhost 6667
+PASS mypassword
+NICK bob
+USER bob 0 * :Bob Johnson
+JOIN #general
+PRIVMSG #general :Hi Alice!
+PRIVMSG alice :Private message to Alice
+
+# Terminal 4 (Charlie)
+nc localhost 6667
+PASS mypassword
+NICK charlie
+USER charlie 0 * :Charlie Brown
+JOIN #general
+MODE #general +o charlie
+TOPIC #general :Welcome to our IRC server!
+```
+

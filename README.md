@@ -105,3 +105,152 @@ To test the topic restriction mode:
 - Code follows 42 coding style guidelines
 - Comprehensive error handling implemented
 - All features thoroughly tested 
+
+# ft_irc - IRC Server Implementation
+
+This project implements an Internet Relay Chat (IRC) server following RFC 1459 specifications. The server is written in C++98 and provides robust message handling and memory management.
+
+## Core Features
+
+### Memory Management
+- **SmartPtr Template Class**
+  - Custom smart pointer implementation for C++98
+  - Automatic resource cleanup
+  - Memory leak prevention
+  - RAII-compliant design
+  - Usage example:
+    ```cpp
+    SmartPtr<Client> client(new Client(socket_fd));
+    // No need to manually delete, SmartPtr handles cleanup
+    ```
+
+### Message Handling
+- **DynamicBuffer Class**
+  - Efficient message buffering system
+  - Automatic buffer growth up to 16KB
+  - Protection against buffer overflows
+  - Line-based message parsing
+  - Usage example:
+    ```cpp
+    DynamicBuffer buffer;
+    buffer.append(data, length);
+    while (buffer.hasCompleteLine()) {
+        std::string line = buffer.getLine();
+        // Process the line
+    }
+    ```
+
+### IRC Protocol Implementation
+- **Client Management**
+  - Authentication (PASS command)
+  - Nickname handling (NICK command)
+  - User registration (USER command)
+  - Private messaging (PRIVMSG command)
+
+- **Channel Operations**
+  - Channel creation and joining (JOIN command)
+  - Channel messaging
+  - Operator privileges
+  - Channel modes:
+    - Invite-only mode (+i)
+    - Topic restriction (+t)
+    - Channel key (+k)
+    - User limit (+l)
+    - Operator status (+o)
+
+## Technical Details
+
+### Memory Safety Features
+1. **SmartPtr Implementation**
+   - Prevents memory leaks through RAII
+   - Disabled copy constructor to prevent double-free
+   - Supports pointer operations:
+     - Dereferencing (`operator*`)
+     - Member access (`operator->`)
+     - Resource release (`release()`)
+     - Pointer reset (`reset()`)
+
+2. **DynamicBuffer Features**
+   - Initial buffer size: 1024 bytes
+   - Maximum buffer size: 16KB
+   - Automatic growth strategy:
+     - Doubles capacity when needed
+     - Stops at maximum size
+   - Memory overflow protection
+   - Efficient line parsing for IRC messages
+
+### Error Handling
+- Buffer overflow protection
+- Socket error handling
+- Memory allocation failure handling
+- Invalid message format detection
+- Network disconnection handling
+
+## Building and Running
+
+### Prerequisites
+- C++98 compatible compiler
+- Make build system
+- POSIX-compliant operating system
+
+### Build Instructions
+```bash
+make        # Build the server
+make clean  # Remove object files
+make re     # Rebuild everything
+```
+
+### Running the Server
+```bash
+./ircserv <port> <password>
+```
+Example:
+```bash
+./ircserv 6667 serverpass
+```
+
+## Testing
+
+### Memory Testing
+```bash
+valgrind --leak-check=full ./ircserv 6667 password
+```
+
+### Load Testing
+1. Connect multiple clients:
+```bash
+nc localhost 6667
+```
+2. Send test messages:
+```
+PASS password
+NICK testuser
+USER testuser 0 * :Test User
+JOIN #testchannel
+PRIVMSG #testchannel :Test message
+```
+
+## Recent Updates
+- Added SmartPtr template for better memory management
+- Implemented DynamicBuffer for improved message handling
+- Enhanced error handling and memory safety
+- Improved message parsing efficiency
+
+## Known Issues
+- None at the moment
+
+## Notes
+- All features comply with C++98 standard
+- Code follows 42 coding style guidelines
+- Comprehensive error handling implemented
+- All features thoroughly tested
+
+## Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+This project is part of the 42 school curriculum. 

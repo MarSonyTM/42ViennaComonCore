@@ -2,6 +2,7 @@
 # define CLIENT_HPP
 
 # include "common.hpp"
+# include "DynamicBuffer.hpp"
 
 class Channel;
 
@@ -14,7 +15,7 @@ private:
     std::string _hostname;
     bool        _authenticated;
     bool        _registered;
-    std::string _buffer;
+    DynamicBuffer _buffer;
     std::vector<Channel*> _channels;
 
     // Private copy constructor and assignment operator to prevent copying
@@ -33,7 +34,7 @@ public:
     const std::string& getHostname() const;
     bool        isAuthenticated() const;
     bool        isRegistered() const;
-    std::string& getBuffer();
+    DynamicBuffer& getBuffer();
     const std::vector<Channel*>& getChannels() const;
 
     // Setters
@@ -50,7 +51,7 @@ public:
     bool        isInChannel(const Channel* channel) const;
 
     // Message handling
-    void        appendToBuffer(const std::string& data);
+    bool        appendToBuffer(const char* data, size_t len);
     void        sendMessage(const std::string& message);
 };
 

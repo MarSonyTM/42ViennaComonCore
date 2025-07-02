@@ -1,5 +1,8 @@
 #include "../../include/Client.hpp"
 #include "../../include/Channel.hpp"
+#include "../../include/Logger.hpp"
+#include <sys/socket.h>
+#include <unistd.h>
 
 Client::Client(int fd)
     : _fd(fd), _authenticated(false), _registered(false) {
@@ -38,7 +41,7 @@ bool Client::isRegistered() const {
     return _registered;
 }
 
-std::string& Client::getBuffer() {
+DynamicBuffer& Client::getBuffer() {
     return _buffer;
 }
 
@@ -106,10 +109,11 @@ bool Client::isInChannel(const Channel* channel) const {
 }
 
 // Message handling
-void Client::appendToBuffer(const std::string& data) {
-    _buffer += data;
+bool Client::appendToBuffer(const char* data, size_t len) {
+    return _buffer.append(data, len);
 }
 
 void Client::sendMessage(const std::string& message) {
-    send(_fd, message.c_str(), message.length(), 0);
+    std::string full_message = message + "\r\n";
+    send(_fd, full_message.c_str(), full_message.length(), 0);
 } 

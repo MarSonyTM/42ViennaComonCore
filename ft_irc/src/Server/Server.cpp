@@ -41,9 +41,8 @@ bool Server::setupSocket() {
 
     // Set non-blocking
     if (fcntl(_socket_fd, F_SETFL, O_NONBLOCK) < 0) {
-        Logger::error("Failed to set non-blocking socket: " + std::string(strerror(errno)));
-        close(_socket_fd);
-        return false;
+        Logger::error("Failed to set socket to non-blocking mode: " + std::string(strerror(errno)));
+        throw std::runtime_error("Failed to set socket to non-blocking mode");
     }
 
     // Bind socket
@@ -98,8 +97,11 @@ void Server::handleNewConnection() {
     }
 
     // Set socket to non-blocking mode
-    int flags = fcntl(clientFd, F_GETFL, 0);
-    fcntl(clientFd, F_SETFL, flags | O_NONBLOCK);
+    if (fcntl(clientFd, F_SETFL, O_NONBLOCK) < 0) {
+        Logger::error("Failed to set client socket to non-blocking mode: " + std::string(strerror(errno)));
+        close(clientFd);
+        return;
+    }
 
     // Create new client
     Client* newClient = new Client(clientFd);
@@ -138,42 +140,19 @@ void Server::handleClientMessage(int client_fd) {
         return;
     }
 
-    buffer[bytes_read] = '\0';
-    std::string message(buffer);
-    
-    // Debug: Print raw message with visible special characters
-    std::string debug_message;
-    for (size_t i = 0; i < message.length(); ++i) {
-        if (message[i] == '\r') debug_message += "\\r";
-        else if (message[i] == '\n') debug_message += "\\n";
-        else debug_message += message[i];
-    }
-    Logger::debug("Received raw message (" + numberToString(bytes_read) + " bytes): '" + debug_message + "'");
-
-    // Split the message by \r\n or \n
-    size_t start = 0;
-    size_t end;
-    
-    while ((end = message.find_first_of("\r\n", start)) != std::string::npos) {
-        if (end > start) {
-            std::string cmd = message.substr(start, end - start);
-            if (!cmd.empty()) {
-                Logger::debug("Processing command: '" + cmd + "'");
-                _command_handler->handleCommand(_clients[client_fd], cmd);
-            }
-        }
-        // Skip \r\n or \n
-        start = message.find_first_not_of("\r\n", end);
-        if (start == std::string::npos)
-            break;
+    Client* client = _clients[client_fd];
+    if (!client->appendToBuffer(buffer, bytes_read)) {
+        Logger::error("Buffer overflow for client " + client->getNickname());
+        removeClient(client_fd);
+        return;
     }
 
-    // Handle any remaining message
-    if (start != std::string::npos && start < message.length()) {
-        std::string cmd = message.substr(start);
+    DynamicBuffer& clientBuffer = client->getBuffer();
+    while (clientBuffer.hasCompleteLine()) {
+        std::string cmd = clientBuffer.getLine();
         if (!cmd.empty()) {
-            Logger::debug("Processing remaining command: '" + cmd + "'");
-            _command_handler->handleCommand(_clients[client_fd], cmd);
+            Logger::debug("Processing command: '" + cmd + "'");
+            _command_handler->handleCommand(client, cmd);
         }
     }
 }

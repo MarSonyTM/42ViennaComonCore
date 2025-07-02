@@ -829,6 +829,7 @@ void CommandHandler::handleCommand(Client* client, const std::string& message) {
 
     Logger::debug("Processing command: " + command + " from " + client->getNickname());
 
+    // Handle valid commands only
     if (command == "PASS")
         handlePass(client, params);
     else if (command == "NICK")
@@ -837,10 +838,8 @@ void CommandHandler::handleCommand(Client* client, const std::string& message) {
         handleUser(client, params);
     else if (command == "QUIT")
         handleQuit(client, params);
-    else if (command == "JOIN") {
-        Logger::debug("Handling JOIN command with params: " + (params.empty() ? "none" : params[0]));
+    else if (command == "JOIN")
         handleJoin(client, params);
-    }
     else if (command == "PART")
         handlePart(client, params);
     else if (command == "PRIVMSG")
@@ -855,6 +854,8 @@ void CommandHandler::handleCommand(Client* client, const std::string& message) {
         handleInvite(client, params);
     else if (command == "MODE")
         handleMode(client, params);
-    else
-        Logger::debug("Unknown command received: " + command);
+    else {
+        // Any other command is invalid
+        sendReply(client, ERR_UNKNOWNCOMMAND, command + " :Unknown command");
+    }
 } 

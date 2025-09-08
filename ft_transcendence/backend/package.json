@@ -18,12 +18,13 @@
     "@fastify/jwt": "^7.0.0",
     "@fastify/websocket": "^8.0.0",
     "knex": "^2.5.1",
-    "@types/sqlite3": "^3.1.8",
     "objection": "^3.1.1"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "@types/sqlite3": "^3.1.8",
     "typescript": "^5.0.0",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "@types/ws": "^8.5.10"
   }
 }

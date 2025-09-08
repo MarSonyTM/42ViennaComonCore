@@ -1,8 +1,22 @@
 import knex, { Knex } from 'knex';
 import { Model } from 'objection';
 import config from '../../knexfile';
+import fs from 'fs';
+import path from 'path';
 
 export async function setupDatabase() {
+  // Create directories if they don't exist
+  const dirs = [
+    path.join(__dirname, 'migrations'),
+    path.join(__dirname, '..', '..', 'database', 'migrations')
+  ];
+
+  dirs.forEach(dir => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  });
+
   // Initialize knex
   const db = knex(config.development);
 

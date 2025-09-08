@@ -13,14 +13,19 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Create necessary directories
+RUN mkdir -p /app/certs \
+    /app/database/migrations \
+    /app/src/database/migrations
+
 # Copy project files
 COPY . .
 
 # Build TypeScript
 RUN npm run build
 
-# Expose port
-EXPOSE 3001
+# Expose ports
+EXPOSE 3001 443
 
 # Start command
 CMD ["npm", "run", "dev"]

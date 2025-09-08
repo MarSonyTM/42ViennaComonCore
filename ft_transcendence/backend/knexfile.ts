@@ -8,7 +8,7 @@ const config: { [key: string]: Knex.Config } = {
       filename: path.join(__dirname, 'database', 'dev.sqlite3')
     },
     migrations: {
-      directory: path.join(__dirname, 'database', 'migrations')
+      directory: path.join(__dirname, 'src', 'database', 'migrations')
     },
     useNullAsDefault: true,
     pool: {
@@ -23,7 +23,7 @@ const config: { [key: string]: Knex.Config } = {
       filename: ':memory:'
     },
     migrations: {
-      directory: path.join(__dirname, 'database', 'migrations')
+      directory: path.join(__dirname, 'src', 'database', 'migrations')
     },
     useNullAsDefault: true,
     pool: {

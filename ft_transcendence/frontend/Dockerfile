@@ -13,11 +13,14 @@ RUN npm install
 # Copy project files
 COPY . .
 
+# Create certs directory
+RUN mkdir -p /app/certs
+
 # Build the app
 RUN npm run build
 
-# Expose port
-EXPOSE 3000
+# Expose ports
+EXPOSE 3000 443
 
-# Start command
+# Start command with HTTPS
 CMD ["npm", "run", "dev"]

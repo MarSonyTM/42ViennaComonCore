@@ -1,7 +1,7 @@
 # ft_transcendence Project TODO List
 
 ## Overall Progress
-- [ ] Phase 1: Core Infrastructure Setup
+- [x] Phase 1: Core Infrastructure Setup (In Progress)
 - [ ] Phase 2: Basic Pong Implementation
 - [ ] Phase 3: User Management
 - [ ] Phase 4: Multiplayer Features
@@ -10,13 +10,19 @@
 
 ## Phase 1 - Core Infrastructure Setup
 ### Tasks
-- [ ] Initial Docker configuration
-- [ ] Basic project structure
+- [x] Initial Docker configuration
+- [x] Basic project structure
+- [x] Basic frontend setup (Next.js + Tailwind)
+- [x] Basic backend setup (Fastify)
 - [ ] Database setup
 
 ### Testing Checkpoints
-- [ ] Docker container builds and runs
-- [ ] Development environment is accessible
+- [x] Docker and Docker Compose installed
+- [x] Development environment (Node.js, npm) verified
+- [x] Project structure verified
+- [x] Docker container builds and runs
+- [x] Development environment is accessible
+- [x] Frontend and backend communication working
 - [ ] Database connections work
 - [ ] Basic HTTP/HTTPS setup verified
 
@@ -85,7 +91,7 @@
 
 ## Module Implementation Status
 ### Major Modules
-- [ ] Backend Framework (Fastify)
+- [x] Backend Framework (Fastify) - Basic setup complete
 - [ ] Standard User Management
 - [ ] Remote Players
 - [ ] Live Chat
@@ -93,7 +99,7 @@
 
 ### Minor Modules
 - [ ] Database (SQLite)
-- [ ] Frontend Framework (Tailwind)
+- [x] Frontend Framework (Tailwind) - Basic setup complete
 - [ ] Support on All Devices
 
 ## Notes
@@ -101,3 +107,13 @@
 - Security measures should be implemented throughout development
 - Regular testing and validation required
 - Documentation should be updated as features are implemented
+
+## Completed Setup Milestones
+- ✅ Project structure created
+- ✅ Docker configuration completed
+- ✅ Frontend basic setup with Next.js and Tailwind
+- ✅ Backend basic setup with Fastify
+- ✅ Development environment verified
+- ✅ Container builds and networking verified
+- ✅ Basic health checks implemented
+- ✅ Version control setup (.gitignore, initial commit)

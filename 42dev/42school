@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Get the current directory
+CURRENT_DIR=$(pwd)
+
+# Run the Docker container with current directory mounted
+docker run -it --rm \
+    -v "$CURRENT_DIR":/app \
+    -w /app \
+    42school:latest "$@"
